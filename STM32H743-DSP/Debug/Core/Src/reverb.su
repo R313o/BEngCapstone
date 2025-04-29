@@ -1,2 +1,0 @@
-../Core/Src/reverb.c:14:6:reverbInit	4120	static
-../Core/Src/reverb.c:40:6:reverbApply	20504	static
