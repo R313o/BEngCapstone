@@ -60,12 +60,9 @@ static void pipe_updateDACOutput(pipe *self, volatile uint16_t *dacBuffer)
     uint16_t i;
 
     uint8_t half = (self->ppState == 0) ? 1 : 0;
-
-    arm_scale_f32(self->outBuffer, DAC_VOLTS2BITS, self->outBuffer, BUFFER_SIZE);
-
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        dacBuffer[BUFFER_SIZE * half + i] = (uint16_t)self->outBuffer[i];
+        dacBuffer[BUFFER_SIZE * half + i] = (uint16_t)(self->outBuffer[i] * DAC_VOLTS2BITS);
     }
 }
 
