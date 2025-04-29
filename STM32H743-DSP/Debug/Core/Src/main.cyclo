@@ -1,6 +1,6 @@
 ../Core/Src/main.c:120:6:HAL_ADC_ConvHalfCpltCallback	2
 ../Core/Src/main.c:128:6:HAL_ADC_ConvCpltCallback	2
-../Core/Src/fastConvolution.h:24:6:ova_convolve	5
+../Core/Inc/fastConvolution.h:24:6:ova_convolve	5
 ../Core/Src/main.c:279:6:SystemClock_Config	4
 ../Core/Src/main.c:338:6:PeriphCommonClock_Config	2
 ../Core/Src/main.c:146:5:main	15

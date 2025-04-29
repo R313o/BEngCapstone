@@ -12,8 +12,9 @@ static void pipe_ADC_HalfComplete(pipe *self, const volatile uint16_t *adcInput)
     uint16_t i;
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        self->inBuffer1[i] = ((float32_t)adcInput[i]) * ADC_BITS2VOLTS;
+        self->inBuffer1[i] = (float32_t)adcInput[i];
     }
+    arm_scale_f32(self->inBuffer1, ADC_BITS2VOLTS, self->inBuffer1, BUFFER_SIZE);
     self->inBuffer  = self->inBuffer1;
     self->outBuffer = self->outBuffer1;
     self->ppState   = 1;
@@ -25,8 +26,9 @@ static void pipe_ADC_Complete(pipe *self, const volatile uint16_t *adcInput)
     uint16_t i;
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        self->inBuffer2[i] = ((float32_t)adcInput[BUFFER_SIZE + i]) * ADC_BITS2VOLTS;
+        self->inBuffer2[i] = (float32_t)adcInput[BUFFER_SIZE + i];
     }
+    arm_scale_f32(self->inBuffer2, ADC_BITS2VOLTS, self->inBuffer2, BUFFER_SIZE);
     self->inBuffer  = self->inBuffer2;
     self->outBuffer = self->outBuffer2;
     self->ppState   = 0;
