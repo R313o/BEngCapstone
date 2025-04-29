@@ -37,19 +37,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00003c6d  00000000  00000000  000b12e9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00024525  00000000  00000000  000b4f56  2**0
+ 17 .debug_line   00023d19  00000000  00000000  000b4f56  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00174784  00000000  00000000  000d947b  2**0
+ 18 .debug_str    001747aa  00000000  00000000  000d8c6f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      000000b3  00000000  00000000  0024dbff  2**0
+ 19 .comment      000000b3  00000000  00000000  0024d419  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00003240  00000000  00000000  0024dcb4  2**2
+ 20 .debug_frame  00003240  00000000  00000000  0024d4cc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000006e  00000000  00000000  00250ef4  2**0
+ 21 .debug_line_str 00000094  00000000  00000000  0025070c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_loc    000035d9  00000000  00000000  00250f62  2**0
+ 22 .debug_loc    000035d9  00000000  00000000  002507a0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 23 .debug_ranges 00000090  00000000  00000000  0025453b  2**0
+ 23 .debug_ranges 00000090  00000000  00000000  00253d79  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -2722,7 +2722,7 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
     HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0U);
  80013b0:	2200      	movs	r2, #0
  80013b2:	4621      	mov	r1, r4
- 80013b4:	f04f 30ff 	mov.w	r0, #4294967295
+ 80013b4:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  80013b8:	f000 ff94 	bl	80022e4 <HAL_NVIC_SetPriority>
     uwTickPrio = TickPriority;
  80013bc:	4b03      	ldr	r3, [pc, #12]	@ (80013cc <HAL_InitTick+0x48>)
@@ -5079,11 +5079,11 @@ void HAL_NVIC_SetPriority(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t Sub
  8002304:	d91a      	bls.n	800233c <HAL_NVIC_SetPriority+0x58>
  8002306:	f1a3 0c03 	sub.w	ip, r3, #3
            ((SubPriority     & (uint32_t)((1UL << (SubPriorityBits    )) - 1UL)))
- 800230a:	f04f 33ff 	mov.w	r3, #4294967295
+ 800230a:	f04f 33ff 	mov.w	r3, #4294967295	@ 0xffffffff
  800230e:	fa03 f30c 	lsl.w	r3, r3, ip
  8002312:	ea22 0203 	bic.w	r2, r2, r3
            ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
- 8002316:	f04f 33ff 	mov.w	r3, #4294967295
+ 8002316:	f04f 33ff 	mov.w	r3, #4294967295	@ 0xffffffff
   if ((int32_t)(IRQn) >= 0)
  800231a:	2800      	cmp	r0, #0
            ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
@@ -8261,7 +8261,7 @@ static void DMA_CalcDMAMUXChannelBaseAndMask(DMA_HandleTypeDef *hdma)
         temp &= ~(GPIO_OSPEEDR_OSPEED0 << (position * 2U));
  800395c:	fa03 f604 	lsl.w	r6, r3, r4
       if (((GPIO_Init->Mode & GPIO_MODE) == MODE_OUTPUT) || ((GPIO_Init->Mode & GPIO_MODE) == MODE_AF))
- 8003960:	f107 38ff 	add.w	r8, r7, #4294967295
+ 8003960:	f107 38ff 	add.w	r8, r7, #4294967295	@ 0xffffffff
         temp &= ~(GPIO_OSPEEDR_OSPEED0 << (position * 2U));
  8003964:	43f6      	mvns	r6, r6
       if (((GPIO_Init->Mode & GPIO_MODE) == MODE_OUTPUT) || ((GPIO_Init->Mode & GPIO_MODE) == MODE_AF))
@@ -8542,7 +8542,7 @@ static void DMA_CalcDMAMUXChannelBaseAndMask(DMA_HandleTypeDef *hdma)
  8003b5c:	fa06 f807 	lsl.w	r8, r6, r7
  8003b60:	ea6f 0a08 	mvn.w	sl, r8
       if (((GPIO_Init->Mode & GPIO_MODE) == MODE_OUTPUT) || ((GPIO_Init->Mode & GPIO_MODE) == MODE_AF))
- 8003b64:	f104 38ff 	add.w	r8, r4, #4294967295
+ 8003b64:	f104 38ff 	add.w	r8, r4, #4294967295	@ 0xffffffff
  8003b68:	f1b8 0f01 	cmp.w	r8, #1
  8003b6c:	f67f af5c 	bls.w	8003a28 <HAL_GPIO_Init+0x108>
       if ((GPIO_Init->Mode & GPIO_MODE) != MODE_ANALOG)
