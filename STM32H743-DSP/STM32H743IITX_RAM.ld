@@ -137,6 +137,8 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
   } >DTCMRAM AT> RAM_EXEC
+  
+  
 
   /* Uninitialized data section */
   . = ALIGN(4);
@@ -164,6 +166,9 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >DTCMRAM
+  
+  
+  
 
   /* Remove information from the standard libraries */
   /DISCARD/ :

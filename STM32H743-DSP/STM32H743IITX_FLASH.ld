@@ -138,6 +138,28 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
   } >RAM_D1 AT> FLASH
+  
+  
+ /* Uninitialized DTCM (BSS) */
+  .dtcm_bss (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __dtcm_bss_start = .;
+    *(.dtcm .dtcm.*)
+    . = ALIGN(4);
+    __dtcm_bss_end = .;
+  } >DTCMRAM
+
+  /* Initialized DTCM (data copied from FLASH) */
+  .dtcm_data (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __dtcm_data_start = .;
+    *(.data.dtcm .data.dtcm.*)
+    . = ALIGN(4);
+    __dtcm_data_end = .;
+  } >DTCMRAM AT> FLASH
+	  
 
   /* Uninitialized data section */
   . = ALIGN(4);
@@ -165,6 +187,7 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM_D1
+  
 
   /* Remove information from the standard libraries */
   /DISCARD/ :

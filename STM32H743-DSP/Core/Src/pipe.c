@@ -12,7 +12,7 @@ static void pipe_ADC_HalfComplete(pipe *self, const volatile uint16_t *adcInput)
     uint16_t i;
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        self->inBuffer1[i] = ((float32_t)adcInput[i]) * ADC_BITS2VOLTS - 1.65f;
+        self->inBuffer1[i] = ((float32_t)adcInput[i]) * ADC_BITS2VOLTS;
     }
     self->inBuffer  = self->inBuffer1;
     self->outBuffer = self->outBuffer1;
@@ -25,7 +25,7 @@ static void pipe_ADC_Complete(pipe *self, const volatile uint16_t *adcInput)
     uint16_t i;
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        self->inBuffer2[i] = ((((float32_t)adcInput[BUFFER_SIZE + i]) * ADC_BITS2VOLTS) - 1.65f);
+        self->inBuffer2[i] = ((float32_t)adcInput[BUFFER_SIZE + i]) * ADC_BITS2VOLTS;
     }
     self->inBuffer  = self->inBuffer2;
     self->outBuffer = self->outBuffer2;
@@ -60,7 +60,7 @@ static void pipe_updateDACOutput(pipe *self, volatile uint16_t *dacBuffer)
     uint8_t half = (self->ppState == 0) ? 1 : 0;
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        dacBuffer[BUFFER_SIZE * half + i] = (uint16_t)((self->outBuffer[i] + 1.65f) * DAC_VOLTS2BITS);
+        dacBuffer[BUFFER_SIZE * half + i] = (uint16_t)(self->outBuffer[i] * DAC_VOLTS2BITS);
     }
 }
 
@@ -83,6 +83,13 @@ void pipeInit(pipe *self)
     self->updateDACOutput = pipe_updateDACOutput;
     self->getDelayBuffer = pipe_getDelayBuffer;
     self->loadProcess = pipe_loadProcess;
+
+    for(int i = 0; i < BUFFER_SIZE ; i++) {
+
+    	self->processBuffer[i] = 0;
+
+    }
+
 }
 
 

@@ -21,17 +21,27 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "bsp_sdram.h"
 
+//#include "effect.h"
+#include <stdint.h>
+
+#define __FPU_PRESENT  1U
 #define ARM_MATH_CM7
-#include "arm_math.h"
 
+
+#include "arm_math.h"
 #include "pipe.h"
-#include "effect.h"
-#include "chorus.h"
-#include "lowpass.h"
-#include "reverb.h"
-#include "lexiconIR.h"
+
+
+#define FFT_SIZE 2048 // zero-padding
+#include "emt_140_dark_3.h"
+
+// Overlap-add buffer
+
+uint16_t Saved_Vals_wr_index, Saved_Vals_rd_index;
+
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,11 +51,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
-#define I2C_BUFFER_SIZE 128
-
-#define SDRAM_ADDRESS 0xc0000000
-
 
 /* USER CODE END PD */
 
@@ -63,43 +68,35 @@ DMA_HandleTypeDef hdma_dac1_ch1;
 
 TIM_HandleTypeDef htim8;
 
-SDRAM_HandleTypeDef hsdram1;
-
 /* USER CODE BEGIN PV */
 
-
 pipe apipe;
-effect myEffect;
-chorus myChorus;
-LowPassFilter lpFilter;
-reverb myReverb;
-int32_t test = 0;
-int32_t test2 = 0;
-
+//effect myEffect;
 
 arm_rfft_fast_instance_f32 fft;
 static 	 uint16_t  adcInput[BUFFER_SIZE*2];
 static	 uint16_t  dacOutput[BUFFER_SIZE*2];
-
-volatile float32_t volume = 1.0f;
-
-//chrous
-volatile uint8_t doChorus = 1;
-volatile uint32_t delay = 2000;
-volatile float32_t wetness = 0.6f;
-volatile float32_t depth = 0.5f;
-
-/*uint32_t irLength = 2048;  // adjust as appropriate (must be <= MAX_IR_LENGTH)
-
-__IO uint32_t     Transfer_Direction = 0;
-__IO uint32_t     Xfer_Complete = 0;
+__attribute__((section(".dtcm"), aligned(32)))  static float32_t fftOut[BUFFER_SIZE*2];
 
 
-uint8_t aTxBuffer[I2C_BUFFER_SIZE];
+#define LPF_TAP_NUM 50
 
+static float lowPassCoeffs[LPF_TAP_NUM] = {
+    0.000632988f, -0.000691077f, -0.001242749f,  0.000219650f,  0.002143668f,
+    0.001070811f, -0.002861713f, -0.003655169f,  0.002227020f,  0.007206402f,
+    0.001172740f, -0.010168003f, -0.008145778f,  0.009847210f,  0.017998176f,
+   -0.003057690f, -0.027959846f, -0.013050047f,  0.033007860f,  0.040892866f,
+   -0.025063252f, -0.086094608f, -0.016236160f,  0.194468185f,  0.387338516f,
+    0.387338516f,  0.194468185f, -0.016236160f, -0.086094608f, -0.025063252f,
+    0.040892866f,  0.033007860f, -0.013050047f, -0.027959846f, -0.003057690f,
+    0.017998176f,  0.009847210f, -0.008145778f, -0.010168003f,  0.001172740f,
+    0.007206402f,  0.002227020f, -0.003655169f, -0.002861713f,  0.001070811f,
+    0.002143668f,  0.000219650f, -0.001242749f, -0.000691077f,  0.000632988f
+};
 
-uint8_t aRxBuffer[I2C_BUFFER_SIZE];
-*/
+// State buffer length = numTaps + blockSize - 1
+static float32_t lowPassState[LPF_TAP_NUM + BUFFER_SIZE - 1];
+arm_fir_instance_f32 lowPass;
 
 /* USER CODE END PV */
 
@@ -112,7 +109,7 @@ static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_DAC1_Init(void);
-static void MX_FMC_Init(void);
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -120,19 +117,25 @@ static void MX_FMC_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
-{
-	apipe.adcComplete(&apipe, adcInput);
-
-}
-
 void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
 {
-	apipe.adcHalfComplete(&apipe, adcInput);
-
+    // DMA has written into adcInput[0…BUFFER_SIZE-1]
+    SCB_InvalidateDCache_by_Addr((uint32_t*)adcInput,
+                                 BUFFER_SIZE * sizeof(adcInput[0]));
+    apipe.adcHalfComplete(&apipe, adcInput);
 }
 
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
+{
+    // DMA has written into adcInput[BUFFER_SIZE…2*BUFFER_SIZE-1]
+    SCB_InvalidateDCache_by_Addr((uint32_t*)&adcInput[BUFFER_SIZE],
+                                 BUFFER_SIZE * sizeof(adcInput[0]));
+    apipe.adcComplete(&apipe, adcInput);
+}
 
+#include "fastConvolution.h"
+
+uint32_t cycles;
 
 /* USER CODE END 0 */
 
@@ -169,20 +172,24 @@ int main(void)
 
   /* USER CODE END SysInit */
 
+
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
   MX_TIM8_Init();
   MX_DAC1_Init();
-  MX_FMC_Init();
+
+  SCB_EnableDCache();
+  SCB_EnableICache();
+
+  // enable DWT cycle counter
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;  // turn on trace
+  DWT->CYCCNT  = 0;                                // clear counter
+  DWT->CTRL   |= DWT_CTRL_CYCCNTENA_Msk;          // start counter
+
   /* USER CODE BEGIN 2 */
-  //HAL_SDRAM_MspInit(&hsdram1);
-
-  SDRAM_InitSequence();
-
-
-  arm_rfft_fast_init_f32(&fft, BUFFER_SIZE);
+  arm_rfft_fast_init_f32(&fft, FFT_SIZE);
 
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
 
@@ -192,24 +199,28 @@ int main(void)
 
   HAL_TIM_Base_Start(&htim8);
 
-  //HAL_I2C_Slave_Receive_DMA(&hi2c2, (uint8_t*)aRxBuffer, I2C_BUFFER_SIZE);
+  // Initialize the CMSIS DSP FIR instance
+  arm_fir_init_f32(
+      &lowPass,            // pointer to instance
+      LPF_TAP_NUM,         // number of filter coefficients
+      lowPassCoeffs,       // coefficient array
+      lowPassState,        // state buffer
+      BUFFER_SIZE          // number of samples per processing block
+  );
 
-  //HAL_I2C_Init(&hi2c2);
+  for(int i = 0 ; i < FFT_SIZE ; i++){
+
+	  zeropaddedinput[i] = 0;
+
+  }
+
+  Saved_Vals_wr_index = 0;
+  Saved_Vals_rd_index = 1;
 
   pipeInit(&apipe);
 
-  effectInit(&myEffect, 2.0f);
+  //effectInit(&myEffect, 2.0f);
 
-  chorusInit(&myChorus, delay, wetness, depth, 0.05f, BUFFER_SIZE, 48000);
-
-  lowPassFilterInit(&lpFilter, 4000.0f, 48000);
-
-
-  /*for(int32_t i=0;i<100;i++)
-  	{
-  		*(uint8_t *)(SDRAM_ADDRESS+i)=i+100;
-  	}*/
-  //reverbInit(&myReverb, 0.6f, lexiconIR, irLength);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -219,52 +230,47 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //test++;
+
+
 	  if (apipe.bufferReady)
 	  {
-		  test2++;
-		  if(test2 >= 125)
-		  {
-			  test2 = 0;
-			  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-		  }
-		  apipe.updateDelayBuffer(&apipe);
-		  apipe.loadProcess(&apipe);
+		 apipe.updateDelayBuffer(&apipe);
+		 apipe.loadProcess(&apipe);
 
-		  //effectApply(&myEffect, &apipe);
-		  myChorus.wetness = wetness;
-		  myChorus.depth = depth;
-		  myChorus.baseDelay = delay;
+		 // GPIO high for profiling
+		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 1);
 
-		  //lowPassFilterProcess(&lpFilter, apipe.processBuffer, apipe.processBuffer, BUFFER_SIZE);
+		 //DWT->CYCCNT = 0;
 
-		  if(doChorus)
-		  {
-			  chorusApply(&myChorus, &apipe);
-			  //reverbApply(&myReverb, &apipe);
-		  }
+		 ova_convolve(&apipe, &fir_emt_140_dark_3 );
 
-		  arm_scale_f32(apipe.processBuffer, volume, apipe.processBuffer, BUFFER_SIZE);
+		 // cycles = DWT->CYCCNT;
 
-		  lowPassFilterProcess(&lpFilter, apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
 
-		  arm_copy_f32(apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
+		 // GPIO low
+		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 0);
 
-		  //arm_copy_f32(apipe.getDelayFrame(&apipe,3), apipe.outBuffer, BUFFER_SIZE);
+		 arm_copy_f32(apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
 
-		  apipe.updateDACOutput(&apipe, dacOutput);
+		 apipe.updateDACOutput(&apipe, dacOutput);
 
-		  apipe.bufferReady = false;
+		    SCB_CleanDCache_by_Addr((uint32_t*)dacOutput,
+		                            BUFFER_SIZE*2 * sizeof(dacOutput[0]));
+
+		 apipe.bufferReady = false;
 	  }
 	  else
 	  {
-		  __WFI();
+	      __WFI();
+	  }
+
+
 	  }
 
 
   }
   /* USER CODE END 3 */
-}
+
 
 /**
   * @brief System Clock Configuration
@@ -502,6 +508,7 @@ static void MX_TIM8_Init(void)
 
 }
 
+
 /**
   * Enable DMA controller clock
   */
@@ -519,53 +526,7 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
 
-}
 
-/* FMC initialization function */
-static void MX_FMC_Init(void)
-{
-
-  /* USER CODE BEGIN FMC_Init 0 */
-
-  /* USER CODE END FMC_Init 0 */
-
-  FMC_SDRAM_TimingTypeDef SdramTiming = {0};
-
-  /* USER CODE BEGIN FMC_Init 1 */
-
-  /* USER CODE END FMC_Init 1 */
-
-  /** Perform the SDRAM1 memory initialization sequence
-  */
-  hsdram1.Instance = FMC_SDRAM_DEVICE;
-  /* hsdram1.Init */
-  hsdram1.Init.SDBank = FMC_SDRAM_BANK1;
-  hsdram1.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_9;
-  hsdram1.Init.RowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_13;
-  hsdram1.Init.MemoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
-  hsdram1.Init.InternalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
-  hsdram1.Init.CASLatency = FMC_SDRAM_CAS_LATENCY_3;
-  hsdram1.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
-  hsdram1.Init.SDClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
-  hsdram1.Init.ReadBurst = FMC_SDRAM_RBURST_ENABLE;
-  hsdram1.Init.ReadPipeDelay = FMC_SDRAM_RPIPE_DELAY_1;
-  /* SdramTiming */
-  SdramTiming.LoadToActiveDelay = 2;
-  SdramTiming.ExitSelfRefreshDelay = 7;
-  SdramTiming.SelfRefreshTime = 4;
-  SdramTiming.RowCycleDelay = 7;
-  SdramTiming.WriteRecoveryTime = 3;
-  SdramTiming.RPDelay = 2;
-  SdramTiming.RCDDelay = 2;
-
-  if (HAL_SDRAM_Init(&hsdram1, &SdramTiming) != HAL_OK)
-  {
-    Error_Handler( );
-  }
-
-  /* USER CODE BEGIN FMC_Init 2 */
-
-  /* USER CODE END FMC_Init 2 */
 }
 
 /**
@@ -575,31 +536,29 @@ static void MX_FMC_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  /* USER CODE BEGIN MX_GPIO_Init_1 */
-  /* USER CODE END MX_GPIO_Init_1 */
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+  /* Enable the clock for the GPIO port */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
-  /*Configure GPIO pin : LED_Pin */
-  GPIO_InitStruct.Pin = LED_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  /* Configure PB0 as pushpull output, no pullups, low speed */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  GPIO_InitStruct.Pin   = GPIO_PIN_3;
+  GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull  = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
-  /* USER CODE END MX_GPIO_Init_2 */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);   // set high
+
+  /* Now you can drive the pin */
+
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */

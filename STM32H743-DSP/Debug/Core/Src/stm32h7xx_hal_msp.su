@@ -5,5 +5,3 @@
 ../Core/Src/stm32h7xx_hal_msp.c:244:6:HAL_DAC_MspDeInit	8	static
 ../Core/Src/stm32h7xx_hal_msp.c:277:6:HAL_TIM_Base_MspInit	8	static
 ../Core/Src/stm32h7xx_hal_msp.c:300:6:HAL_TIM_Base_MspDeInit	0	static
-../Core/Src/stm32h7xx_hal_msp.c:438:6:HAL_SDRAM_MspInit	240	static
-../Core/Src/stm32h7xx_hal_msp.c:527:6:HAL_SDRAM_MspDeInit	8	static

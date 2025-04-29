@@ -4,4 +4,4 @@
 ../Core/Src/pipe.c:56:13:pipe_updateDACOutput	0	static
 ../Core/Src/pipe.c:67:13:pipe_loadProcess	0	static
 ../Core/Src/pipe.c:36:13:pipe_updateDelayBuffer	8	static
-../Core/Src/pipe.c:72:6:pipeInit	16	static
+../Core/Src/pipe.c:72:6:pipeInit	12	static

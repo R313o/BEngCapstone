@@ -25,3 +25,4 @@ void effectApply(effect *self, pipe *p) {
         self->process(self, p);
     }
 }
+
