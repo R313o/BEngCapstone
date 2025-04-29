@@ -5,5 +5,4 @@
 
 extern arm_rfft_fast_instance_f32 fft;
 
-void ova_convolve(pipe *pipe, fir_t *fir);
-
+void ova_convolve(pipe *p, fir_t *fir);

@@ -22,25 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-//#include "effect.h"
-#include <stdint.h>
-
-#define __FPU_PRESENT  1U
-#define ARM_MATH_CM7
-
-
-#include "arm_math.h"
 #include "pipe.h"
-
-
-#define FFT_SIZE 2048 // zero-padding
-#include "emt_140_dark_3.h"
-
-// Overlap-add buffer
-
-uint16_t Saved_Vals_wr_index, Saved_Vals_rd_index;
-
-
 
 /* USER CODE END Includes */
 
@@ -71,32 +53,11 @@ TIM_HandleTypeDef htim8;
 /* USER CODE BEGIN PV */
 
 pipe apipe;
-//effect myEffect;
 
 arm_rfft_fast_instance_f32 fft;
 static 	 uint16_t  adcInput[BUFFER_SIZE*2];
 static	 uint16_t  dacOutput[BUFFER_SIZE*2];
-__attribute__((section(".dtcm"), aligned(32)))  static float32_t fftOut[BUFFER_SIZE*2];
 
-
-#define LPF_TAP_NUM 50
-
-static float lowPassCoeffs[LPF_TAP_NUM] = {
-    0.000632988f, -0.000691077f, -0.001242749f,  0.000219650f,  0.002143668f,
-    0.001070811f, -0.002861713f, -0.003655169f,  0.002227020f,  0.007206402f,
-    0.001172740f, -0.010168003f, -0.008145778f,  0.009847210f,  0.017998176f,
-   -0.003057690f, -0.027959846f, -0.013050047f,  0.033007860f,  0.040892866f,
-   -0.025063252f, -0.086094608f, -0.016236160f,  0.194468185f,  0.387338516f,
-    0.387338516f,  0.194468185f, -0.016236160f, -0.086094608f, -0.025063252f,
-    0.040892866f,  0.033007860f, -0.013050047f, -0.027959846f, -0.003057690f,
-    0.017998176f,  0.009847210f, -0.008145778f, -0.010168003f,  0.001172740f,
-    0.007206402f,  0.002227020f, -0.003655169f, -0.002861713f,  0.001070811f,
-    0.002143668f,  0.000219650f, -0.001242749f, -0.000691077f,  0.000632988f
-};
-
-// State buffer length = numTaps + blockSize - 1
-static float32_t lowPassState[LPF_TAP_NUM + BUFFER_SIZE - 1];
-arm_fir_instance_f32 lowPass;
 
 /* USER CODE END PV */
 
@@ -133,7 +94,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     apipe.adcComplete(&apipe, adcInput);
 }
 
-#include "fastConvolution.h"
+#include "supro_simulation.h"
 
 uint32_t cycles;
 
@@ -199,27 +160,8 @@ int main(void)
 
   HAL_TIM_Base_Start(&htim8);
 
-  // Initialize the CMSIS DSP FIR instance
-  arm_fir_init_f32(
-      &lowPass,            // pointer to instance
-      LPF_TAP_NUM,         // number of filter coefficients
-      lowPassCoeffs,       // coefficient array
-      lowPassState,        // state buffer
-      BUFFER_SIZE          // number of samples per processing block
-  );
-
-  for(int i = 0 ; i < FFT_SIZE ; i++){
-
-	  zeropaddedinput[i] = 0;
-
-  }
-
-  Saved_Vals_wr_index = 0;
-  Saved_Vals_rd_index = 1;
-
   pipeInit(&apipe);
 
-  //effectInit(&myEffect, 2.0f);
 
   /* USER CODE END 2 */
 
@@ -240,12 +182,11 @@ int main(void)
 		 // GPIO high for profiling
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 1);
 
-		 //DWT->CYCCNT = 0;
+		 DWT->CYCCNT = 0;
 
-		 ova_convolve(&apipe, &fir_emt_140_dark_3 );
+		 supro_sim.process(&apipe);
 
-		 // cycles = DWT->CYCCNT;
-
+		 cycles = DWT->CYCCNT;
 
 		 // GPIO low
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 0);

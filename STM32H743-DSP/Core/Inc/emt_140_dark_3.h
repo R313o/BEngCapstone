@@ -1,10 +1,4 @@
-typedef struct {
-    const float* ir_ffts[46];
-    float*       prev_ffts[46];
-    int32_t      curr_fftidx;
-    int32_t      prev_fftidx;
-    int32_t      numSegments;
-} fir_t;
+#include "fir_struct.h"
 
 __attribute__((aligned(32)))
 const float IR_FFT_ALL[94208] = {

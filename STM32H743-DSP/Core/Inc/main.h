@@ -31,6 +31,15 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#define FFT_SIZE 2048
+
+#include <stdint.h>
+#include <stdbool.h>
+
+#define __FPU_PRESENT  1U
+#define ARM_MATH_CM7
+
+#include "arm_math.h"
 
 /* USER CODE END Includes */
 
