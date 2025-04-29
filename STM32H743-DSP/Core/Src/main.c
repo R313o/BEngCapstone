@@ -34,7 +34,6 @@
 
 
 #define FFT_SIZE 2048 // zero-padding
-#include "emt_140_dark_3.h"
 
 // Overlap-add buffer
 
@@ -76,7 +75,7 @@ pipe apipe;
 arm_rfft_fast_instance_f32 fft;
 static 	 uint16_t  adcInput[BUFFER_SIZE*2];
 static	 uint16_t  dacOutput[BUFFER_SIZE*2];
-__attribute__((section(".dtcm"), aligned(32)))  static float32_t fftOut[BUFFER_SIZE*2];
+__attribute__((section(".dtcm"), aligned(32)))  float32_t fftOut[BUFFER_SIZE*2];
 
 
 #define LPF_TAP_NUM 50
@@ -133,7 +132,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     apipe.adcComplete(&apipe, adcInput);
 }
 
-#include "fastConvolution.h"
+
+#include "supro_simulation.h"
 
 uint32_t cycles;
 
@@ -208,11 +208,6 @@ int main(void)
       BUFFER_SIZE          // number of samples per processing block
   );
 
-  for(int i = 0 ; i < FFT_SIZE ; i++){
-
-	  zeropaddedinput[i] = 0;
-
-  }
 
   Saved_Vals_wr_index = 0;
   Saved_Vals_rd_index = 1;
@@ -242,7 +237,8 @@ int main(void)
 
 		 //DWT->CYCCNT = 0;
 
-		 ova_convolve(&apipe, &fir_emt_140_dark_3 );
+		 //ova_convolve(&apipe, &fir_emt_140_dark_3 );
+		 supro_sim.process(&apipe);
 
 		 // cycles = DWT->CYCCNT;
 
