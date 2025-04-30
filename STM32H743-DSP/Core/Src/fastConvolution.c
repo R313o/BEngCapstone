@@ -1,29 +1,30 @@
-#pragma GCC optimize ("Ofast,unroll-loops,fast-math")
+#include "fastConvolution.h"
 
-#include "arm_math.h"
-#include "pipe.h"
 
-#ifndef FFT_SIZE
+//__attribute__((section(".dtcm"), aligned(32))) float zeropaddedinput[FFT_SIZE];
+//__attribute__((section(".dtcm"), aligned(32))) float overlap[BUFFER_SIZE];
 
-	#define FFT_SIZE    1024
+//float fftOut[FFT_SIZE];
 
-#endif
 
-#ifndef BUFFER_SIZE
+/*
+__attribute__((section(".dtcm"), aligned(32))) float fftout[FFT_SIZE];
+__attribute__((section(".dtcm"), aligned(32))) float state[BUFFER_SIZE];
 
-#define BUFFER_SIZE (FFT_SIZE/2)
+float fftOut[FFT_SIZE];
+*/
 
-#endif
 
-__attribute__((section(".dtcm"), aligned(32))) float zeropaddedinput[FFT_SIZE];
-__attribute__((section(".dtcm"), aligned(32))) float overlap[BUFFER_SIZE];
-
-extern arm_rfft_fast_instance_f32 fft;
-extern float fftOut[FFT_SIZE];
-
-<<<<<<< Updated upstream
-void ova_convolve(pipe *pipe, fir_t *fir)
+void ova_convolve(pipe *pipe, fir_t *fir, float* state, float* fftOut, float* zeropad )
 {
+
+	//float *zeropaddedinput = fir->zeropad;
+	//float *overlap         = fir->state;
+	//float *fftOut          = fir->fftOut;
+
+	float *zeropaddedinput = zeropad;
+	float *overlap         = state;
+	//float *fftOut          = fftout;
 
     // prepare input
     arm_copy_f32(pipe->processBuffer, zeropaddedinput, BUFFER_SIZE);
@@ -197,8 +198,3 @@ void ova_convolve(pipe *pipe, fir_t *fir)
     }
 
 }
-=======
-//void ova_convolve(pipe *pipe, fir_t *fir);
-
-void ova_convolve(pipe *pipe, fir_t *fir, float* state, float* fftOut, float* zeropad );
->>>>>>> Stashed changes

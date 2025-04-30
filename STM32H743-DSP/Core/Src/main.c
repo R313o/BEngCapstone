@@ -237,8 +237,12 @@ int main(void)
 
 		 //DWT->CYCCNT = 0;
 
+<<<<<<< Updated upstream
 		 //ova_convolve(&apipe, &fir_emt_140_dark_3 );
 		 supro_sim.process(&apipe);
+=======
+		 //supro_sim.process(&apipe);
+>>>>>>> Stashed changes
 
 		 // cycles = DWT->CYCCNT;
 
@@ -262,8 +266,6 @@ int main(void)
 
 
 	  }
-
-
   }
   /* USER CODE END 3 */
 

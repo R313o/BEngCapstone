@@ -12,12 +12,14 @@
 
 
 typedef struct {
-    const float* ir_ffts[46];
-    float*       prev_ffts[46];
-    int32_t      curr_fftidx;
-    int32_t      prev_fftidx;
-    int32_t      numSegments;
+    const float** ir_ffts;
+    float**       prev_ffts;
+    int32_t       curr_fftidx;
+    int32_t       prev_fftidx;
+    int32_t       numSegments;
 } fir_t;
+
+
 
 
 #endif /* INC_FIR_STRUCT_H_ */
