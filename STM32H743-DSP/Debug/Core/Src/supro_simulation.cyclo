@@ -1,6 +1,1 @@
-<<<<<<< Updated upstream
-../Core/Inc/fastConvolution.h:24:6:ova_convolve	5
-../Core/Src/supro_simulation.c:12:6:supro_process	1
-=======
 ../Core/Src/supro_simulation.c:32:6:supro_process	1
->>>>>>> Stashed changes

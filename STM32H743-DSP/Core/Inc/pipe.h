@@ -4,6 +4,8 @@
  *  Created on: Feb 19, 2025
  *      Author: spencer
  */
+#include "main.h"
+
 #ifndef BUFFER_SIZE
   #define BUFFER_SIZE 1024
 #endif
@@ -20,17 +22,8 @@
 #define DAC_VOLTS2BITS 1241.2121212121212121212121212121f
 #endif
 
-
 #ifndef SRC_PIPE_H_
 #define SRC_PIPE_H_
-
-#include <stdint.h>
-#include <stdbool.h>
-
-#define __FPU_PRESENT  1U
-#define ARM_MATH_CM7
-#include "arm_math.h"
-
 
 typedef struct pipe pipe;
 

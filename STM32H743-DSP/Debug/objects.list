@@ -1,13 +1,10 @@
 "./Core/Src/chorus.o"
 "./Core/Src/effect.o"
-<<<<<<< Updated upstream
-=======
 "./Core/Src/emt_140_dark_3.o"
 "./Core/Src/fastConvolution.o"
 "./Core/Src/h1_gaincorrected.o"
 "./Core/Src/h2_gaincorrected.o"
 "./Core/Src/h3_gaincorrected.o"
->>>>>>> Stashed changes
 "./Core/Src/main.o"
 "./Core/Src/pipe.o"
 "./Core/Src/stm32h7xx_hal_msp.o"

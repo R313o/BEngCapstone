@@ -75,7 +75,6 @@ pipe apipe;
 arm_rfft_fast_instance_f32 fft;
 static 	 uint16_t  adcInput[BUFFER_SIZE*2];
 static	 uint16_t  dacOutput[BUFFER_SIZE*2];
-__attribute__((section(".dtcm"), aligned(32)))  float32_t fftOut[BUFFER_SIZE*2];
 
 
 #define LPF_TAP_NUM 50
@@ -237,12 +236,12 @@ int main(void)
 
 		 //DWT->CYCCNT = 0;
 
-<<<<<<< Updated upstream
+
 		 //ova_convolve(&apipe, &fir_emt_140_dark_3 );
 		 supro_sim.process(&apipe);
-=======
+
 		 //supro_sim.process(&apipe);
->>>>>>> Stashed changes
+
 
 		 // cycles = DWT->CYCCNT;
 

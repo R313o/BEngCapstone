@@ -7,14 +7,11 @@
 C_SRCS += \
 ../Core/Src/chorus.c \
 ../Core/Src/effect.c \
-<<<<<<< Updated upstream
-=======
 ../Core/Src/emt_140_dark_3.c \
 ../Core/Src/fastConvolution.c \
 ../Core/Src/h1_gaincorrected.c \
 ../Core/Src/h2_gaincorrected.c \
 ../Core/Src/h3_gaincorrected.c \
->>>>>>> Stashed changes
 ../Core/Src/main.c \
 ../Core/Src/pipe.c \
 ../Core/Src/stm32h7xx_hal_msp.c \
@@ -27,14 +24,11 @@ C_SRCS += \
 OBJS += \
 ./Core/Src/chorus.o \
 ./Core/Src/effect.o \
-<<<<<<< Updated upstream
-=======
 ./Core/Src/emt_140_dark_3.o \
 ./Core/Src/fastConvolution.o \
 ./Core/Src/h1_gaincorrected.o \
 ./Core/Src/h2_gaincorrected.o \
 ./Core/Src/h3_gaincorrected.o \
->>>>>>> Stashed changes
 ./Core/Src/main.o \
 ./Core/Src/pipe.o \
 ./Core/Src/stm32h7xx_hal_msp.o \
@@ -47,14 +41,11 @@ OBJS += \
 C_DEPS += \
 ./Core/Src/chorus.d \
 ./Core/Src/effect.d \
-<<<<<<< Updated upstream
-=======
 ./Core/Src/emt_140_dark_3.d \
 ./Core/Src/fastConvolution.d \
 ./Core/Src/h1_gaincorrected.d \
 ./Core/Src/h2_gaincorrected.d \
 ./Core/Src/h3_gaincorrected.d \
->>>>>>> Stashed changes
 ./Core/Src/main.d \
 ./Core/Src/pipe.d \
 ./Core/Src/stm32h7xx_hal_msp.d \
@@ -72,11 +63,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-<<<<<<< Updated upstream
-	-$(RM) ./Core/Src/chorus.cyclo ./Core/Src/chorus.d ./Core/Src/chorus.o ./Core/Src/chorus.su ./Core/Src/effect.cyclo ./Core/Src/effect.d ./Core/Src/effect.o ./Core/Src/effect.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/pipe.cyclo ./Core/Src/pipe.d ./Core/Src/pipe.o ./Core/Src/pipe.su ./Core/Src/stm32h7xx_hal_msp.cyclo ./Core/Src/stm32h7xx_hal_msp.d ./Core/Src/stm32h7xx_hal_msp.o ./Core/Src/stm32h7xx_hal_msp.su ./Core/Src/stm32h7xx_it.cyclo ./Core/Src/stm32h7xx_it.d ./Core/Src/stm32h7xx_it.o ./Core/Src/stm32h7xx_it.su ./Core/Src/supro_simulation.cyclo ./Core/Src/supro_simulation.d ./Core/Src/supro_simulation.o ./Core/Src/supro_simulation.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32h7xx.cyclo ./Core/Src/system_stm32h7xx.d ./Core/Src/system_stm32h7xx.o ./Core/Src/system_stm32h7xx.su
-=======
 	-$(RM) ./Core/Src/chorus.cyclo ./Core/Src/chorus.d ./Core/Src/chorus.o ./Core/Src/chorus.su ./Core/Src/effect.cyclo ./Core/Src/effect.d ./Core/Src/effect.o ./Core/Src/effect.su ./Core/Src/emt_140_dark_3.cyclo ./Core/Src/emt_140_dark_3.d ./Core/Src/emt_140_dark_3.o ./Core/Src/emt_140_dark_3.su ./Core/Src/fastConvolution.cyclo ./Core/Src/fastConvolution.d ./Core/Src/fastConvolution.o ./Core/Src/fastConvolution.su ./Core/Src/h1_gaincorrected.cyclo ./Core/Src/h1_gaincorrected.d ./Core/Src/h1_gaincorrected.o ./Core/Src/h1_gaincorrected.su ./Core/Src/h2_gaincorrected.cyclo ./Core/Src/h2_gaincorrected.d ./Core/Src/h2_gaincorrected.o ./Core/Src/h2_gaincorrected.su ./Core/Src/h3_gaincorrected.cyclo ./Core/Src/h3_gaincorrected.d ./Core/Src/h3_gaincorrected.o ./Core/Src/h3_gaincorrected.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/pipe.cyclo ./Core/Src/pipe.d ./Core/Src/pipe.o ./Core/Src/pipe.su ./Core/Src/stm32h7xx_hal_msp.cyclo ./Core/Src/stm32h7xx_hal_msp.d ./Core/Src/stm32h7xx_hal_msp.o ./Core/Src/stm32h7xx_hal_msp.su ./Core/Src/stm32h7xx_it.cyclo ./Core/Src/stm32h7xx_it.d ./Core/Src/stm32h7xx_it.o ./Core/Src/stm32h7xx_it.su ./Core/Src/supro_simulation.cyclo ./Core/Src/supro_simulation.d ./Core/Src/supro_simulation.o ./Core/Src/supro_simulation.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32h7xx.cyclo ./Core/Src/system_stm32h7xx.d ./Core/Src/system_stm32h7xx.o ./Core/Src/system_stm32h7xx.su
->>>>>>> Stashed changes
 
 .PHONY: clean-Core-2f-Src
 
