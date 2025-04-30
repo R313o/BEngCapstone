@@ -1,8 +1,4 @@
 #include "supro_simulation.h"
-#include "emt_140_dark_3.h"      // defines fir_emt_140_dark_3
-#include "fastConvolution.h"     // defines ova_convolve
-#include "h1_gaincorrected.h"
-#include "h2_gaincorrected.h"
 
 
 supro_simulation_f32 supro_sim = {
@@ -36,9 +32,9 @@ void supro_process(pipe *p)
 	//ova_convolve(p, supro_sim.fir1);
 	//ova_convolve(p, supro_sim.fir2);
 
-	ova_convolve(p, supro_sim.fir2, state2, fftOut2, zeropad2);
+	partitioned_fir_convolution_fft(p, supro_sim.fir2, state2, fftOut2, zeropad2);
 
-	ova_convolve(p, supro_sim.fir1, state, fftOut, zeropad);
+	partitioned_fir_convolution_fft(p, supro_sim.fir1, state, fftOut, zeropad);
 
 	//ova_convolve(p, supro_sim.fir3, state3, fftOut3, zeropad3);
 

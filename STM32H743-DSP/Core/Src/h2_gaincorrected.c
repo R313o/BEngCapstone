@@ -1,4 +1,4 @@
-#include "h2_gaincorrected.h"
+#include "impulse_responses.h"
 
 __attribute__((aligned(32)))
 const float _H2_IR_FFT_ALL[2048] = {

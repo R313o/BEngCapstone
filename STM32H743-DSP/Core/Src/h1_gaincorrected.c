@@ -1,4 +1,28 @@
-#include "h1_gaincorrected.h"
+/**
+  ******************************************************************************
+  * @file    impulse_responses.c
+  * @brief   Definitions of FFT-domain impulse response arrays and associated
+  *          overlap buffers for the fast-convolution engine.
+  *
+  * This source file provides the actual definitions (with data) for:
+  *   - FFT-domain impulse response arrays (_H1_IR_FFT_ALL, etc.)
+  *   - 32-byte aligned overlap buffers (prev_ffts_…_)
+  *   - fir_t instances configured for partitioned convolution
+  *
+  * Each array is aligned to 32 bytes to support DMA transfers and
+  * SIMD-optimized FFT routines on the STM32H7’s DTCM memory.
+  *
+  * Include the corresponding header (impulse_responses.h) where you need
+  * only the extern declarations.
+  *
+  * @author
+  *   Hassan Islam
+  * @date
+  *   April 2025
+  ******************************************************************************
+  */
+
+#include "impulse_responses.h"
 
 __attribute__((aligned(32)))
 const float _H1_IR_FFT_ALL[2048] = {
