@@ -161,6 +161,8 @@ int main(void)
 
   pipeInit(&apipe);
 
+  //supro_init_f32();
+
   //effectInit(&myEffect, 2.0f);
 
   /* USER CODE END 2 */
@@ -186,7 +188,7 @@ int main(void)
 
 
 		 //ova_convolve(&apipe, &fir_emt_140_dark_3 );
-		 supro_sim.process(&apipe);
+		 //supro_sim.process(&apipe);
 
 		 //supro_sim.process(&apipe);
 

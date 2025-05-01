@@ -50,6 +50,11 @@ extern supro_simulation_f32 supro_sim;
 void supro_process(pipe *p);
 
 
+void supro_preamp_f32();
+void sugar_power_amp_f32();
+
+extern void supro_init_f32();
+
 /*********************************************************************/
 /* FIR buffers: zero-pad input, overlap buffer, FFT output (float32) */
 /*********************************************************************/
@@ -68,5 +73,8 @@ extern float fftOut2[FFT_SIZE];
 extern __attribute__((section(".dtcm"), aligned(32))) float zeropad3[FFT_SIZE];
 extern __attribute__((section(".dtcm"), aligned(32))) float state3[BUFFER_SIZE];
 extern float fftOut3[FFT_SIZE];
+
+
+
 
 #endif /* INC_SUPRO_SIMULATION_H_ */

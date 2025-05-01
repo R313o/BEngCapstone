@@ -1,1 +1,3 @@
-../Core/Src/supro_simulation.c:28:6:supro_process	24	static
+../Core/Src/supro_simulation.c:103:6:supro_init_f32	16	static
+../Core/Src/supro_simulation.c:137:6:supro_preamp_f32	24600	static
+../Core/Src/supro_simulation.c:111:6:supro_process	0	static
