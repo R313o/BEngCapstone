@@ -69,7 +69,7 @@ static void pipe_updateDACOutput(pipe *self, volatile uint16_t *dacBuffer)
 
     uint8_t half = (self->ppState == 0) ? 1 : 0;
     //add dc offset
-    arm_offset_f32(self->inBuffer2, 1.65f, self->inBuffer2, BUFFER_SIZE);
+    arm_offset_f32(self->outBuffer, 1.65f, self->outBuffer, BUFFER_SIZE);
     //convert from voltage range to quantized dac value
     arm_scale_f32(self->outBuffer, DAC_VOLTS2BITS, self->outBuffer, BUFFER_SIZE);
     //load dac dma buffer from output buffer

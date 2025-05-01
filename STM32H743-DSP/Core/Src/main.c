@@ -184,7 +184,7 @@ int main(void)
 
 		 DWT->CYCCNT = 0;
 
-		 supro_sim.process(&apipe);
+		 //supro_sim.process(&apipe);
 
 		 cycles = DWT->CYCCNT;
 
