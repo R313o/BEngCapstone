@@ -59,9 +59,11 @@ static const float supro_parameters[SUPRO_TAYLOR_COEFF_COUNT] = {
 #define NUM_TAPS              512
 #define BLOCK_SIZE 			  BUFFER_SIZE
 
-arm_fir_instance_f32 fir_5Hz_lowpass;
+arm_fir_instance_f32 preamp_fir_5Hz_lowpass;
+arm_fir_instance_f32 poweramp_fir_5Hz_lowpass;
 
-static float32_t firStateF32[BLOCK_SIZE + NUM_TAPS - 1];
+static float32_t preamp_firState_f32[BLOCK_SIZE + NUM_TAPS - 1];
+static float32_t poweramp_firState_f32[BLOCK_SIZE + NUM_TAPS - 1];
 
 static const float firCoeffs32[NUM_TAPS] = {
      0.00001659f,  0.00001660f,  0.00001662f,  0.00001666f,  0.00001671f,  0.00001678f,  0.00001686f,  0.00001696f,  0.00001708f,  0.00001721f,
@@ -100,19 +102,24 @@ static const float firCoeffs32[NUM_TAPS] = {
 
 
 
-void supro_init_f32(){
+void supro_init_f32()
+{
 
-	arm_fir_init_f32(&fir_5Hz_lowpass, NUM_TAPS, (float32_t *)&firCoeffs32[0], &firStateF32[0], (uint32_t)BLOCK_SIZE);
+	arm_fir_init_f32(&preamp_fir_5Hz_lowpass, NUM_TAPS, (float32_t *)&firCoeffs32[0], &preamp_firState_f32[0], (uint32_t)BLOCK_SIZE);
+	arm_fir_init_f32(&poweramp_fir_5Hz_lowpass, NUM_TAPS, (float32_t *)&firCoeffs32[0], &poweramp_firState_f32[0], (uint32_t)BLOCK_SIZE);
 
 }
 
 
 /* --- implementation --- */
+
 void supro_process(pipe *p)
 {
+
+	arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BUFFER_SIZE);
     /* 1) First FIR filter */
     // ...
-	//partitioned_fir_convolution_fft(p, supro_sim.fir1, state, fftOut, zeropad);
+	partitioned_fir_convolution_fft(p, supro_sim.fir1, state, fftOut, zeropad);
 
 
     /* Preamp shaper */
@@ -120,23 +127,22 @@ void supro_process(pipe *p)
 
 
     /* Second FIR filter */
-	//partitioned_fir_convolution_fft(p, supro_sim.fir2, state2, fftOut2, zeropad2);
+	partitioned_fir_convolution_fft(p, supro_sim.fir2, state2, fftOut2, zeropad2);
 
 	/* Poweramp shaper */
 
 
 	/* Third FIR filter */
-	//partitioned_fir_convolution_fft(p, supro_sim.fir3, state3, fftOut3, zeropad3);
+	partitioned_fir_convolution_fft(p, supro_sim.fir3, state3, fftOut3, zeropad3);
 
 
-	//arm_scale_f32(p->processBuffer, 0.5, p->processBuffer, BUFFER_SIZE);
+	arm_scale_f32(p->processBuffer, 0.00002, p->processBuffer, BUFFER_SIZE);
 
 }
 
-
 void supro_preamp_f32(pipe *p)
 {
-	arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BLOCK_SIZE); // temporary scaling until SPENCER corrects pipe scaling
+	//arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BLOCK_SIZE); // temporary scaling until SPENCER corrects pipe scaling
 
     float32_t temp[BLOCK_SIZE], envelope[BLOCK_SIZE], xpre[BLOCK_SIZE];
     float32_t xmapped[BLOCK_SIZE], yMap[BLOCK_SIZE], yDry[BLOCK_SIZE];
@@ -149,7 +155,7 @@ void supro_preamp_f32(pipe *p)
 
     /* 1) envelope = sqrt( 2 * LP( x^2 ) ) */
     arm_mult_f32(p->processBuffer, p->processBuffer, temp, BLOCK_SIZE);
-    arm_fir_f32(&fir_5Hz_lowpass, temp, envelope, BLOCK_SIZE);
+    arm_fir_f32(&preamp_fir_5Hz_lowpass, temp, envelope, BLOCK_SIZE);
     arm_scale_f32(envelope, 2.0f, temp, BLOCK_SIZE);
 
     for(uint32_t i = 0; i < (uint32_t)BLOCK_SIZE; i++){
@@ -179,5 +185,67 @@ void supro_preamp_f32(pipe *p)
 
     /* 6) post-gain */
     arm_scale_f32(temp, *gPost, p->processBuffer, BLOCK_SIZE);
+}
+
+
+void supro_poweramp_f32(pipe *p)
+{
+	//arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BLOCK_SIZE); // temporary scaling until SPENCER corrects pipe scaling
+
+    float32_t temp[BLOCK_SIZE], envelope[BLOCK_SIZE];
+
+    /* 1) envelope = sqrt( 2 * LP( x^2 ) ) */
+    arm_mult_f32(p->processBuffer, p->processBuffer, temp, BLOCK_SIZE);
+    arm_fir_f32(&poweramp_fir_5Hz_lowpass, temp, envelope, BLOCK_SIZE);
+    arm_scale_f32(envelope, 2.0f, temp, BLOCK_SIZE);
+
+    for(uint32_t i = 0; i < (uint32_t)BLOCK_SIZE; i++){
+        float32_t v = temp[i];
+        envelope[i] = sqrtf(v > 0.0f ? v : 0.0f);
+    }
+
+	const float32_t *gPre   = &supro_parameters[SUPRO_P_G_PRE_IDX];
+	const float32_t *gPost  = &supro_parameters[SUPRO_P_G_POST_IDX];
+	const float32_t *gWet   = &supro_parameters[SUPRO_P_BLEND_IDX];
+	const float32_t *gBias  = &supro_parameters[SUPRO_P_BIAS_IDX];
+
+	const float32_t *kN     = &supro_parameters[SUPRO_P_KN_IDX];
+	const float32_t *kP     = &supro_parameters[SUPRO_P_KP_IDX];
+	const float32_t *gN     = &supro_parameters[SUPRO_P_GN_IDX];
+	const float32_t *gP     = &supro_parameters[SUPRO_P_GP_IDX];
+
+	/* Pre-compute constants used in every sample */
+	const float32_t kN_val   = *kN,         kP_val   = *kP;
+	const float32_t gN_val   = *gN,         gP_val   = *gP;
+	const float32_t tanh_kN  = tanhf(kN_val);
+	const float32_t tanh_kP  = tanhf(kP_val);
+	const float32_t coeffN   = (tanh_kN*tanh_kN - 1.0f) / gN_val;
+	const float32_t coeffP   = (tanh_kP*tanh_kP - 1.0f) / gP_val;
+
+	/* ──────────────────────────────────────────
+	 * 3. Per-sample processing loop
+	 * ────────────────────────────────────────── */
+	for (uint32_t i = 0; i < BLOCK_SIZE; ++i)
+	{
+		/* 3.1 Feed-forward bias & pre-gain (MATLAB: xBias, xPre) */
+		float32_t xBias = p->processBuffer[i] - (*gBias) * envelope[i];
+		float32_t xPre  = (*gPre) * xBias;              /* dry path copy */
+		float32_t m;                                    /* shaped sample */
+
+		/* 3.2 Piece-wise tanh mapping (Eq. 6) */
+		if (xPre > kP_val) {                    /* Region A */
+			m = tanh_kP - coeffP * tanhf(gP_val * xPre - kP_val);
+		} else if (xPre >= -kN_val) {           /* Region B */
+			m = tanhf(xPre);
+		} else {                                /* Region C */
+			m = -tanh_kN - coeffN * tanhf(gN_val * xPre + kN_val);
+		}
+
+		/* 3.3 Wet/dry blend then post-gain */
+		m = (*gWet) * m + (1.0f - *gWet) * xPre;   /* yMap in MATLAB   */
+		p->processBuffer[i] = (*gPost) * m;        /* y output         */
+	}
+
+
 }
 
