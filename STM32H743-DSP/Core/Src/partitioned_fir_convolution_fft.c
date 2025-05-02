@@ -173,7 +173,7 @@ void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* state, float
     for (uint32_t k = 0;  k < BUFFER_SIZE;  ++k) {
         float32_t s = zeropaddedinput[k]            * invN;
         float32_t o = overlap[k]                    * invN;
-        pipe->processBuffer[k] = s + o + 0.5f;
+        pipe->processBuffer[k] = s + o;
         overlap[k]             = zeropaddedinput[BUFFER_SIZE + k];
     }
 

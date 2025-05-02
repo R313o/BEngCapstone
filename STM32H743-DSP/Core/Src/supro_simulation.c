@@ -116,7 +116,7 @@ void supro_init_f32()
 void supro_process(pipe *p)
 {
 
-	arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BUFFER_SIZE);
+	arm_scale_f32(p->processBuffer, 0.2, p->processBuffer, BUFFER_SIZE);
     /* 1) First FIR filter */
     // ...
 	partitioned_fir_convolution_fft(p, supro_sim.fir1, state, fftOut, zeropad);
@@ -136,7 +136,7 @@ void supro_process(pipe *p)
 	partitioned_fir_convolution_fft(p, supro_sim.fir3, state3, fftOut3, zeropad3);
 
 
-	arm_scale_f32(p->processBuffer, 0.00002, p->processBuffer, BUFFER_SIZE);
+	arm_scale_f32(p->processBuffer, 0.001, p->processBuffer, BUFFER_SIZE);
 
 }
 
@@ -242,7 +242,7 @@ void supro_poweramp_f32(pipe *p)
 		}
 
 		/* 3.3 Wet/dry blend then post-gain */
-		m = (*gWet) * m + (1.0f - *gWet) * xPre;   /* yMap in MATLAB   */
+		//m = (*gWet) * m + (1.0f - *gWet) * xPre;   /* yMap in MATLAB   */
 		p->processBuffer[i] = (*gPost) * m;        /* y output         */
 	}
 

@@ -195,6 +195,15 @@ int main(void)
 
 		 // cycles = DWT->CYCCNT;
 
+		 // IF SIGNAL IS CLIPPING
+		 for(int i =0; i < BUFFER_SIZE; i++){
+
+			 if(apipe.processBuffer[i] <= -1 || apipe.processBuffer[i] >= 1 ){
+				 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
+			 }
+
+		 }
+
 
 		 // GPIO low
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 0);
@@ -501,6 +510,15 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);   // set high
+
+
+  GPIO_InitStruct.Pin   = GPIO_PIN_13;
+  GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull  = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   // set high
 
   /* Now you can drive the pin */
 
