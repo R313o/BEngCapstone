@@ -112,4 +112,14 @@ extern __attribute__((aligned(32))) 	  float prev_ffts_46_EMT[2048];
 extern fir_t fir_emt_140_dark_3; /* fir handler */
 
 
+/******************************************************************/
+/* OD-M212-VINT-DYN-201-P05-00 impulse response                   */
+/******************************************************************/
+extern __attribute__((aligned(32))) const float CAB_IR_FFT_ALL[2048];
+extern __attribute__((aligned(32))) 	  float prev_ffts_1_CAB[2048];
+
+
+extern fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
+
+
 #endif /* INC_IMPULSE_RESPONSES_H_ */

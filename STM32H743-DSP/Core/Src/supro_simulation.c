@@ -11,6 +11,15 @@ supro_simulation_f32 supro_sim = {
 	.process =&supro_process
 };
 
+cabinet_simulation_f32 cabinet_sim = {
+
+    .fir1 = &fir_OD_M212_VINT_DYN_201_P05_00,
+
+	.process =&cabinet_process
+};
+
+
+
 #include "h1_fir.h"
 #include "h2_fir.h"
 #include "h3_fir.h"
@@ -27,6 +36,10 @@ float fftOut2[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float zeropad3[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state3[BUFFER_SIZE];
 float fftOut3[FFT_SIZE];
+
+__attribute__((section(".dtcm"), aligned(32))) float zeropad4[FFT_SIZE];
+__attribute__((section(".dtcm"), aligned(32))) float state4[BUFFER_SIZE];
+float fftOut4[FFT_SIZE];
 
 
 /* Parameter vector indices */
@@ -269,3 +282,9 @@ void supro_poweramp_f32(pipe *p)
 
 }
 
+
+void cabinet_process(pipe *p){
+
+	partitioned_fir_convolution_fft(p, cabinet_sim.fir1, state4, fftOut4, zeropad4);
+
+}

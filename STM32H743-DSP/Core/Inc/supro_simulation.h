@@ -27,9 +27,11 @@
 #include "partitioned_fir_convolution_fft.h"  	// ova_convolve API
 #include "impulse_responses.h"         			// IR FFT tables & FIR handlers
 
-/**
-  * @brief  Simulation context for three parallel FIR stages.
-  */
+
+
+/******************************************************************/
+/* supro simulation struct.				                          */
+/******************************************************************/
 typedef struct {
     fir_t *fir1;     	 /**< Handler for stage-1 filter  */
     fir_t *fir2;      	 /**< Handler for stage-2 filter  */
@@ -51,32 +53,29 @@ extern supro_simulation_f32 supro_sim;
   */
 void supro_process(pipe *p);
 
-
 void supro_preamp_f32();
 void supro_poweramp_f32();
 
 extern void supro_init_f32();
 
-/*********************************************************************/
-/* FIR buffers: zero-pad input, overlap buffer, FFT output (float32) */
-/*********************************************************************/
-
-/*  Stage 1 buffers */
-extern __attribute__((section(".dtcm"), aligned(32))) float zeropad[FFT_SIZE];
-extern __attribute__((section(".dtcm"), aligned(32))) float state[BUFFER_SIZE];
-extern float fftOut[FFT_SIZE];
-
-/* Stage 2 buffers */
-extern __attribute__((section(".dtcm"), aligned(32))) float zeropad2[FFT_SIZE];
-extern __attribute__((section(".dtcm"), aligned(32))) float state2[BUFFER_SIZE];
-extern float fftOut2[FFT_SIZE];
-
-/* Stage 3 fir buffers*/
-extern __attribute__((section(".dtcm"), aligned(32))) float zeropad3[FFT_SIZE];
-extern __attribute__((section(".dtcm"), aligned(32))) float state3[BUFFER_SIZE];
-extern float fftOut3[FFT_SIZE];
 
 
+/******************************************************************/
+/* Cabinet simulation struct.				                          */
+/******************************************************************/
+typedef struct {
+    fir_t *fir1;     	 /**< Handler for stage-1 filter  */
+    void  (*process)(pipe *p);  /**< Processing callback */
+} cabinet_simulation_f32;
+
+
+void cabinet_process(pipe *p);
+
+
+/******************************************************************/
+/* Global instance of the supro simulation.                       */
+/******************************************************************/
+extern cabinet_simulation_f32 cabinet_sim;
 
 
 #endif /* INC_SUPRO_SIMULATION_H_ */
