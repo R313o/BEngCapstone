@@ -1,6 +1,10 @@
 #include "partitioned_fir_convolution_fft.h"
 
-void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* state, float* fftOut, float* zeropad )
+__attribute__((section(".dtcm"), aligned(32))) float zeropad[FFT_SIZE];
+float fftOut[FFT_SIZE];
+
+
+void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* state )
 {
 
 	float *zeropaddedinput = zeropad;
@@ -171,7 +175,7 @@ void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* state, float
     arm_rfft_fast_f32(&fft, fftOut, zeropaddedinput, 1);
 
     // overlap-add and scaling
-    const float32_t invN = 1.0f ;/// (float32_t)segs;
+    const float32_t invN = 1.0f / (float32_t)segs;
     for (uint32_t k = 0;  k < BUFFER_SIZE;  ++k) {
         float32_t s = zeropaddedinput[k]            * invN;
         float32_t o = overlap[k]                    * invN;

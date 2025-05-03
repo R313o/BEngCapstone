@@ -39,9 +39,15 @@ extern arm_rfft_fast_instance_f32 fft;
  * @param   fftOut   Scratch buffer for this block’s FFT output
  * @param   zeropad  Input buffer zero-padded to FFT size
  */
+/*
 void partitioned_fir_convolution_fft( pipe *pipe,
                                       fir_t  *fir,
                                       float  *state,
                                       float  *fftOut,
                                       float  *zeropad );
+                                      */
+
+void partitioned_fir_convolution_fft( pipe *pipe,
+                                      fir_t  *fir,
+                                      float  *state );
 #endif

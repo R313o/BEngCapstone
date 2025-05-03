@@ -1,5 +1,5 @@
-../Core/Src/supro_simulation.c:286:6:cabinet_process	1
+../Core/Src/supro_simulation.c:289:6:cabinet_process	1
 ../Core/Src/supro_simulation.c:118:6:supro_init_f32	1
-../Core/Src/supro_simulation.c:173:6:supro_preamp_f32	4
-../Core/Src/supro_simulation.c:224:6:supro_poweramp_f32	5
+../Core/Src/supro_simulation.c:176:6:supro_preamp_f32	4
+../Core/Src/supro_simulation.c:227:6:supro_poweramp_f32	5
 ../Core/Src/supro_simulation.c:139:6:supro_process	1

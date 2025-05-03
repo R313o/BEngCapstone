@@ -25,21 +25,21 @@ cabinet_simulation_f32 cabinet_sim = {
 #include "h3_fir.h"
 
 
-__attribute__((section(".dtcm"), aligned(32))) float zeropad[FFT_SIZE];
+//_attribute__((section(".dtcm"), aligned(32))) float zeropad[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state[BUFFER_SIZE];
-float fftOut[FFT_SIZE];
+//float fftOut[FFT_SIZE];
 
-__attribute__((section(".dtcm"), aligned(32))) float zeropad2[FFT_SIZE];
+//__attribute__((section(".dtcm"), aligned(32))) float zeropad2[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state2[BUFFER_SIZE];
-float fftOut2[FFT_SIZE];
+//float fftOut2[FFT_SIZE];
 
-__attribute__((section(".dtcm"), aligned(32))) float zeropad3[FFT_SIZE];
+//__attribute__((section(".dtcm"), aligned(32))) float zeropad3[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state3[BUFFER_SIZE];
-float fftOut3[FFT_SIZE];
+//float fftOut3[FFT_SIZE];
 
-__attribute__((section(".dtcm"), aligned(32))) float zeropad4[FFT_SIZE];
+//__attribute__((section(".dtcm"), aligned(32))) float zeropad4[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state4[BUFFER_SIZE];
-float fftOut4[FFT_SIZE];
+//float fftOut4[FFT_SIZE];
 
 
 /* Parameter vector indices */
@@ -143,7 +143,8 @@ void supro_process(pipe *p)
 
     /* 1) First FIR filter */
     // ...
-	partitioned_fir_convolution_fft(p, supro_sim.fir1, state, fftOut, zeropad);
+	//partitioned_fir_convolution_fft(p, supro_sim.fir1, state, fftOut, zeropad);
+	partitioned_fir_convolution_fft(p, supro_sim.fir1, state);
     //arm_fir_f32(&h1_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
 
 
@@ -152,15 +153,17 @@ void supro_process(pipe *p)
 
 
     /* Second FIR filter */
-	partitioned_fir_convolution_fft(p, supro_sim.fir2, state2, fftOut2, zeropad2);
+	//partitioned_fir_convolution_fft(p, supro_sim.fir2, state2, fftOut2, zeropad2);
     //arm_fir_f32(&h2_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
+	partitioned_fir_convolution_fft(p, supro_sim.fir2, state2);
 
 
 	/* Poweramp shaper */
     supro_poweramp_f32(p);
 
 	/* Third FIR filter */
-	partitioned_fir_convolution_fft(p, supro_sim.fir3, state3, fftOut3, zeropad3);
+	//partitioned_fir_convolution_fft(p, supro_sim.fir3, state3, fftOut3, zeropad3);
+	partitioned_fir_convolution_fft(p, supro_sim.fir2, state3);
     //arm_fir_f32(&h3_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
 
 
@@ -285,6 +288,6 @@ void supro_poweramp_f32(pipe *p)
 
 void cabinet_process(pipe *p){
 
-	partitioned_fir_convolution_fft(p, cabinet_sim.fir1, state4, fftOut4, zeropad4);
+	partitioned_fir_convolution_fft(p, cabinet_sim.fir1, state4);
 
 }

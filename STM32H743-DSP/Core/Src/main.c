@@ -97,9 +97,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 uint32_t cycles;
 
-__attribute__((section(".dtcm"), aligned(32))) float zeropad5[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state5[BUFFER_SIZE];
-float fftOut5[FFT_SIZE];
+
 
 
 /* USER CODE END 0 */
@@ -197,7 +196,7 @@ int main(void)
 
 		 supro_sim.process(&apipe);
 		 cabinet_sim.process(&apipe);
-		 partitioned_fir_convolution_fft(&apipe, &fir_emt_140_dark_3, state5, fftOut5, zeropad5);
+		 partitioned_fir_convolution_fft(&apipe, &fir_emt_140_dark_3, state5);
 
 		 // cycles = DWT->CYCCNT;
 
