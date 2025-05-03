@@ -196,13 +196,13 @@ int main(void)
 		 // cycles = DWT->CYCCNT;
 
 		 // IF SIGNAL IS CLIPPING
-		 for(int i =0; i < BUFFER_SIZE; i++){
+		 //for(int i =0; i < BUFFER_SIZE; i++){
 
-			 if(apipe.processBuffer[i] <= -1 || apipe.processBuffer[i] >= 1 ){
-				 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
-			 }
+			// if(apipe.processBuffer[i] <= -1 || apipe.processBuffer[i] >= 1 ){
+				// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
+			 //}
 
-		 }
+		 //}
 
 
 		 // GPIO low

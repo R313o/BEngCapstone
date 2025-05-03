@@ -38,10 +38,12 @@ typedef struct {
 } supro_simulation_f32;
 
 
+
 /******************************************************************/
 /* Global instance of the supro simulation.                       */
 /******************************************************************/
 extern supro_simulation_f32 supro_sim;
+
 
 /**
   * @brief  Top-level processing function for the three-stage convolution chain.
@@ -51,7 +53,7 @@ void supro_process(pipe *p);
 
 
 void supro_preamp_f32();
-void sugar_power_amp_f32();
+void supro_poweramp_f32();
 
 extern void supro_init_f32();
 

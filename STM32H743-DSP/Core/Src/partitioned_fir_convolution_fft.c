@@ -17,6 +17,8 @@ void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* state, float
     fir->prev_fftidx = fir->curr_fftidx;
     arm_copy_f32(fftOut, fir->prev_ffts[fir->curr_fftidx], FFT_SIZE);
 
+    arm_fill_f32(0.0f, fftOut, FFT_SIZE);              /* clear accumulator */
+
     const uint32_t segs = fir->numSegments;
     uint32_t i = 0;
     uint32_t idx = fir->prev_fftidx;
@@ -169,7 +171,7 @@ void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* state, float
     arm_rfft_fast_f32(&fft, fftOut, zeropaddedinput, 1);
 
     // overlap-add and scaling
-    const float32_t invN = 1.0f / (float32_t)segs;
+    const float32_t invN = 1.0f ;/// (float32_t)segs;
     for (uint32_t k = 0;  k < BUFFER_SIZE;  ++k) {
         float32_t s = zeropaddedinput[k]            * invN;
         float32_t o = overlap[k]                    * invN;
