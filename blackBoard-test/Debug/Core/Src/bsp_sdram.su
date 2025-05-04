@@ -1,0 +1,2 @@
+../Core/Src/bsp_sdram.c:10:13:SDRAM_delay	24	static
+../Core/Src/bsp_sdram.c:23:6:SDRAM_InitSequence	16	static

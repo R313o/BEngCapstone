@@ -21,6 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+//#include "fmc.h"
+//#include "bsp_sdram.h"
+#include "stdio.h"
 #include <string.h>
 #include "dataLink.h"
 #include "process.h"
@@ -46,11 +49,13 @@
 
 UART_HandleTypeDef huart2;
 
+SDRAM_HandleTypeDef hsdram1;
+
 /* USER CODE BEGIN PV */
 dataLink link;
 pipeDef ioPipe;
 
-
+#define sdram_addr 0xc0000000
 
 #define UART_BUFFER_SIZE 128
 
@@ -72,6 +77,7 @@ void SystemClock_Config(void);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_FMC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -144,15 +150,45 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  MX_FMC_Init();
   /* USER CODE BEGIN 2 */
+  HAL_Delay(100);
+  FMC_SDRAM_CommandTypeDef Command;
+	/* Step 1 and Step 2 already done in HAL_SDRAM_Init() */
+	/* Step 3: Configure a clock configuration enable command */
+	Command.CommandMode            = FMC_SDRAM_CMD_CLK_ENABLE; /* Set MODE bits to "001" */
+	Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1; /* configure the Target Bank bits */
+	Command.AutoRefreshNumber      = 1;
+	Command.ModeRegisterDefinition = 0;
+	HAL_SDRAM_SendCommand(&hsdram1, &Command, 0xfff);
+	HAL_Delay(1); /* Step 4: Insert 100 us minimum delay - Min HAL Delay is 1ms */
+	/* Step 5: Configure a PALL (precharge all) command */
+	Command.CommandMode            = FMC_SDRAM_CMD_PALL; /* Set MODE bits to "010" */
+	HAL_SDRAM_SendCommand(&hsdram1, &Command, 0xfff);
+	/* Step 6: Configure an Auto Refresh command */
+	Command.CommandMode            = FMC_SDRAM_CMD_AUTOREFRESH_MODE; /* Set MODE bits to "011" */
+	Command.AutoRefreshNumber      = 2;
+	HAL_SDRAM_SendCommand(&hsdram1, &Command, 0xfff);
+	/* Step 7: Program the external memory mode register */
+	Command.CommandMode            = FMC_SDRAM_CMD_LOAD_MODE;/*set the MODE bits to "100" */
+	Command.ModeRegisterDefinition =  (uint32_t)0 | 0<<3 | 2<<4 | 0<<7 | 1<<9;
+	HAL_SDRAM_SendCommand(&hsdram1, &Command, 0xfff);
+	/* Step 8: Set the refresh rate counter - refer to section SDRAM refresh timer register in RM0455 */
+	/* Set the device refresh rate
+	* COUNT = [(SDRAM self refresh time / number of row) x  SDRAM CLK] – 20
+	  = [(64ms/4096) * 100MHz] - 20 = 1562.5 - 20 ~ 1542 */
+	 HAL_SDRAM_ProgramRefreshRate(&hsdram1, 1542);
 
+
+
+	 HAL_Delay(100);
+
+  for(int8_t i=0;i<100;i++)
+  	{
+  		*(__IO uint8_t *)(sdram_addr+i)=(uint8_t)(i+100);
+  	}
   /* USER CODE END 2 */
-  initDataLink(&link);
 
-  memcpy(ioPipe.in1, in0, sizeof(ioPipe.in1));   /* copies BUFFER_SIZE floats */
-  memcpy(ioPipe.in2, in1, sizeof(ioPipe.in2));
-
-  HAL_UART_Receive_IT(&huart2, rxRecieve, 1);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -160,7 +196,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	 /* test++;
+	  /*test++;
 	  if (test >= 4800000)
 	  {
 		  test = 0;
@@ -282,6 +318,53 @@ static void MX_USART2_UART_Init(void)
 
 }
 
+/* FMC initialization function */
+static void MX_FMC_Init(void)
+{
+
+  /* USER CODE BEGIN FMC_Init 0 */
+
+  /* USER CODE END FMC_Init 0 */
+
+  FMC_SDRAM_TimingTypeDef SdramTiming = {0};
+
+  /* USER CODE BEGIN FMC_Init 1 */
+
+  /* USER CODE END FMC_Init 1 */
+
+  /** Perform the SDRAM1 memory initialization sequence
+  */
+  hsdram1.Instance = FMC_SDRAM_DEVICE;
+  /* hsdram1.Init */
+  hsdram1.Init.SDBank = FMC_SDRAM_BANK1;
+  hsdram1.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_9;
+  hsdram1.Init.RowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_13;
+  hsdram1.Init.MemoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
+  hsdram1.Init.InternalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
+  hsdram1.Init.CASLatency = FMC_SDRAM_CAS_LATENCY_3;
+  hsdram1.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
+  hsdram1.Init.SDClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
+  hsdram1.Init.ReadBurst = FMC_SDRAM_RBURST_DISABLE;
+  hsdram1.Init.ReadPipeDelay = FMC_SDRAM_RPIPE_DELAY_1;
+  /* SdramTiming */
+  SdramTiming.LoadToActiveDelay = 2;
+  SdramTiming.ExitSelfRefreshDelay = 7;
+  SdramTiming.SelfRefreshTime = 4;
+  SdramTiming.RowCycleDelay = 7;
+  SdramTiming.WriteRecoveryTime = 3;
+  SdramTiming.RPDelay = 2;
+  SdramTiming.RCDDelay = 2;
+
+  if (HAL_SDRAM_Init(&hsdram1, &SdramTiming) != HAL_OK)
+  {
+    Error_Handler( );
+  }
+
+  /* USER CODE BEGIN FMC_Init 2 */
+
+  /* USER CODE END FMC_Init 2 */
+}
+
 /**
   * @brief GPIO Initialization Function
   * @param None
@@ -296,7 +379,11 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -308,6 +395,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PA9 PA10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
