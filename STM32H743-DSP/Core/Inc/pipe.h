@@ -4,6 +4,9 @@
  *  Created on: Feb 19, 2025
  *      Author: spencer
  */
+#ifndef SRC_PIPE_H_
+#define SRC_PIPE_H_
+
 #include "main.h"
 
 #ifndef BUFFER_SIZE
@@ -15,15 +18,12 @@
 #endif
 
 #ifndef ADC_BITS2VOLTS
-#define ADC_BITS2VOLTS 0.000030517578f
+	#define ADC_BITS2VOLTS 0.000030517578f
 #endif
 
 #ifndef DAC_VOLTS2BITS
-#define DAC_VOLTS2BITS 2048.0f
+	#define DAC_VOLTS2BITS 2048.0f
 #endif
-
-#ifndef SRC_PIPE_H_
-#define SRC_PIPE_H_
 
 typedef struct pipe pipe;
 

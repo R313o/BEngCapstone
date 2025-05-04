@@ -4,11 +4,11 @@ __attribute__((section(".dtcm"), aligned(32))) float zeropad[FFT_SIZE];
 float fftOut[FFT_SIZE];
 
 
-void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* state )
+void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* overlap_state_buf )
 {
 
 	float *zeropaddedinput = zeropad;
-	float *overlap         = state;
+	float *overlap         = overlap_state_buf;
 
     // prepare input
     arm_copy_f32(pipe->processBuffer, zeropaddedinput, BUFFER_SIZE);

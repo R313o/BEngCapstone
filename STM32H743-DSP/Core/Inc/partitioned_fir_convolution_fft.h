@@ -49,5 +49,5 @@ void partitioned_fir_convolution_fft( pipe *pipe,
 
 void partitioned_fir_convolution_fft( pipe *pipe,
                                       fir_t  *fir,
-                                      float  *state );
+                                      float  *overlap_state_buf );
 #endif

@@ -22,8 +22,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-#include "pipe.h"
-#include "fx.h"
+//#include "pipe.h"
+#include "_MULTI_FX.h"
 //#include "supro_simulation.h"
 
 /* USER CODE END Includes */
@@ -97,8 +97,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 uint32_t cycles;
 
-__attribute__((section(".dtcm"), aligned(32))) float state5[BUFFER_SIZE];
-
 
 
 /* USER CODE END 0 */
@@ -136,7 +134,6 @@ int main(void)
 
   /* USER CODE END SysInit */
 
-
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
@@ -165,9 +162,7 @@ int main(void)
 
   pipeInit(&apipe);
 
-  supro_init_f32();
-
-  //effectInit(&myEffect, 2.0f);
+  supro_init_f32(); //replace with fx_int();
 
   /* USER CODE END 2 */
 
@@ -190,13 +185,9 @@ int main(void)
 
 		 //DWT->CYCCNT = 0;
 
-
-		 //ova_convolve(&apipe, &fir_emt_140_dark_3 );
-		 //supro_sim.process(&apipe);
-
 		 supro_sim.process(&apipe);
 		 cabinet_sim.process(&apipe);
-		 partitioned_fir_convolution_fft(&apipe, &fir_emt_140_dark_3, state5);
+		 convolution_reverb.process(&apipe);
 
 		 // cycles = DWT->CYCCNT;
 
@@ -209,7 +200,6 @@ int main(void)
 
 		 //}
 
-
 		 // GPIO low
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 0);
 
@@ -217,8 +207,7 @@ int main(void)
 
 		 apipe.updateDACOutput(&apipe, dacOutput);
 
-		    SCB_CleanDCache_by_Addr((uint32_t*)dacOutput,
-		                            BUFFER_SIZE*2 * sizeof(dacOutput[0]));
+		 SCB_CleanDCache_by_Addr((uint32_t*)dacOutput, BUFFER_SIZE*2 * sizeof(dacOutput[0]));
 
 		 apipe.bufferReady = false;
 	  }

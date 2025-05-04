@@ -1,5 +1,5 @@
-#include "supro_simulation.h"
-
+//#include "supro_simulation.h"
+#include "_MULTI_FX.h"
 
 supro_simulation_f32 supro_sim = {
 
@@ -11,35 +11,17 @@ supro_simulation_f32 supro_sim = {
 	.process =&supro_process
 };
 
-cabinet_simulation_f32 cabinet_sim = {
-
-    .fir1 = &fir_OD_M212_VINT_DYN_201_P05_00,
-
-	.process =&cabinet_process
-};
-
-
 
 #include "h1_fir.h"
 #include "h2_fir.h"
 #include "h3_fir.h"
 
 
-//_attribute__((section(".dtcm"), aligned(32))) float zeropad[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state[BUFFER_SIZE];
-//float fftOut[FFT_SIZE];
 
-//__attribute__((section(".dtcm"), aligned(32))) float zeropad2[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state2[BUFFER_SIZE];
-//float fftOut2[FFT_SIZE];
 
-//__attribute__((section(".dtcm"), aligned(32))) float zeropad3[FFT_SIZE];
 __attribute__((section(".dtcm"), aligned(32))) float state3[BUFFER_SIZE];
-//float fftOut3[FFT_SIZE];
-
-//__attribute__((section(".dtcm"), aligned(32))) float zeropad4[FFT_SIZE];
-__attribute__((section(".dtcm"), aligned(32))) float state4[BUFFER_SIZE];
-//float fftOut4[FFT_SIZE];
 
 
 /* Parameter vector indices */
@@ -75,21 +57,13 @@ static const float supro_parameters[SUPRO_TAYLOR_COEFF_COUNT] = {
 
 };
 
-
 #define NUM_TAPS              512
 #define BLOCK_SIZE 			  BUFFER_SIZE
 
-//arm_fir_instance_f32 preamp_fir_5Hz_lowpass;
-//arm_fir_instance_f32 poweramp_fir_5Hz_lowpass;
 
-
-//static float32_t preamp_firState_f32[BLOCK_SIZE + NUM_TAPS - 1];
-//static float32_t poweramp_firState_f32[BLOCK_SIZE + NUM_TAPS - 1];
-
-#define LP_STAGES 1                    /* one biquad ⇒ 2‑pole */
+#define LP_STAGES 1
 __attribute__((section(".dtcm"), aligned(32)))
-static float32_t preampLP_State[LP_STAGES*4];   /* 4 words per stage (DF1) */
-
+static float32_t preampLP_State[LP_STAGES*4];
 __attribute__((section(".dtcm"), aligned(32)))
 static float32_t powerampLP_State[LP_STAGES*4];
 
@@ -118,8 +92,6 @@ static const float32_t LP5Hz_Biquad[5] =
 void supro_init_f32()
 {
 
-	//arm_fir_init_f32(&preamp_fir_5Hz_lowpass, NUM_TAPS, (float32_t *)&firCoeffs32[0], &preamp_firState_f32[0], (uint32_t)BLOCK_SIZE);
-	//arm_fir_init_f32(&poweramp_fir_5Hz_lowpass, NUM_TAPS, (float32_t *)&firCoeffs32[0], &poweramp_firState_f32[0], (uint32_t)BLOCK_SIZE);
     arm_biquad_cascade_df1_init_f32(&preampLP,  LP_STAGES,
                                     (float32_t *)LP5Hz_Biquad,
                                     preampLP_State);
@@ -282,12 +254,5 @@ void supro_poweramp_f32(pipe *p)
 		p->processBuffer[i] = (*gPost) * m;        /* y output         */
 	}
 
-
-}
-
-
-void cabinet_process(pipe *p){
-
-	partitioned_fir_convolution_fft(p, cabinet_sim.fir1, state4);
 
 }

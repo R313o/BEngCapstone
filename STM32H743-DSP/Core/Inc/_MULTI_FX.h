@@ -20,14 +20,10 @@
   ******************************************************************************
   */
 
-#ifndef INC_SUPRO_SIMULATION_H_
-#define INC_SUPRO_SIMULATION_H_
+#ifndef INC_MULTI_FX_H_
+#define INC_MULTI_FX_H_
 
-#include "pipe.h"                      			// pipe_t
-#include "partitioned_fir_convolution_fft.h"  	// ova_convolve API
-#include "impulse_responses.h"         			// IR FFT tables & FIR handlers
-
-
+#include "partitioned_fir_convolution_fft.h"
 
 /******************************************************************/
 /* supro simulation struct.				                          */
@@ -46,22 +42,23 @@ typedef struct {
 /******************************************************************/
 extern supro_simulation_f32 supro_sim;
 
-
 /**
-  * @brief  Top-level processing function for the three-stage convolution chain.
-  * @param  p Pointer to the audio pipe context
-  */
-void supro_process(pipe *p);
-
-void supro_preamp_f32();
-void supro_poweramp_f32();
-
+ * @brief supro simulation iniitialization function. Call once before using process
+ */
 extern void supro_init_f32();
 
 
+/**
+  * @brief  Top-level private processing functions for the supro simulation
+  * @param  p Pointer to the audio pipe context
+  */
+static void supro_process(pipe *p);
+static void supro_preamp_f32();
+static void supro_poweramp_f32();
+
 
 /******************************************************************/
-/* Cabinet simulation struct.				                          */
+/* Cabinet simulation struct.				                      */
 /******************************************************************/
 typedef struct {
     fir_t *fir1;     	 /**< Handler for stage-1 filter  */
@@ -69,13 +66,41 @@ typedef struct {
 } cabinet_simulation_f32;
 
 
-void cabinet_process(pipe *p);
+/**
+  * @brief  Top-level private processing functions for the cabinet simulation
+  * @param  p Pointer to the audio pipe context
+  */
+static void cabinet_process(pipe *p);
 
 
 /******************************************************************/
-/* Global instance of the supro simulation.                       */
+/* Global instance of the cabinet simulation.                     */
 /******************************************************************/
 extern cabinet_simulation_f32 cabinet_sim;
 
 
-#endif /* INC_SUPRO_SIMULATION_H_ */
+
+/******************************************************************/
+/* Convolution reverb effect struct.				              */
+/******************************************************************/
+typedef struct {
+    fir_t *fir1;     	 		/**< Handler for stage-1 filter  */
+    void  (*process)(pipe *p);  /**< Processing callback */
+} convolution_reverb_f32;
+
+
+/**
+  * @brief  Top-level private processing functions for the convolution reverb
+  * @param  p Pointer to the audio pipe context
+  */
+static void convolution_reverb_process(pipe *p);
+
+/******************************************************************/
+/* Global instance of the convolution reverb                   */
+/******************************************************************/
+extern convolution_reverb_f32 convolution_reverb;
+
+
+
+
+#endif /* INC_MULTI_FX_H_ */
