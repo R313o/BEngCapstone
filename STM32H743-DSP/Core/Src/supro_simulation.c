@@ -1,5 +1,14 @@
 #include "supro_simulation.h"
 #include "emt_140_dark_3.h"      // defines fir_emt_140_dark_3
+#include "chorus.h"
+#include "phaser.h"
+
+extern int doChorus;
+extern int doPhaser;
+
+extern chorus myChorus;
+extern phaser myPhaser;
+
 
 supro_simulation_f32 supro_sim = {
     .fir1 = &fir_emt_140_dark_3,
@@ -11,11 +20,23 @@ void supro_process(pipe *p)
 {
     /* 1) First FIR filter */
     // ...
-	ova_convolve(p, supro_sim.fir1);
+	//ova_convolve(p, supro_sim.fir1);
 
     /* 2) Preamp shaper */
     // ...
 
     /* 3) Second FIR filter */
     // ...
+
+    if (doChorus)
+    {
+        chorusApply(&myChorus, p);
+    }
+
+    if (doPhaser)
+    {
+        phaserApply(&myPhaser, p);
+    }
+
+
 }

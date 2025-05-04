@@ -23,6 +23,12 @@
 /* USER CODE BEGIN Includes */
 
 #include "pipe.h"
+#include "effect.h"
+#include "chorus.h"
+//#include "lowpass.h"
+//#include "reverb.h"
+#include "phaser.h"
+//#include "lexiconIR.h"
 
 /* USER CODE END Includes */
 
@@ -54,9 +60,30 @@ TIM_HandleTypeDef htim8;
 
 pipe apipe;
 
+
+effect myEffect;
+chorus myChorus;
+phaser myPhaser;
+
+
+
+
+
 arm_rfft_fast_instance_f32 fft;
 static 	 uint16_t  adcInput[BUFFER_SIZE*2];
 static	 uint16_t  dacOutput[BUFFER_SIZE*2];
+
+
+//Chorus
+volatile uint8_t doChorus = 0;
+volatile uint32_t delay = 2000;
+volatile float32_t wetness = 1.0f;
+volatile float32_t depth = 0.5f;
+
+//Phaser
+volatile uint8_t doPhaser = 1;
+volatile float32_t rate = 1.5f;
+
 
 
 /* USER CODE END PV */
@@ -162,6 +189,11 @@ int main(void)
 
   pipeInit(&apipe);
 
+  effectInit(&myEffect, 2.0f);
+
+  chorusInit(&myChorus, delay, wetness, depth, 0.05f, BUFFER_SIZE, 48000);
+
+  phaserInit(&myPhaser, wetness, depth, rate, 15, BUFFER_SIZE, 48000);
 
   /* USER CODE END 2 */
 
@@ -178,6 +210,16 @@ int main(void)
 	  {
 		 apipe.updateDelayBuffer(&apipe);
 		 apipe.loadProcess(&apipe);
+
+		 myChorus.wetness = wetness;
+		 myChorus.depth = depth;
+		 myChorus.baseDelay = delay;
+
+		 myPhaser.wetness = 1;
+		 myPhaser.depth = depth;
+		 myPhaser.baseDelay = delay;
+		 myPhaser.stages = 15;
+
 
 		 // GPIO high for profiling
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 1);

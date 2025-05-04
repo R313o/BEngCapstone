@@ -1,0 +1,22 @@
+17:01:16 **** Incremental Build of configuration Debug for project STM32H743-DSP ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32H743xx -DUSE_PWR_LDO_SUPPLY -c -I../Core/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -ffast-math -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/supro_simulation.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32H743xx -DUSE_PWR_LDO_SUPPLY -c -I../Core/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -ffast-math -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/supro_simulation.d" -MT"Core/Src/supro_simulation.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/supro_simulation.o"
+arm-none-eabi-gcc -o "STM32H743-DSP.elf" @"objects.list"  -larm_cortexM7lfsp_math -mcpu=cortex-m7 -T"C:\Users\sarab\OneDrive\Documents\GitHub\BEngCapstone\STM32H743-DSP\STM32H743IITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32H743-DSP.map" -Wl,--gc-sections -static -L"C:\Users\sarab\OneDrive\Documents\GitHub\BEngCapstone\STM32H743-DSP\Lib" -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: STM32H743-DSP.elf
+ 
+arm-none-eabi-size  STM32H743-DSP.elf 
+arm-none-eabi-objdump -h -S STM32H743-DSP.elf  > "STM32H743-DSP.list"
+   text	   data	    bss	    dec	    hex	filename
+ 483628	    512	 448976	 933116	  e3cfc	STM32H743-DSP.elf
+Finished building: default.size.stdout
+ 
+Finished building: STM32H743-DSP.list
+ 
+13:15:51 **** Incremental Build of configuration Debug for project STM32H743-DSP ****
+make -j16 all 
+arm-none-eabi-size  STM32H743-DSP.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 483628	    512	 448976	 933116	  e3cfc	STM32H743-DSP.elf
+Finished building: default.size.stdout
+ 

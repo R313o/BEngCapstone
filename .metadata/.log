@@ -1,0 +1,48 @@
+!SESSION 2025-04-29 13:35:42.319 -----------------------------------------------
+eclipse.buildId=Version 1.18.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-04-29 13:38:35.622
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-04-29 13:38:35.626
+!MESSAGE Log4j2 initialized with config file C:\Users\sarab\OneDrive\Documents\GitHub\BEngCapstone\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-04-29 13:38:45.319
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-04-29 13:49:31.047
+!MESSAGE Indexed 'STM32H743-DSP' (33 sources, 144 headers) in 20.3 sec: 19,525 declarations; 122,420 references; 3 unresolved inclusions; 46 syntax errors; 171 unresolved names (0.12%)
+!SESSION 2025-04-29 17:56:55.808 -----------------------------------------------
+eclipse.buildId=Version 1.18.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-04-29 17:57:20.051
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-04-29 17:57:20.057
+!MESSAGE Log4j2 initialized with config file C:\Users\sarab\OneDrive\Documents\GitHub\BEngCapstone\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-04-29 17:57:43.681
+!MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2025-05-04 13:10:57.230 -----------------------------------------------
+eclipse.buildId=Version 1.18.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-05-04 13:11:12.151
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-05-04 13:11:12.156
+!MESSAGE Log4j2 initialized with config file C:\Users\sarab\OneDrive\Documents\GitHub\BEngCapstone\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-05-04 13:11:34.271
+!MESSAGE Started RMI Server, listening on port 41337
