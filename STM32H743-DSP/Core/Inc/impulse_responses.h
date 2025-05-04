@@ -61,7 +61,10 @@ extern fir_t fir_h3_gaincorrected; /* fir handler */
 /******************************************************************/
 /* EMT_140_DARK_3 impulse response                                */
 /******************************************************************/
+
 extern __attribute__((aligned(32))) const float _EMT_IR_FFT_ALL[94208];
+extern __attribute__((aligned(32))) 	  float prev_ffts_EMT[94208];
+/*
 extern __attribute__((aligned(32))) 	  float prev_ffts_1_EMT[2048];
 extern __attribute__((aligned(32))) 	  float prev_ffts_2_EMT[2048];
 extern __attribute__((aligned(32))) 	  float prev_ffts_3_EMT[2048];
@@ -108,6 +111,7 @@ extern __attribute__((aligned(32))) 	  float prev_ffts_43_EMT[2048];
 extern __attribute__((aligned(32))) 	  float prev_ffts_44_EMT[2048];
 extern __attribute__((aligned(32))) 	  float prev_ffts_45_EMT[2048];
 extern __attribute__((aligned(32))) 	  float prev_ffts_46_EMT[2048];
+*/
 
 extern fir_t fir_emt_140_dark_3; /* fir handler */
 
