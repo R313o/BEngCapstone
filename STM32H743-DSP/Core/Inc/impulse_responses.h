@@ -64,9 +64,9 @@ extern fir_t fir_h3_gaincorrected; /* fir handler */
 /******************************************************************/
 
 #define EMT_SEGMENTS   46U
-#define SCRATCH_FLOATS (EMT_SEGMENTS * FFT_SIZE)      /* 94 208 */
+#define EMT_SCRATCH_FLOATS (EMT_SEGMENTS * FFT_SIZE)      /* 94 208 */
 
-extern __attribute__((aligned(32))) const float _EMT_IR_FFT_ALL[SCRATCH_FLOATS];
+extern __attribute__((aligned(32))) const float _EMT_IR_FFT_ALL[EMT_SCRATCH_FLOATS];
 
 //extern fir_t fir_emt_140_dark_3; /* fir handler */
 
@@ -75,11 +75,16 @@ void fir_emt_140_dark_3_f32_init(fir_t *self, float *state);
 /******************************************************************/
 /* OD-M212-VINT-DYN-201-P05-00 impulse response                   */
 /******************************************************************/
-extern __attribute__((aligned(32))) const float CAB_IR_FFT_ALL[2048];
-extern __attribute__((aligned(32))) 	  float prev_ffts_1_CAB[2048];
 
+#define OD_M212_SEGMENTS   1U
+#define OD_M212_SCRATCH_FLOATS (OD_M212_SEGMENTS * FFT_SIZE)      /* 2048 */
 
-extern fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
+extern __attribute__((aligned(32))) const float _CAB_IR_FFT_ALL[OD_M212_SCRATCH_FLOATS];
+
+//extern fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
+
+void fir_OD_M212_VINT_DYN_201_P05_00_f32_init(fir_t *self, float *state);
+
 
 
 #endif /* INC_IMPULSE_RESPONSES_H_ */

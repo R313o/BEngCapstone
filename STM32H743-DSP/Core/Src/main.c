@@ -97,12 +97,16 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 uint32_t cycles;
 __attribute__((section(".dtcm"), aligned(32))) float state5[BUFFER_SIZE];
+__attribute__((section(".dtcm"), aligned(32))) float statecab[BUFFER_SIZE];
+
 float prev_ffts_EMT[94208 + 46 * 2];
+float prev_ffts_OD_M212[2048 + 1 * 2];
 
  fir_t fir_emt_140_dark_3; /* fir handler */
+ fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
 
 
-
+cabinet_simulation_f32 cabinet_sim;
 convolution_reverb_f32 convolution_reverb;
 
 
@@ -172,7 +176,10 @@ int main(void)
   supro_init_f32(); //replace with fx_int();
 
   fir_emt_140_dark_3_f32_init(&fir_emt_140_dark_3, prev_ffts_EMT);
+  fir_OD_M212_VINT_DYN_201_P05_00_f32_init(&fir_OD_M212_VINT_DYN_201_P05_00, prev_ffts_OD_M212);
+
   convolution_reverb_f32_init(&convolution_reverb, state5 , &fir_emt_140_dark_3);
+  cabinet_simulation_f32_init(&cabinet_sim, statecab, &fir_OD_M212_VINT_DYN_201_P05_00);
 
   /* USER CODE END 2 */
 
@@ -198,8 +205,8 @@ int main(void)
 		 //convolution_reverb_f32_process(&convolution_reverb, &apipe);
 
 		 supro_sim.process(&apipe);
-		 cabinet_sim.process(&apipe);
 
+		 cabinet_simulation_f32_process(&cabinet_sim, &apipe);
 		 convolution_reverb_f32_process(&convolution_reverb, &apipe);
 
 			//arm_scale_f32(p->processBuffer, 0.0001, p->processBuffer, BUFFER_SIZE);

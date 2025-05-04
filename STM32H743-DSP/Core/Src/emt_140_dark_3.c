@@ -1,7 +1,30 @@
 #include "impulse_responses.h"
 
-__attribute__((aligned(32)))
-const float _EMT_IR_FFT_ALL[94208] = {
+
+void fir_emt_140_dark_3_f32_init(fir_t *self, float *state){
+
+#define SCRATCH      (state)
+#define IR_TABLE     ((const float **)(state + EMT_SCRATCH_FLOATS))
+#define PREV_TABLE   ((float       **)(state + EMT_SCRATCH_FLOATS + EMT_SEGMENTS))
+
+    self->ir_ffts      = IR_TABLE;
+    self->prev_ffts    = PREV_TABLE;
+    self->numSegments  = EMT_SEGMENTS;
+    self->curr_fftidx  = 0;
+    self->prev_fftidx  = 0;
+
+    for (uint32_t i = 0; i < EMT_SEGMENTS; ++i) {
+        IR_TABLE [i] = &_EMT_IR_FFT_ALL[i * FFT_SIZE];  /* spectrums  */
+        PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
+    }
+
+}
+
+
+/* FIR Coefficients */
+
+__attribute__((aligned(32))) const float _EMT_IR_FFT_ALL[94208] = {
+
   -8.031685f,
   -1.540160f,
   8.159322f,
@@ -94212,152 +94235,5 @@ const float _EMT_IR_FFT_ALL[94208] = {
   -0.573739f,
 };
 
-/*
-__attribute__((aligned(32))) float prev_ffts_1_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_2_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_3_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_4_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_5_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_6_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_7_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_8_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_9_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_10_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_11_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_12_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_13_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_14_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_15_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_16_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_17_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_18_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_19_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_20_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_21_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_22_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_23_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_24_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_25_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_26_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_27_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_28_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_29_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_30_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_31_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_32_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_33_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_34_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_35_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_36_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_37_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_38_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_39_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_40_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_41_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_42_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_43_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_44_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_45_EMT[2048] = {0};
-__attribute__((aligned(32))) float prev_ffts_46_EMT[2048] = {0};
-*/
 
-//__attribute__((aligned(32))) 	  float prev_ffts_EMT[94208] = {0};
-
-//#define IR_FFT_ALL _EMT_IR_FFT_ALL
-
-/*
-
-#define PREV_SEG(i) (&prev_ffts_EMT[(i) * 2048])
-
-fir_t fir_emt_140_dark_3 = {
-
-	    .curr_fftidx = 0,
-	    .prev_fftidx = 0,
-	    .numSegments = 46,
-
-    .ir_ffts =(const float*[]) {
-        &IR_FFT_ALL[0],
-        &IR_FFT_ALL[2048],
-        &IR_FFT_ALL[4096],
-        &IR_FFT_ALL[6144],
-        &IR_FFT_ALL[8192],
-        &IR_FFT_ALL[10240],
-        &IR_FFT_ALL[12288],
-        &IR_FFT_ALL[14336],
-        &IR_FFT_ALL[16384],
-        &IR_FFT_ALL[18432],
-        &IR_FFT_ALL[20480],
-        &IR_FFT_ALL[22528],
-        &IR_FFT_ALL[24576],
-        &IR_FFT_ALL[26624],
-        &IR_FFT_ALL[28672],
-        &IR_FFT_ALL[30720],
-        &IR_FFT_ALL[32768],
-        &IR_FFT_ALL[34816],
-        &IR_FFT_ALL[36864],
-        &IR_FFT_ALL[38912],
-        &IR_FFT_ALL[40960],
-        &IR_FFT_ALL[43008],
-        &IR_FFT_ALL[45056],
-        &IR_FFT_ALL[47104],
-        &IR_FFT_ALL[49152],
-        &IR_FFT_ALL[51200],
-        &IR_FFT_ALL[53248],
-        &IR_FFT_ALL[55296],
-        &IR_FFT_ALL[57344],
-        &IR_FFT_ALL[59392],
-        &IR_FFT_ALL[61440],
-        &IR_FFT_ALL[63488],
-        &IR_FFT_ALL[65536],
-        &IR_FFT_ALL[67584],
-        &IR_FFT_ALL[69632],
-        &IR_FFT_ALL[71680],
-        &IR_FFT_ALL[73728],
-        &IR_FFT_ALL[75776],
-        &IR_FFT_ALL[77824],
-        &IR_FFT_ALL[79872],
-        &IR_FFT_ALL[81920],
-        &IR_FFT_ALL[83968],
-        &IR_FFT_ALL[86016],
-        &IR_FFT_ALL[88064],
-        &IR_FFT_ALL[90112],
-        &IR_FFT_ALL[92160]
-    },
-    .prev_ffts = (float*[]) {
-        PREV_SEG( 0),  PREV_SEG( 1),  PREV_SEG( 2),  PREV_SEG( 3),
-        PREV_SEG( 4),  PREV_SEG( 5),  PREV_SEG( 6),  PREV_SEG( 7),
-        PREV_SEG( 8),  PREV_SEG( 9),  PREV_SEG(10),  PREV_SEG(11),
-        PREV_SEG(12),  PREV_SEG(13),  PREV_SEG(14),  PREV_SEG(15),
-        PREV_SEG(16),  PREV_SEG(17),  PREV_SEG(18),  PREV_SEG(19),
-        PREV_SEG(20),  PREV_SEG(21),  PREV_SEG(22),  PREV_SEG(23),
-        PREV_SEG(24),  PREV_SEG(25),  PREV_SEG(26),  PREV_SEG(27),
-        PREV_SEG(28),  PREV_SEG(29),  PREV_SEG(30),  PREV_SEG(31),
-        PREV_SEG(32),  PREV_SEG(33),  PREV_SEG(34),  PREV_SEG(35),
-        PREV_SEG(36),  PREV_SEG(37),  PREV_SEG(38),  PREV_SEG(39),
-        PREV_SEG(40),  PREV_SEG(41),  PREV_SEG(42),  PREV_SEG(43),
-        PREV_SEG(44),  PREV_SEG(45)
-    },
-
-};
-
-*/
-
-void fir_emt_140_dark_3_f32_init(fir_t *self, float *state){
-
-#define SCRATCH      (state)
-#define IR_TABLE     ((const float **)(state + SCRATCH_FLOATS))
-#define PREV_TABLE   ((float       **)(state + SCRATCH_FLOATS + EMT_SEGMENTS))
-
-    self->ir_ffts      = IR_TABLE;
-    self->prev_ffts    = PREV_TABLE;
-    self->numSegments  = EMT_SEGMENTS;
-    self->curr_fftidx  = 0;
-    self->prev_fftidx  = 0;
-
-    for (uint32_t i = 0; i < EMT_SEGMENTS; ++i) {
-        IR_TABLE [i] = &_EMT_IR_FFT_ALL[i * FFT_SIZE];  /* spectrums  */
-        PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
-    }
-
-}
 

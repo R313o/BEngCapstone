@@ -45,7 +45,12 @@ extern supro_simulation_f32 supro_sim;
 /**
  * @brief supro simulation iniitialization function. Call once before using process
  */
-extern void supro_init_f32();
+extern void supro_init();
+
+// void supro_init_f32();
+//void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p);
+//void supro_simulation_f32_init(supro_simulation_f32 *self, float32_t *state, fir_t *fir1, fir_t *fir2, fir_t *fir3);
+
 
 
 /**
@@ -62,7 +67,8 @@ static void supro_poweramp_f32();
 /******************************************************************/
 typedef struct {
     fir_t *fir1;     	 /**< Handler for stage-1 filter  */
-    void  (*process)(pipe *p);  /**< Processing callback */
+    float32_t *state;
+    //void  (*process)(pipe *p);  /**< Processing callback */
 } cabinet_simulation_f32;
 
 
@@ -70,7 +76,9 @@ typedef struct {
   * @brief  Top-level private processing functions for the cabinet simulation
   * @param  p Pointer to the audio pipe context
   */
-static void cabinet_process(pipe *p);
+
+void cabinet_simulation_f32_process(cabinet_simulation_f32 *self, pipe *p);
+void cabinet_simulation_f32_init(cabinet_simulation_f32 *self, float32_t *state, fir_t *fir);
 
 
 /******************************************************************/
