@@ -96,7 +96,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 
 uint32_t cycles;
+__attribute__((section(".dtcm"), aligned(32))) float state5[BUFFER_SIZE];
 
+convolution_reverb_f32 convolution_reverb;
 
 
 /* USER CODE END 0 */
@@ -163,6 +165,7 @@ int main(void)
   pipeInit(&apipe);
 
   supro_init_f32(); //replace with fx_int();
+  convolution_reverb_f32_init(&convolution_reverb, state5 );
 
   /* USER CODE END 2 */
 
@@ -187,7 +190,7 @@ int main(void)
 
 		 supro_sim.process(&apipe);
 		 cabinet_sim.process(&apipe);
-		 convolution_reverb.process(&apipe);
+		 convolution_reverb_f32_process(&convolution_reverb, &apipe);
 
 		 // cycles = DWT->CYCCNT;
 

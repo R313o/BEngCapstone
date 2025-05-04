@@ -3,19 +3,18 @@
 #include "_MULTI_FX.h"
 
 
-convolution_reverb_f32 convolution_reverb = {
+void convolution_reverb_f32_process(convolution_reverb_f32 *self, pipe *p){
 
-    .fir1 = &fir_emt_140_dark_3,
+	partitioned_fir_convolution_fft(p, convolution_reverb.fir1, self->state);
 
-	.process =&convolution_reverb_process
-};
-
-__attribute__((section(".dtcm"), aligned(32))) float state5[BUFFER_SIZE];
+}
 
 
-static void convolution_reverb_process(pipe *p){
+void convolution_reverb_f32_init(convolution_reverb_f32 *self, float32_t *state){
 
-	partitioned_fir_convolution_fft(p, convolution_reverb.fir1, state5);
+	self->state = state;
+	self->fir1 = &fir_emt_140_dark_3;
+
 
 }
 
