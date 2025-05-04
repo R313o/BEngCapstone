@@ -95,7 +95,7 @@ typedef struct {
   * @param  p Pointer to the audio pipe context
   */
 void convolution_reverb_f32_process(convolution_reverb_f32 *self, pipe *p);
-void convolution_reverb_f32_init(convolution_reverb_f32 *self, float32_t *state);
+void convolution_reverb_f32_init(convolution_reverb_f32 *self, float32_t *state, fir_t *fir);
 /******************************************************************/
 /* Global instance of the convolution reverb                   */
 /******************************************************************/

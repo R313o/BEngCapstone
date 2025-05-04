@@ -94261,9 +94261,11 @@ __attribute__((aligned(32))) float prev_ffts_45_EMT[2048] = {0};
 __attribute__((aligned(32))) float prev_ffts_46_EMT[2048] = {0};
 */
 
-__attribute__((aligned(32))) 	  float prev_ffts_EMT[94208] = {0};
+//__attribute__((aligned(32))) 	  float prev_ffts_EMT[94208] = {0};
 
-#define IR_FFT_ALL _EMT_IR_FFT_ALL
+//#define IR_FFT_ALL _EMT_IR_FFT_ALL
+
+/*
 
 #define PREV_SEG(i) (&prev_ffts_EMT[(i) * 2048])
 
@@ -94338,4 +94340,24 @@ fir_t fir_emt_140_dark_3 = {
 
 };
 
+*/
+
+void fir_emt_140_dark_3_f32_init(fir_t *self, float *state){
+
+#define SCRATCH      (state)
+#define IR_TABLE     ((const float **)(state + SCRATCH_FLOATS))
+#define PREV_TABLE   ((float       **)(state + SCRATCH_FLOATS + EMT_SEGMENTS))
+
+    self->ir_ffts      = IR_TABLE;
+    self->prev_ffts    = PREV_TABLE;
+    self->numSegments  = EMT_SEGMENTS;
+    self->curr_fftidx  = 0;
+    self->prev_fftidx  = 0;
+
+    for (uint32_t i = 0; i < EMT_SEGMENTS; ++i) {
+        IR_TABLE [i] = &_EMT_IR_FFT_ALL[i * FFT_SIZE];  /* spectrums  */
+        PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
+    }
+
+}
 

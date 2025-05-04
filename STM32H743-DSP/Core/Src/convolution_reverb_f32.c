@@ -10,10 +10,10 @@ void convolution_reverb_f32_process(convolution_reverb_f32 *self, pipe *p){
 }
 
 
-void convolution_reverb_f32_init(convolution_reverb_f32 *self, float32_t *state){
+void convolution_reverb_f32_init(convolution_reverb_f32 *self, float32_t *state, fir_t *fir){
 
 	self->state = state;
-	self->fir1 = &fir_emt_140_dark_3;
+	self->fir1 = fir;
 
 
 }

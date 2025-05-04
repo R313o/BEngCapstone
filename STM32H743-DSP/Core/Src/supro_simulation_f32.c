@@ -135,7 +135,7 @@ void supro_process(pipe *p)
 
 	/* Third FIR filter */
 	//partitioned_fir_convolution_fft(p, supro_sim.fir3, state3, fftOut3, zeropad3);
-	partitioned_fir_convolution_fft(p, supro_sim.fir2, state3);
+	partitioned_fir_convolution_fft(p, supro_sim.fir3, state3);
     //arm_fir_f32(&h3_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
 
 
