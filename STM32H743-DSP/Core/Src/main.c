@@ -103,12 +103,16 @@ uint32_t cycles;
 //float prev_ffts_EMT[94208 + 46 * 2];
 //float prev_ffts_OD_M212[2048 + 1 * 2];
 
-fir_t fir_emt_140_dark_3; /* fir handler */
+//fir_t fir_emt_140_dark_3; /* fir handler */
 fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
 
+fir_t *fir_emt_140_dark_3_ptr; /* fir handler */
+
+
+FX_HANDLER_t fx_handle_0;
 
 cabinet_simulation_f32 cabinet_sim;
-convolution_reverb_f32 convolution_reverb;
+convolution_reverb_f32 *convolution_reverb_ptr;
 
 float *cab_ptr_alloc, *conv_ptr_alloc, *conv_fft_ptr_alloc, *cab_fft_ptr_alloc;
 
@@ -182,33 +186,35 @@ int main(void)
 
   supro_init_f32();
 
+/*
 #define NUMSEGMENTS_EMT 46U
 
-  conv_fft_ptr_alloc = (float*)_static_mem_alloc((NUMSEGMENTS_EMT*FFT_SIZE + 2*NUMSEGMENTS_EMT)*sizeof(float), _Alignof(float));
+  {
 
-  if (conv_fft_ptr_alloc == NULL) while(1);
+	  conv_fft_ptr_alloc = (float*)_static_mem_alloc((NUMSEGMENTS_EMT*FFT_SIZE + 2*NUMSEGMENTS_EMT)*sizeof(float), _Alignof(float));
+	  conv_ptr_alloc = (float *)_dctm_static_mem_alloc(BUFFER_SIZE*sizeof(float), _Alignof(float));
+
+	  fir_emt_140_dark_3_ptr = (fir_t*)_static_mem_alloc(sizeof(fir_t), _Alignof(fir_t));
+	  convolution_reverb_ptr = (convolution_reverb_f32*)_static_mem_alloc(sizeof(convolution_reverb_f32), _Alignof(convolution_reverb_f32));
+
+	  fir_emt_140_dark_3_f32_init(fir_emt_140_dark_3_ptr, conv_fft_ptr_alloc);
+	  convolution_reverb_f32_init(convolution_reverb_ptr, conv_ptr_alloc , fir_emt_140_dark_3_ptr);
+
+  }
+*/
+  fx_reverb_init(&fx_handle_0);
 
 #define NUMSEGMENTS_CAB 1U
 
-  cab_fft_ptr_alloc = (float*)_static_mem_alloc((NUMSEGMENTS_CAB*FFT_SIZE + 2*NUMSEGMENTS_CAB)*sizeof(float), _Alignof(float));
+  {   /*initialization and mem allocation for cabinet*/
 
-  if (cab_fft_ptr_alloc == NULL) while(1);
+	  cab_fft_ptr_alloc = (float*)_static_mem_alloc((NUMSEGMENTS_CAB*FFT_SIZE + 2*NUMSEGMENTS_CAB)*sizeof(float), _Alignof(float));
+	  cab_ptr_alloc = (float *)_dctm_static_mem_alloc(BUFFER_SIZE*sizeof(float), _Alignof(float));
 
-  fir_emt_140_dark_3_f32_init(&fir_emt_140_dark_3, conv_fft_ptr_alloc);
+	  fir_OD_M212_VINT_DYN_201_P05_00_f32_init(&fir_OD_M212_VINT_DYN_201_P05_00, cab_fft_ptr_alloc);
+	  cabinet_simulation_f32_init(&cabinet_sim, cab_ptr_alloc, &fir_OD_M212_VINT_DYN_201_P05_00);
 
-  fir_OD_M212_VINT_DYN_201_P05_00_f32_init(&fir_OD_M212_VINT_DYN_201_P05_00, cab_fft_ptr_alloc);
-
-  conv_ptr_alloc = (float *)_dctm_static_mem_alloc(BUFFER_SIZE*sizeof(float), _Alignof(float));
-
-  if (conv_ptr_alloc == NULL) while(1);
-
-  cab_ptr_alloc = (float *)_dctm_static_mem_alloc(BUFFER_SIZE*sizeof(float), _Alignof(float));
-
-  if (cab_ptr_alloc == NULL) while(1);
-
-  convolution_reverb_f32_init(&convolution_reverb, conv_ptr_alloc , &fir_emt_140_dark_3);
-
-  cabinet_simulation_f32_init(&cabinet_sim, cab_ptr_alloc, &fir_OD_M212_VINT_DYN_201_P05_00);
+  }
 
 
   /* USER CODE END 2 */
@@ -232,27 +238,17 @@ int main(void)
 
 		 //DWT->CYCCNT = 0;
 
-		 //convolution_reverb_f32_process(&convolution_reverb, &apipe);
-
 		 supro_sim.process(&apipe);
 
 		 cabinet_simulation_f32_process(&cabinet_sim, &apipe);
 
-		 convolution_reverb_f32_process(&convolution_reverb, &apipe);
+		 //convolution_reverb_f32_process(&fx_handle_0, &apipe);
 
-		 //arm_scale_f32(p->processBuffer, 0.0001, p->processBuffer, BUFFER_SIZE);
+		 fx_handle_0.process(&fx_handle_0, &apipe);
+
 	     arm_scale_f32(apipe.processBuffer, 1, apipe.processBuffer, BUFFER_SIZE);
 
 		 // cycles = DWT->CYCCNT;
-
-		 // IF SIGNAL IS CLIPPING
-		 //for(int i =0; i < BUFFER_SIZE; i++){
-
-			// if(apipe.processBuffer[i] <= -1 || apipe.processBuffer[i] >= 1 ){
-				// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
-			 //}
-
-		 //}
 
 		 // GPIO low
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 0);

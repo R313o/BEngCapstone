@@ -20,7 +20,6 @@ void fir_emt_140_dark_3_f32_init(fir_t *self, float *state){
 
 }
 
-
 /* FIR Coefficients */
 
 __attribute__((aligned(32))) const float _EMT_IR_FFT_ALL[94208] = {

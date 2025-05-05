@@ -42,7 +42,7 @@ void *_dctm_static_mem_alloc(size_t size, size_t align)
 {
     size_t off = align_up(dtcm_pool_head, align);
     if (off + size > DTCM_STATIC_POOL_SIZE)
-        return NULL;                             // out of memory
+    	_memory_alloc_error_handler();// return NULL;                             // out of memory
     dtcm_pool_head = off + size;
     return &dtcm_static_pool[off];
 }
@@ -52,9 +52,15 @@ void *_static_mem_alloc(size_t size, size_t align)
 {
     size_t off = align_up(pool_head, align);
     if (off + size > STATIC_POOL_SIZE)
-        return NULL;                             // out of memory
+    	_memory_alloc_error_handler(); //return NULL;                             // out of memory
     pool_head = off + size;
     return &static_pool[off];
 }
 
 
+
+void _memory_alloc_error_handler(){
+
+	while(1);
+
+}

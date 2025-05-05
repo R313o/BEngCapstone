@@ -24,6 +24,7 @@
 #define INC_MULTI_FX_H_
 
 #include "partitioned_fir_convolution_fft.h"
+#include "mem_manager_multi_fx.h"
 
 
 
@@ -34,11 +35,15 @@ typedef enum {
 	FX_SUPRO
 } MULTI_FX_type_t;
 
-typedef struct {
+typedef struct FX_HANDLER_t {
+    MULTI_FX_type_t type;
+    void (*process)(struct FX_HANDLER_t *self, pipe *p);
+    void *states[5];
+} FX_HANDLER_t;
 
-	MULTI_FX_type_t  type;
+void fx_reverb_init(FX_HANDLER_t *fx );
 
-} MULTI_FX_base_t;
+//void convolution_reverb_f32_process_FX_WRAPPER(convolution_reverb_f32 *self, pipe *p);
 
 
 /******************************************************************/
@@ -108,6 +113,7 @@ extern cabinet_simulation_f32 cabinet_sim;
 /* Convolution reverb effect struct.				              */
 /******************************************************************/
 typedef struct {
+	FX_HANDLER_t  base;
     fir_t *fir1;     	 		/**< Handler for stage-1 filter  */
     float32_t *state;
     //void  (*process)(pipe *p);  /**< Processing callback */
@@ -118,8 +124,11 @@ typedef struct {
   * @brief  Top-level private processing functions for the convolution reverb
   * @param  p Pointer to the audio pipe context
   */
-void convolution_reverb_f32_process(convolution_reverb_f32 *self, pipe *p);
+//void convolution_reverb_f32_process(convolution_reverb_f32 *self, pipe *p);
 void convolution_reverb_f32_init(convolution_reverb_f32 *self, float32_t *state, fir_t *fir);
+void convolution_reverb_f32_process(FX_HANDLER_t *self, pipe *p);
+
+//void convolution_reverb_f32_init(FX_HANDLER_t *self, float32_t *state, fir_t *fir);
 /******************************************************************/
 /* Global instance of the convolution reverb                   */
 /******************************************************************/
@@ -129,3 +138,18 @@ extern convolution_reverb_f32 convolution_reverb;
 
 
 #endif /* INC_MULTI_FX_H_ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
