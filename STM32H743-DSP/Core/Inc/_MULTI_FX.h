@@ -76,37 +76,37 @@ extern FX_HANDLER_t fx_handle_1;
  * Groups three FIR filters and a pipeline processing callback.
  */
 typedef struct {
+	FX_HANDLER_t base;
     fir_t  *fir1;      /**< Stage-1 FIR filter */
     fir_t  *fir2;      /**< Stage-2 FIR filter */
     fir_t  *fir3;      /**< Stage-3 FIR filter */
-    void   (*process)(pipe *p); /**< Pipeline processing callback */
+    //void   (*process)(pipe *p); /**< Pipeline processing callback */
 } supro_simulation_f32;
 
 /**
  * @brief Global instance of the Supro simulation
  */
-extern supro_simulation_f32 supro_sim;
+//extern supro_simulation_f32 supro_sim;
 
 /**
  * @brief Initialize the Supro simulation (must be called before use)
  */
-void supro_init_f32(void);
-
+void supro_simulation_init_f32(supro_simulation_f32 *self, fir_t *fir1, fir_t *fir2, fir_t *fir3);
 /**
  * @brief Internal Supro processing step
  * @param p Pointer to the audio pipe context
  */
-static void supro_process(pipe *p);
+void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p);
 
 /**
  * @brief Internal Supro preamp stage
  */
-static void supro_preamp_f32();
+void supro_preamp_f32(pipe *p);
 
 /**
  * @brief Internal Supro poweramp stage
  */
-static void supro_poweramp_f32();
+void supro_poweramp_f32(pipe *p);
 
 //=============================================================================
 // Cabinet Simulation

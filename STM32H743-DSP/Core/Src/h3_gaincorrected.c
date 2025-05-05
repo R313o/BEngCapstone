@@ -2052,7 +2052,7 @@ const float _H3_IR_FFT_ALL[2048] = {
   0.038736f,
 };
 
- __attribute__((aligned(32))) float _H3_prev_ffts_[2048] = {0};
+ __attribute__((aligned(32))) float _H3_prev_ffts[2048] = {0};
 
 fir_t fir_h3_gaincorrected = {
     .ir_ffts = (const float*[]){

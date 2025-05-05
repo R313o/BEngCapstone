@@ -8,7 +8,7 @@ supro_simulation_f32 supro_sim = {
 	.fir2 = &fir_h2_gaincorrected,
 	.fir3 = &fir_h2_gaincorrected,
 
-	.process =&supro_process
+	//.process =&supro_process
 };
 
 
@@ -71,13 +71,13 @@ static arm_biquad_casd_df1_inst_f32 preampLP;
 static arm_biquad_casd_df1_inst_f32 powerampLP;
 
 
-arm_fir_instance_f32 h1_fir_f32;
-arm_fir_instance_f32 h2_fir_f32;
-arm_fir_instance_f32 h3_fir_f32;
+//arm_fir_instance_f32 h1_fir_f32;
+//arm_fir_instance_f32 h2_fir_f32;
+//arm_fir_instance_f32 h3_fir_f32;
 
-static float32_t h1_fir[BLOCK_SIZE + h1_fir_LEN - 1];
-static float32_t h2_fir[BLOCK_SIZE + h2_fir_LEN - 1];
-static float32_t h3_fir[BLOCK_SIZE + h3_fir_LEN - 1];
+//static float32_t h1_fir[BLOCK_SIZE + h1_fir_LEN - 1];
+//static float32_t h2_fir[BLOCK_SIZE + h2_fir_LEN - 1];
+//static float32_t h3_fir[BLOCK_SIZE + h3_fir_LEN - 1];
 
 
 static const float32_t LP5Hz_Biquad[5] =
@@ -89,8 +89,14 @@ static const float32_t LP5Hz_Biquad[5] =
    -0.99907482762f      /* -( 0.99907483) */
 };
 
-void supro_init_f32()
+void supro_simulation_init_f32(supro_simulation_f32 *self, fir_t *fir1, fir_t *fir2, fir_t*fir3) //float32_t *state
 {
+
+    self->fir1  = fir1;
+    self->fir2  = fir2;
+    self->fir3  = fir3;
+   // self->state = state;
+
 
     arm_biquad_cascade_df1_init_f32(&preampLP,  LP_STAGES,
                                     (float32_t *)LP5Hz_Biquad,
@@ -99,11 +105,9 @@ void supro_init_f32()
                                     (float32_t *)LP5Hz_Biquad,
                                     powerampLP_State);
 
-	arm_fir_init_f32(&h1_fir_f32, h1_fir_LEN, (float32_t *)&h1_fir_coeffs[0], &h1_fir[0], (uint32_t)BLOCK_SIZE);
-	arm_fir_init_f32(&h2_fir_f32, h2_fir_LEN, (float32_t *)&h2_fir_coeffs[0], &h2_fir[0], (uint32_t)BLOCK_SIZE);
-	arm_fir_init_f32(&h3_fir_f32, h3_fir_LEN, (float32_t *)&h3_fir_coeffs[0], &h3_fir[0], (uint32_t)BLOCK_SIZE);
-
-
+	//arm_fir_init_f32(&h1_fir_f32, h1_fir_LEN, (float32_t *)&h1_fir_coeffs[0], &h1_fir[0], (uint32_t)BLOCK_SIZE);
+	//arm_fir_init_f32(&h2_fir_f32, h2_fir_LEN, (float32_t *)&h2_fir_coeffs[0], &h2_fir[0], (uint32_t)BLOCK_SIZE);
+	//arm_fir_init_f32(&h3_fir_f32, h3_fir_LEN, (float32_t *)&h3_fir_coeffs[0], &h3_fir[0], (uint32_t)BLOCK_SIZE);
 
 
 }
@@ -111,7 +115,7 @@ void supro_init_f32()
 
 /* --- implementation --- */
 
-void supro_process(pipe *p)
+void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p)
 {
 
 	arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BUFFER_SIZE);
