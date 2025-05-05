@@ -1,155 +1,175 @@
 /**
-  ******************************************************************************
-  * @file    supro_simulation.h
-  * @brief   Multi-stage FFT-based convolution simulation interface.
-  *
-  * This header exposes:
-  *   - The supro_simulation_f32 struct, grouping three FIR filters and a
-  *     processing callback for the audio pipeline.
-  *   - The global simulation instance `supro_sim`.
-  *   - The `supro_process()` prototype, which dispatches each filter stage.
-  *   - Three sets of zero-pad, overlap (state), and FFT output buffers,
-  *     all 32-byte aligned in DTCM for DMA/SIMD-optimized FFT routines.
-  *
-  * Include this file to configure and run the three-stage convolution chain.
-  *
-  * @author
-  *   Hassan Islam
-  * @date
-  *   April 2025
-  ******************************************************************************
-  */
+ * @file    supro_simulation.h
+ * @brief   Multi-stage FFT-based convolution simulation interface.
+ *
+ * This header exposes:
+ *   - The `FX_HANDLER_t` struct for generic FX handling.
+ *   - The `supro_simulation_f32` struct for three-stage Supro convolution.
+ *   - The `cabinet_simulation_f32` and `convolution_reverb_f32` structs.
+ *   - Initialization and processing callbacks for each effect.
+ *
+ * @author
+ *   Hassan Islam
+ * @date
+ *   April 2025
+ */
 
-#ifndef INC_MULTI_FX_H_
-#define INC_MULTI_FX_H_
+#ifndef SUPRO_SIMULATION_H_
+#define SUPRO_SIMULATION_H_
 
 #include "partitioned_fir_convolution_fft.h"
 #include "mem_manager_multi_fx.h"
 
+//=============================================================================
+// Generic FX Handler
+//=============================================================================
 
-
+/**
+ * @brief Supported multi-FX types
+ */
 typedef enum {
-    FX_REVERB,
-    FX_CHORUS,
-	FX_CABINET,
-	FX_SUPRO
+    FX_REVERB,    /**< Reverb effect */
+    FX_CHORUS,    /**< Chorus effect */
+    FX_CABINET,   /**< Cabinet simulation */
+    FX_SUPRO      /**< Supro simulation */
 } MULTI_FX_type_t;
 
+/**
+ * @brief Generic FX handler structure
+ */
 typedef struct FX_HANDLER_t {
-    MULTI_FX_type_t type;
-    void (*process)(struct FX_HANDLER_t *self, pipe *p);
-    void *states[5];
+    MULTI_FX_type_t      type;      /**< FX type identifier */
+    void (*process)(struct FX_HANDLER_t *self, pipe *p); /**< Processing callback */
+    void *states[5];                 /**< Pointers to effect-specific state buffers */
 } FX_HANDLER_t;
 
-void fx_reverb_init(FX_HANDLER_t *fx );
+/**
+ * @brief Initialize a reverb FX handler
+ * @param fx Pointer to an FX_HANDLER_t to initialize
+ */
+void fx_reverb_init(FX_HANDLER_t *fx);
 
-//void convolution_reverb_f32_process_FX_WRAPPER(convolution_reverb_f32 *self, pipe *p);
+/**
+ * @brief Initialize a cabinet FX handler
+ * @param fx Pointer to an FX_HANDLER_t to initialize
+ */
+void fx_cabinet_init(FX_HANDLER_t *fx);
+
+/**
+ * @brief Global FX handler instances (user-defined)
+ */
+extern FX_HANDLER_t fx_handle_0;
+extern FX_HANDLER_t fx_handle_1;
 
 
-/******************************************************************/
-/* supro simulation struct.				                          */
-/******************************************************************/
+//________________________(PRIVATE) STATIC DEFINITIONS___________________________//
+
+
+
+//=============================================================================
+// Supro Simulation
+//=============================================================================
+
+/**
+ * @brief Supro multi-stage convolution simulation
+ *
+ * Groups three FIR filters and a pipeline processing callback.
+ */
 typedef struct {
-    fir_t *fir1;     	 /**< Handler for stage-1 filter  */
-    fir_t *fir2;      	 /**< Handler for stage-2 filter  */
-    fir_t *fir3;      	 /**< Handler for stage-3 filter  */
-    void  (*process)(pipe *p);  /**< Processing callback */
+    fir_t  *fir1;      /**< Stage-1 FIR filter */
+    fir_t  *fir2;      /**< Stage-2 FIR filter */
+    fir_t  *fir3;      /**< Stage-3 FIR filter */
+    void   (*process)(pipe *p); /**< Pipeline processing callback */
 } supro_simulation_f32;
 
-
-
-/******************************************************************/
-/* Global instance of the supro simulation.                       */
-/******************************************************************/
+/**
+ * @brief Global instance of the Supro simulation
+ */
 extern supro_simulation_f32 supro_sim;
 
 /**
- * @brief supro simulation iniitialization function. Call once before using process
+ * @brief Initialize the Supro simulation (must be called before use)
  */
-extern void supro_init_f32();
-
-// void supro_init_f32();
-//void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p);
-//void supro_simulation_f32_init(supro_simulation_f32 *self, float32_t *state, fir_t *fir1, fir_t *fir2, fir_t *fir3);
-
-
+void supro_init_f32(void);
 
 /**
-  * @brief  Top-level private processing functions for the supro simulation
-  * @param  p Pointer to the audio pipe context
-  */
+ * @brief Internal Supro processing step
+ * @param p Pointer to the audio pipe context
+ */
 static void supro_process(pipe *p);
+
+/**
+ * @brief Internal Supro preamp stage
+ */
 static void supro_preamp_f32();
+
+/**
+ * @brief Internal Supro poweramp stage
+ */
 static void supro_poweramp_f32();
 
+//=============================================================================
+// Cabinet Simulation
+//=============================================================================
 
-/******************************************************************/
-/* Cabinet simulation struct.				                      */
-/******************************************************************/
+/**
+ * @brief Cabinet simulation structure
+ */
 typedef struct {
-    fir_t *fir1;     	 /**< Handler for stage-1 filter  */
-    float32_t *state;
-    //void  (*process)(pipe *p);  /**< Processing callback */
+    FX_HANDLER_t  base;    /**< Base FX handler */
+    fir_t        *fir1;    /**< Cabinet FIR filter */
+    float32_t    *state;   /**< Overlap/state buffer */
 } cabinet_simulation_f32;
 
+/**
+ * @brief Initialize a cabinet simulation instance
+ * @param self  Pointer to cabinet_simulation_f32 to initialize
+ * @param state Pointer to user-provided state buffer
+ * @param fir   Pointer to FIR filter handler
+ */
+static void cabinet_simulation_f32_init(cabinet_simulation_f32 *self,
+                                 float32_t *state,
+                                 fir_t *fir);
 
 /**
-  * @brief  Top-level private processing functions for the cabinet simulation
-  * @param  p Pointer to the audio pipe context
-  */
+ * @brief Cabinet processing callback
+ * @param self Pointer to FX_HANDLER_t base
+ * @param p    Pointer to the audio pipe context
+ */
+static void cabinet_simulation_f32_process(FX_HANDLER_t *self, pipe *p);
 
-void cabinet_simulation_f32_process(cabinet_simulation_f32 *self, pipe *p);
-void cabinet_simulation_f32_init(cabinet_simulation_f32 *self, float32_t *state, fir_t *fir);
+// extern cabinet_simulation_f32 cabinet_sim; // Optional global instance
 
+//=============================================================================
+// Convolution Reverb
+//=============================================================================
 
-/******************************************************************/
-/* Global instance of the cabinet simulation.                     */
-/******************************************************************/
-extern cabinet_simulation_f32 cabinet_sim;
-
-
-
-/******************************************************************/
-/* Convolution reverb effect struct.				              */
-/******************************************************************/
+/**
+ * @brief Convolution reverb effect structure
+ */
 typedef struct {
-	FX_HANDLER_t  base;
-    fir_t *fir1;     	 		/**< Handler for stage-1 filter  */
-    float32_t *state;
-    //void  (*process)(pipe *p);  /**< Processing callback */
+    FX_HANDLER_t  base;    /**< Base FX handler */
+    fir_t        *fir1;    /**< Reverb FIR filter */
+    float32_t    *state;   /**< Overlap/state buffer */
 } convolution_reverb_f32;
 
+/**
+ * @brief Initialize a convolution reverb instance
+ * @param self  Pointer to convolution_reverb_f32 to initialize
+ * @param state Pointer to user-provided state buffer
+ * @param fir   Pointer to FIR filter handler
+ */
+static void convolution_reverb_f32_init(convolution_reverb_f32 *self,
+                                 float32_t *state,
+                                 fir_t *fir);
 
 /**
-  * @brief  Top-level private processing functions for the convolution reverb
-  * @param  p Pointer to the audio pipe context
-  */
-//void convolution_reverb_f32_process(convolution_reverb_f32 *self, pipe *p);
-void convolution_reverb_f32_init(convolution_reverb_f32 *self, float32_t *state, fir_t *fir);
-void convolution_reverb_f32_process(FX_HANDLER_t *self, pipe *p);
-
-//void convolution_reverb_f32_init(FX_HANDLER_t *self, float32_t *state, fir_t *fir);
-/******************************************************************/
-/* Global instance of the convolution reverb                   */
-/******************************************************************/
-extern convolution_reverb_f32 convolution_reverb;
+ * @brief Convolution reverb processing callback
+ * @param self Pointer to FX_HANDLER_t base
+ * @param p    Pointer to the audio pipe context
+ */
+static void convolution_reverb_f32_process(FX_HANDLER_t *self, pipe *p);
 
 
 
-
-#endif /* INC_MULTI_FX_H_ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // SUPRO_SIMULATION_H_

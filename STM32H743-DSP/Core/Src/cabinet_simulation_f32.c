@@ -1,32 +1,106 @@
+/**
+ * @file    fx_cabinet.c
+ * @brief   Cabinet simulation implementation for multi-FX engine.
+ *
+ * Allocates and initializes the FIR filter, state buffers, and processing callbacks
+ * for the cabinet effect using partitioned FFT convolution.
+ *
+ * @author
+ *   Hassan Islam
+ * @date
+ *   May 2025
+ */
 
-//#include "supro_simulation.h"
 #include "_MULTI_FX.h"
 
-
-/*
-cabinet_simulation_f32 cabinet_sim = {
-
-    .fir1 = &fir_OD_M212_VINT_DYN_201_P05_00,
-
-	.process =&cabinet_process
-};
-*/
-
-__attribute__((section(".dtcm"), aligned(32))) float state4[BUFFER_SIZE];
-
-
-void cabinet_simulation_f32_process(cabinet_simulation_f32 *self, pipe *p){
-
-	partitioned_fir_convolution_fft(p, self->fir1, self->state);
-
-}
-void cabinet_simulation_f32_init(cabinet_simulation_f32 *self, float32_t *state, fir_t *fir){
-
-
-	self->fir1 = fir;
-	self->state = state;
-
+/**
+ * @brief Cabinet effect processing function.
+ *
+ * Dispatches a single-stage partitioned FIR convolution for the cabinet simulation.
+ *
+ * @param self Generic FX handler containing allocated state and FIR pointers.
+ * @param p    Audio pipeline context.
+ */
+void cabinet_simulation_f32_process(FX_HANDLER_t *self, pipe *p)
+{
+    // self->states[2]: pointer to FIR filter handler
+    // self->states[1]: pointer to overlap/state buffer
+    partitioned_fir_convolution_fft(
+        p,
+        (fir_t *)self->states[2],
+        (float32_t *)self->states[1]
+    );
 }
 
+/**
+ * @brief Initialize a cabinet simulation instance.
+ *
+ * Sets the FIR handler and state buffer on a cabinet_simulation_f32 struct.
+ *
+ * @param self  Pointer to cabinet_simulation_f32 to initialize.
+ * @param state Pointer to DTCM-aligned overlap/state buffer (BUFFER_SIZE floats).
+ * @param fir   Pointer to FIR filter handler.
+ */
+void cabinet_simulation_f32_init(
+    cabinet_simulation_f32 *self,
+    float32_t *state,
+    fir_t *fir
+)
+{
+    self->fir1  = fir;
+    self->state = state;
+}
 
+/**
+ * @brief Configure a generic FX handler for cabinet simulation.
+ *
+ * Allocates necessary memory for FFT-domain buffers, overlap buffers, FIR handler,
+ * and the cabinet simulation instance. Then initializes each component and sets
+ * the processing callback.
+ *
+ * @param fx Pointer to FX_HANDLER_t to configure for cabinet effect.
+ */
+void fx_cabinet_init(FX_HANDLER_t *fx)
+{
+    const uint32_t numSegments = 1U;
 
+    // Allocate FFT-domain memory for FIR (numSegments * FFT_SIZE floats + overlap paddings)
+    fx->states[0] = _static_mem_alloc(
+        (numSegments * FFT_SIZE + 2 * numSegments) * sizeof(float),
+        _Alignof(float)
+    );
+
+    // Allocate DTCM state buffer for overlap (BUFFER_SIZE floats)
+    fx->states[1] = _dctm_static_mem_alloc(
+        BUFFER_SIZE * sizeof(float),
+        _Alignof(float)
+    );
+
+    // Allocate FIR filter handler
+    fx->states[2] = _static_mem_alloc(
+        sizeof(fir_t),
+        _Alignof(fir_t)
+    );
+
+    // Allocate cabinet simulation instance
+    fx->states[3] = _static_mem_alloc(
+        sizeof(cabinet_simulation_f32),
+        _Alignof(cabinet_simulation_f32)
+    );
+
+    // Initialize FIR filter with FFT memory
+    fir_OD_M212_VINT_DYN_201_P05_00_f32_init(
+        (fir_t *)fx->states[2],
+        (float *)fx->states[0]
+    );
+
+    // Initialize cabinet simulation with state buffer and FIR handler
+    cabinet_simulation_f32_init(
+        (cabinet_simulation_f32 *)fx->states[3],
+        (float32_t *)fx->states[1],
+        (fir_t *)fx->states[2]
+    );
+
+    // Assign processing callback for cabinet effect
+    fx->process = cabinet_simulation_f32_process;
+}

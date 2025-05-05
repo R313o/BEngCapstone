@@ -109,10 +109,11 @@ fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
 fir_t *fir_emt_140_dark_3_ptr; /* fir handler */
 
 
-FX_HANDLER_t fx_handle_0;
+FX_HANDLER_t fx_handle_0, fx_handle_1;
+
 
 cabinet_simulation_f32 cabinet_sim;
-convolution_reverb_f32 *convolution_reverb_ptr;
+//convolution_reverb_f32 *convolution_reverb_ptr;
 
 float *cab_ptr_alloc, *conv_ptr_alloc, *conv_fft_ptr_alloc, *cab_fft_ptr_alloc;
 
@@ -203,10 +204,12 @@ int main(void)
   }
 */
   fx_reverb_init(&fx_handle_0);
+  fx_cabinet_init(&fx_handle_1);
 
+  /*
 #define NUMSEGMENTS_CAB 1U
 
-  {   /*initialization and mem allocation for cabinet*/
+  {
 
 	  cab_fft_ptr_alloc = (float*)_static_mem_alloc((NUMSEGMENTS_CAB*FFT_SIZE + 2*NUMSEGMENTS_CAB)*sizeof(float), _Alignof(float));
 	  cab_ptr_alloc = (float *)_dctm_static_mem_alloc(BUFFER_SIZE*sizeof(float), _Alignof(float));
@@ -215,7 +218,7 @@ int main(void)
 	  cabinet_simulation_f32_init(&cabinet_sim, cab_ptr_alloc, &fir_OD_M212_VINT_DYN_201_P05_00);
 
   }
-
+*/
 
   /* USER CODE END 2 */
 
@@ -240,11 +243,8 @@ int main(void)
 
 		 supro_sim.process(&apipe);
 
-		 cabinet_simulation_f32_process(&cabinet_sim, &apipe);
-
-		 //convolution_reverb_f32_process(&fx_handle_0, &apipe);
-
-		 fx_handle_0.process(&fx_handle_0, &apipe);
+		 fx_handle_1.process(&fx_handle_1, &apipe); // cabinet
+		 fx_handle_0.process(&fx_handle_0, &apipe); // reverb
 
 	     arm_scale_f32(apipe.processBuffer, 1, apipe.processBuffer, BUFFER_SIZE);
 
