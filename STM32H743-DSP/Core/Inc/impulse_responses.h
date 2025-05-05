@@ -39,25 +39,40 @@ typedef struct {
 /* Ampifier preamp-H1 impulse response                            */
 /******************************************************************/
 extern __attribute__((aligned(32))) const float _H1_IR_FFT_ALL[2048];
-extern __attribute__((aligned(32))) 	  float _H1_prev_ffts[2048];
+//extern __attribute__((aligned(32))) 	  float _H1_prev_ffts[2048];
 
-extern fir_t fir_h1_gaincorrected; /* fir handler */
+#define H1_SEGMENTS   1U
+#define H1_SCRATCH_FLOATS (H1_SEGMENTS * FFT_SIZE)      /* 2048 */
+
+void fir_h1_f32_init(fir_t *self, float *state);
+
+//extern fir_t fir_h1_gaincorrected; /* fir handler */
 
 /******************************************************************/
 /* Ampifier stage-2-H2 correction impulse response                */
 /******************************************************************/
 extern __attribute__((aligned(32))) const float _H2_IR_FFT_ALL[2048];
-extern __attribute__((aligned(32)))       float _H2_prev_ffts[2048];
+//extern __attribute__((aligned(32)))       float _H2_prev_ffts[2048];
 
-extern fir_t fir_h2_gaincorrected; /* fir handler */
+#define H2_SEGMENTS   1U
+#define H2_SCRATCH_FLOATS (H2_SEGMENTS * FFT_SIZE)      /* 2048 */
+
+void fir_h2_f32_init(fir_t *self, float *state);
+
+//extern fir_t fir_h2_gaincorrected; /* fir handler */
 
 /******************************************************************/
 /* Ampifier power_amplifer-H3 impulse response                    */
 /******************************************************************/
 extern __attribute__((aligned(32))) const float _H3_IR_FFT_ALL[2048];
-extern __attribute__((aligned(32))) 	  float _H3_prev_ffts[2048];
+//extern __attribute__((aligned(32))) 	  float _H3_prev_ffts[2048];
 
-extern fir_t fir_h3_gaincorrected; /* fir handler */
+#define H3_SEGMENTS   1U
+#define H3_SCRATCH_FLOATS (H3_SEGMENTS * FFT_SIZE)      /* 2048 */
+
+void fir_h3_f32_init(fir_t *self, float *state);
+
+//extern fir_t fir_h3_gaincorrected; /* fir handler */
 
 /******************************************************************/
 /* EMT_140_DARK_3 impulse response                                */

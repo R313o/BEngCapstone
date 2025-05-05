@@ -24,6 +24,25 @@
 
 #include "impulse_responses.h"
 
+void fir_h1_f32_init(fir_t *self, float *state){
+
+#define SCRATCH      (state)
+#define IR_TABLE     ((const float **)(state + H1_SCRATCH_FLOATS))
+#define PREV_TABLE   ((float       **)(state + H1_SCRATCH_FLOATS + H1_SEGMENTS))
+
+    self->ir_ffts      = IR_TABLE;
+    self->prev_ffts    = PREV_TABLE;
+    self->numSegments  = H1_SEGMENTS;
+    self->curr_fftidx  = 0;
+    self->prev_fftidx  = 0;
+
+    for (uint32_t i = 0; i < H1_SEGMENTS; ++i) {
+        IR_TABLE [i] = &_H1_IR_FFT_ALL[i * FFT_SIZE];  /* spectrums  */
+        PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
+    }
+
+}
+
 __attribute__((aligned(32)))
 const float _H1_IR_FFT_ALL[2048] = {
   0.318304f,
@@ -2076,17 +2095,4 @@ const float _H1_IR_FFT_ALL[2048] = {
   -0.007809f,
 };
 
-__attribute__((aligned(32))) float _H1_prev_ffts_[2048] = {0};
-
-fir_t fir_h1_gaincorrected = {
-    .ir_ffts = (const float*[]){
-        &_H1_IR_FFT_ALL[0]
-    },
-    .prev_ffts =(float*[]) {
-        &_H1_prev_ffts_[0]
-    },
-    .curr_fftidx = 0,
-    .prev_fftidx = 0,
-    .numSegments = 1
-};
 
