@@ -1,29 +1,99 @@
-//#include "supro_simulation.h"
 #include "_MULTI_FX.h"
 
+
+#define LP_STAGES 1
+
+/* Instance unique objects */
+
+//__attribute__((section(".dtcm"), aligned(32))) float state[BUFFER_SIZE];
+
+//__attribute__((section(".dtcm"), aligned(32))) float state2[BUFFER_SIZE];
+
+//__attribute__((section(".dtcm"), aligned(32))) float state3[BUFFER_SIZE];
+
+__attribute__((section(".dtcm"), aligned(32))) static float32_t preampLP_State[LP_STAGES*4];
+
+__attribute__((section(".dtcm"), aligned(32))) static float32_t powerampLP_State[LP_STAGES*4];
+
+static arm_biquad_casd_df1_inst_f32 preampLP;
+static arm_biquad_casd_df1_inst_f32 powerampLP;
+
+
 /*
-supro_simulation_f32 supro_sim = {
+void fx_supro_init(FX_HANDLER_t *fx)
+{
+    // Three general‐purpose DTCM buffers (state, state2, state3)
+    fx->states[0] = _dctm_static_mem_alloc(
+        BUFFER_SIZE * sizeof(float32_t),
+        _Alignof(float32_t)
+    );
+    fx->states[1] = _dctm_static_mem_alloc(
+        BUFFER_SIZE * sizeof(float32_t),
+        _Alignof(float32_t)
+    );
+    fx->states[2] = _dctm_static_mem_alloc(
+        BUFFER_SIZE * sizeof(float32_t),
+        _Alignof(float32_t)
+    );
 
-    //.fir1 = &fir_emt_140_dark_3,
-    .fir1 = &fir_h1_gaincorrected,
-	.fir2 = &fir_h2_gaincorrected,
-	.fir3 = &fir_h2_gaincorrected,
+    fx->states[3] = _dctm_static_mem_alloc(
+        BUFFER_SIZE * sizeof(float32_t),
+        _Alignof(float32_t)
+    );
 
-	//.process =&supro_process
-};
+
+    // Allocate FFT-domain memory for reverb: numSegments * FFT_SIZE + space for Handlers
+    //
+    //fx->states[0] = _static_mem_alloc(
+    //    (NUMSEGMENTS_EMT * FFT_SIZE + 2 * NUMSEGMENTS_H1) * sizeof(float),
+    //    _Alignof(float)
+    //);
+    //
+
+    // Two biquad state arrays in DTCM
+    fx->states[4] = _dctm_static_mem_alloc(
+        LP_STAGES * 4 * sizeof(float32_t),
+        _Alignof(float32_t)
+    );
+    fx->states[5] = _dctm_static_mem_alloc(
+        LP_STAGES * 4 * sizeof(float32_t),
+        _Alignof(float32_t)
+    );
+
+    // Two CMSIS DSP biquad handler structs in (normal) static memory
+    fx->states[6] = _static_mem_alloc(
+        sizeof(arm_biquad_casd_df1_inst_f32),
+        _Alignof(arm_biquad_casd_df1_inst_f32)
+    );
+    fx->states[7] = _static_mem_alloc(
+        sizeof(arm_biquad_casd_df1_inst_f32),
+        _Alignof(arm_biquad_casd_df1_inst_f32)
+    );
+
+    // Initialize the two filters in place
+    arm_biquad_cascade_df1_init_f32(
+        (arm_biquad_casd_df1_inst_f32 *)fx->states[5],
+        LP_STAGES,
+        preampLP_Coefs,               // your coeff array
+        (float32_t *)fx->states[3]    // preampLP_State
+    );
+    arm_biquad_cascade_df1_init_f32(
+        (arm_biquad_casd_df1_inst_f32 *)fx->states[6],
+        LP_STAGES,
+        powerampLP_Coefs,             // your coeff array
+        (float32_t *)fx->states[4]    // powerampLP_State
+    );
+
+    // process callback
+    fx->process = supro_poweramp_f32;
+}
+
 */
 
-#include "h1_fir.h"
-#include "h2_fir.h"
-#include "h3_fir.h"
 
 
-__attribute__((section(".dtcm"), aligned(32))) float state[BUFFER_SIZE];
 
-__attribute__((section(".dtcm"), aligned(32))) float state2[BUFFER_SIZE];
-
-__attribute__((section(".dtcm"), aligned(32))) float state3[BUFFER_SIZE];
-
+/* end of Instance unique objects */
 
 /* Parameter vector indices */
 #define SUPRO_NUM_A_VALS      40
@@ -58,29 +128,6 @@ static const float supro_parameters[SUPRO_TAYLOR_COEFF_COUNT] = {
 
 };
 
-#define NUM_TAPS              512
-#define BLOCK_SIZE 			  BUFFER_SIZE
-
-
-#define LP_STAGES 1
-__attribute__((section(".dtcm"), aligned(32)))
-static float32_t preampLP_State[LP_STAGES*4];
-__attribute__((section(".dtcm"), aligned(32)))
-static float32_t powerampLP_State[LP_STAGES*4];
-
-static arm_biquad_casd_df1_inst_f32 preampLP;
-static arm_biquad_casd_df1_inst_f32 powerampLP;
-
-
-//arm_fir_instance_f32 h1_fir_f32;
-//arm_fir_instance_f32 h2_fir_f32;
-//arm_fir_instance_f32 h3_fir_f32;
-
-//static float32_t h1_fir[BLOCK_SIZE + h1_fir_LEN - 1];
-//static float32_t h2_fir[BLOCK_SIZE + h2_fir_LEN - 1];
-//static float32_t h3_fir[BLOCK_SIZE + h3_fir_LEN - 1];
-
-
 static const float32_t LP5Hz_Biquad[5] =
 {
     1.07042518514e-07f,
@@ -90,14 +137,14 @@ static const float32_t LP5Hz_Biquad[5] =
    -0.99907482762f      /* -( 0.99907483) */
 };
 
-void supro_simulation_init_f32(supro_simulation_f32 *self, fir_t *fir1, fir_t *fir2, fir_t*fir3) //float32_t *state
+void supro_simulation_init_f32(supro_simulation_f32 *self, float32_t *state, fir_t *fir1, fir_t *fir2, fir_t*fir3)
 {
 
     self->fir1  = fir1;
     self->fir2  = fir2;
     self->fir3  = fir3;
-   // self->state = state;
 
+    self->state = state;
 
     arm_biquad_cascade_df1_init_f32(&preampLP,  LP_STAGES,
                                     (float32_t *)LP5Hz_Biquad,
@@ -105,11 +152,6 @@ void supro_simulation_init_f32(supro_simulation_f32 *self, fir_t *fir1, fir_t *f
     arm_biquad_cascade_df1_init_f32(&powerampLP, LP_STAGES,
                                     (float32_t *)LP5Hz_Biquad,
                                     powerampLP_State);
-
-	//arm_fir_init_f32(&h1_fir_f32, h1_fir_LEN, (float32_t *)&h1_fir_coeffs[0], &h1_fir[0], (uint32_t)BLOCK_SIZE);
-	//arm_fir_init_f32(&h2_fir_f32, h2_fir_LEN, (float32_t *)&h2_fir_coeffs[0], &h2_fir[0], (uint32_t)BLOCK_SIZE);
-	//arm_fir_init_f32(&h3_fir_f32, h3_fir_LEN, (float32_t *)&h3_fir_coeffs[0], &h3_fir[0], (uint32_t)BLOCK_SIZE);
-
 
 }
 
@@ -123,9 +165,8 @@ void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p)
 
     /* 1) First FIR filter */
     // ...
-	//partitioned_fir_convolution_fft(p, supro_sim.fir1, state, fftOut, zeropad);
-	partitioned_fir_convolution_fft(p, self->fir1, state);
-    //arm_fir_f32(&h1_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
+	//partitioned_fir_convolution_fft(p, self->fir1, state);
+	partitioned_fir_convolution_fft(p, self->fir1, &self->state[0]);
 
 
     /* Preamp shaper */
@@ -133,23 +174,20 @@ void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p)
 
 
     /* Second FIR filter */
-	//partitioned_fir_convolution_fft(p, supro_sim.fir2, state2, fftOut2, zeropad2);
-    //arm_fir_f32(&h2_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
-	partitioned_fir_convolution_fft(p, self->fir2, state2);
+	//partitioned_fir_convolution_fft(p, self->fir2, state2);
+	partitioned_fir_convolution_fft(p, self->fir2, &self->state[BUFFER_SIZE]);
 
 
 	/* Poweramp shaper */
     supro_poweramp_f32(p);
 
 	/* Third FIR filter */
-	//partitioned_fir_convolution_fft(p, supro_sim.fir3, state3, fftOut3, zeropad3);
-	partitioned_fir_convolution_fft(p, self->fir3, state3);
-    //arm_fir_f32(&h3_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
+	//partitioned_fir_convolution_fft(p, self->fir3, state3);
+
+    partitioned_fir_convolution_fft(p, self->fir3, &self->state[BUFFER_SIZE*2]);
 
 
-	//arm_scale_f32(p->processBuffer, 0.0001, p->processBuffer, BUFFER_SIZE);
 	arm_scale_f32(p->processBuffer, 0.005, p->processBuffer, BUFFER_SIZE);
-
 
 }
 

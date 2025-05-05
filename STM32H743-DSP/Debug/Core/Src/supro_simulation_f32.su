@@ -1,4 +1,4 @@
-../Core/Src/supro_simulation_f32.c:93:6:supro_simulation_init_f32	16	static
-../Core/Src/supro_simulation_f32.c:159:6:supro_preamp_f32	32	static
-../Core/Src/supro_simulation_f32.c:212:6:supro_poweramp_f32	56	static
-../Core/Src/supro_simulation_f32.c:119:6:supro_simulation_f32_process	16	static
+../Core/Src/supro_simulation_f32.c:140:6:supro_simulation_init_f32	8	static
+../Core/Src/supro_simulation_f32.c:197:6:supro_preamp_f32	32	static
+../Core/Src/supro_simulation_f32.c:250:6:supro_poweramp_f32	56	static
+../Core/Src/supro_simulation_f32.c:161:6:supro_simulation_f32_process	16	static

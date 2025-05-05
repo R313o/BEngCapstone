@@ -80,6 +80,7 @@ typedef struct {
     fir_t  *fir1;      /**< Stage-1 FIR filter */
     fir_t  *fir2;      /**< Stage-2 FIR filter */
     fir_t  *fir3;      /**< Stage-3 FIR filter */
+    float32_t    *state;   /**< Overlap/state buffer */
     //void   (*process)(pipe *p); /**< Pipeline processing callback */
 } supro_simulation_f32;
 
@@ -91,7 +92,7 @@ typedef struct {
 /**
  * @brief Initialize the Supro simulation (must be called before use)
  */
-void supro_simulation_init_f32(supro_simulation_f32 *self, fir_t *fir1, fir_t *fir2, fir_t *fir3);
+void supro_simulation_init_f32(supro_simulation_f32 *self, float32_t *state, fir_t *fir1, fir_t *fir2, fir_t *fir3);
 /**
  * @brief Internal Supro processing step
  * @param p Pointer to the audio pipe context

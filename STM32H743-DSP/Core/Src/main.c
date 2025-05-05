@@ -124,9 +124,12 @@ fir_t fir_h1_gaincorrected;
 fir_t fir_h2_gaincorrected;
 fir_t fir_h3_gaincorrected;
 
-__attribute__((aligned(32))) 	  float _H1_prev_ffts[2048 + 2*1];
-__attribute__((aligned(32))) 	  float _H2_prev_ffts[2048 + 2*1];
-__attribute__((aligned(32))) 	  float _H3_prev_ffts[2048 + 2*1]; // + 2*Num of segments
+#define BUFFER_OFFSET (2048 + 2*1)
+
+__attribute__((aligned(32))) 	  float _supro_prev_ffts[3*BUFFER_OFFSET];
+__attribute__((aligned(32))) 	  float supro_pad[3*BUFFER_SIZE];
+//__attribute__((aligned(32))) 	  float _H3_prev_ffts[2048 + 2*1]; // + 2*Num of segments
+
 
 float32_t *s;
 
@@ -197,11 +200,11 @@ int main(void)
 
   pipeInit(&apipe);
 
-  fir_h1_f32_init(&fir_h1_gaincorrected, _H1_prev_ffts);
-  fir_h2_f32_init(&fir_h2_gaincorrected, _H2_prev_ffts);
-  fir_h3_f32_init(&fir_h3_gaincorrected, _H3_prev_ffts);
+  fir_h1_f32_init(&fir_h1_gaincorrected, &_supro_prev_ffts[0]);
+  fir_h2_f32_init(&fir_h2_gaincorrected, &_supro_prev_ffts[BUFFER_OFFSET]);
+  fir_h3_f32_init(&fir_h3_gaincorrected, &_supro_prev_ffts[2*BUFFER_OFFSET]);
 
-  supro_simulation_init_f32(&supro, &fir_h1_gaincorrected, &fir_h2_gaincorrected, &fir_h3_gaincorrected);
+  supro_simulation_init_f32(&supro, supro_pad, &fir_h1_gaincorrected, &fir_h2_gaincorrected, &fir_h3_gaincorrected);
 
   fx_reverb_init(&fx_handle_0);
   fx_cabinet_init(&fx_handle_1);
@@ -231,7 +234,7 @@ int main(void)
 		 supro_simulation_f32_process(&supro, &apipe);
 
 		 fx_handle_1.process(&fx_handle_1, &apipe); // cabinet
-		 //fx_handle_0.process(&fx_handle_0, &apipe); // reverb
+		 fx_handle_0.process(&fx_handle_0, &apipe); // reverb
 
 	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
 
