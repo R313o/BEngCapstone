@@ -1,0 +1,11 @@
+2025-05-05 14:45:07,903 [INFO] WebApp:194 - Connection lost
+2025-05-05 14:45:51,920 [INFO] WebApp:191 - Connection restablished
+2025-05-05 14:46:57,625 [INFO] WebApp:194 - Connection lost
+2025-05-05 14:46:57,773 [INFO] WebApp:191 - Connection restablished
+2025-05-05 15:15:40,872 [WARN] IpParametersView:155 - Warning: This peripheral hasn't parameters
+2025-05-05 15:15:54,571 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-05-05 15:15:55,027 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-05-05 15:16:03,046 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-05-05 15:16:03,522 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-05-05 15:16:55,020 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 696237968 Bytes (1073741824)
+2025-05-05 15:16:57,628 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 686256440 Bytes (1073741824)

@@ -1,6 +1,7 @@
 ../Core/Src/main.c:81:6:HAL_ADC_ConvHalfCpltCallback	0	static,ignoring_inline_asm
 ../Core/Src/main.c:89:6:HAL_ADC_ConvCpltCallback	0	static,ignoring_inline_asm
-../Core/Src/main.c:220:6:SystemClock_Config	136	static,ignoring_inline_asm
-../Core/Src/main.c:279:6:PeriphCommonClock_Config	200	static,ignoring_inline_asm
-../Core/Src/main.c:107:5:main	88	static,ignoring_inline_asm
-../Core/Src/main.c:542:6:Error_Handler	0	static,ignoring_inline_asm
+../Core/Src/main.c:104:6:TestSDRAM	24	static
+../Core/Src/main.c:257:6:SystemClock_Config	136	static,ignoring_inline_asm
+../Core/Src/main.c:316:6:PeriphCommonClock_Config	200	static,ignoring_inline_asm
+../Core/Src/main.c:145:5:main	88	static,ignoring_inline_asm
+../Core/Src/main.c:594:6:Error_Handler	0	static,ignoring_inline_asm

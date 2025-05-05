@@ -96,6 +96,44 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 #include "supro_simulation.h"
 
+/* Memory Testing */
+
+#define SDRAM_START_ADDRESS  ((uint32_t)0xC0000000)  // FMC Bank5_6 base address for SDRAM
+#define SDRAM_WORD_COUNT     (1024)                  // Number of words to test
+
+void TestSDRAM(void)
+{
+    uint32_t* sdram = (uint32_t*)SDRAM_START_ADDRESS;
+    uint32_t errors = 0;
+
+    printf("Starting SDRAM Test...\n");
+
+    // Step 1: Write test pattern (0, 1, 2, ..., SDRAM_WORD_COUNT-1)
+    for (uint32_t i = 0; i < SDRAM_WORD_COUNT; i++) {
+        sdram[i] = i;
+    }
+
+    // Step 2: Read back and verify
+    for (uint32_t i = 0; i < SDRAM_WORD_COUNT; i++) {
+        if (sdram[i] != i) {
+            printf("SDRAM Mismatch at index %lu: wrote %lu, read %lu\n", i, i, sdram[i]);
+            errors++;
+        }
+    }
+
+    // Step 3: Print result
+    if (errors == 0) {
+        printf("SDRAM Test PASSED ✓\n");
+    } else {
+        printf("SDRAM Test FAILED ✗ — Total errors: %lu\n", errors);
+    }
+}
+
+
+/* End of Memory Testing */
+
+
+
 uint32_t cycles;
 
 /* USER CODE END 0 */
@@ -162,7 +200,6 @@ int main(void)
 
   pipeInit(&apipe);
 
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -173,7 +210,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-
+	  TestSDRAM();
 	  if (apipe.bufferReady)
 	  {
 		 apipe.updateDelayBuffer(&apipe);
@@ -510,28 +547,43 @@ static void MX_GPIO_Init(void)
 
 void MPU_Config(void)
 {
-  MPU_Region_InitTypeDef MPU_InitStruct = {0};
+    MPU_Region_InitTypeDef MPU_InitStruct = {0};
 
-  /* Disables the MPU */
-  HAL_MPU_Disable();
+    HAL_MPU_Disable();
 
-  /** Initializes and configures the Region and the memory to be protected
-  */
-  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
-  MPU_InitStruct.BaseAddress = 0x0;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_4GB;
-  MPU_InitStruct.SubRegionDisable = 0x87;
-  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-  MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
-  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
-  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+    // Region 0: Default deny all
+    MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+    MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+    MPU_InitStruct.BaseAddress = 0x00000000;
+    MPU_InitStruct.Size = MPU_REGION_SIZE_4GB;
+    MPU_InitStruct.SubRegionDisable = 0x87;
+    MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+    MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
+    MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+    MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+    MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+    MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+    HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
-  HAL_MPU_ConfigRegion(&MPU_InitStruct);
-  /* Enables the MPU */
-  HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+    // Region 1: SDRAM at 0xC0000000 (64MB)
+    MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+    MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+    MPU_InitStruct.BaseAddress = 0xC0000000;
+    MPU_InitStruct.Size = MPU_REGION_SIZE_64MB;
+    MPU_InitStruct.SubRegionDisable = 0x00;
+    MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
+    MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+    MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+    MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+    MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+    MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+    HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+    HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+
+
+
+
 
 }
 

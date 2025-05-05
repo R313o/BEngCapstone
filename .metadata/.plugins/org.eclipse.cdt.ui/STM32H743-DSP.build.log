@@ -1,0 +1,29 @@
+21:44:45 **** Incremental Build of configuration Debug for project STM32H743-DSP ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32H743xx -DUSE_PWR_LDO_SUPPLY -c -I../Core/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -ffast-math -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'TestSDRAM':
+../Core/Src/main.c:109:5: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+  109 |     printf("Starting SDRAM Test...\n");
+      |     ^~~~~~
+../Core/Src/main.c:98:1: note: include '<stdio.h>' or provide a declaration of 'printf'
+   97 | #include "supro_simulation.h"
+  +++ |+#include <stdio.h>
+   98 | 
+../Core/Src/main.c:109:5: warning: incompatible implicit declaration of built-in function 'printf' [-Wbuiltin-declaration-mismatch]
+  109 |     printf("Starting SDRAM Test...\n");
+      |     ^~~~~~
+../Core/Src/main.c:109:5: note: include '<stdio.h>' or provide a declaration of 'printf'
+arm-none-eabi-gcc -o "STM32H743-DSP.elf" @"objects.list"  -larm_cortexM7lfsp_math -mcpu=cortex-m7 -T"C:\Users\sarab\OneDrive\Documents\GitHub\BEngCapstone\STM32H743-DSP\STM32H743IITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32H743-DSP.map" -Wl,--gc-sections -static -L"C:\Users\sarab\OneDrive\Documents\GitHub\BEngCapstone\STM32H743-DSP\Lib" -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: STM32H743-DSP.elf
+ 
+arm-none-eabi-size  STM32H743-DSP.elf 
+arm-none-eabi-objdump -h -S STM32H743-DSP.elf  > "STM32H743-DSP.list"
+   text	   data	    bss	    dec	    hex	filename
+ 108288	    108	  72044	 180440	  2c0d8	STM32H743-DSP.elf
+Finished building: default.size.stdout
+ 
+Finished building: STM32H743-DSP.list
+ 
+
+21:44:47 Build Finished. 0 errors, 2 warnings. (took 1s.464ms)
+

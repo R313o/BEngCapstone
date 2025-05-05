@@ -1,0 +1,47 @@
+15:54:02 **** Incremental Build of configuration Debug for project blackBoard-test ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_PWR_LDO_SUPPLY -DUSE_HAL_DRIVER -DSTM32H743xx -c -I../Core/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'FMC_TEST':
+../Core/Src/main.c:45:18: warning: variable 'fmcTestStop' set but not used [-Wunused-but-set-variable]
+   45 |         uint32_t fmcTestStop;
+      |                  ^~~~~~~~~~~
+../Core/Src/main.c: In function 'FMC_Init':
+../Core/Src/main.c:152:29: warning: variable 'status' set but not used [-Wunused-but-set-variable]
+  152 |           HAL_StatusTypeDef status;
+      |                             ^~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:476:14: warning: 'MPU_Config' defined but not used [-Wunused-function]
+  476 |         void MPU_Config(void)
+      |              ^~~~~~~~~~
+arm-none-eabi-g++ -o "blackBoard-test.elf" @"objects.list"   -mcpu=cortex-m7 -T"C:\Users\sarab\OneDrive\Documents\GitHub\BEngCapstone\blackBoard-test\STM32H743IITX_FLASH.ld" -Wl,-Map="blackBoard-test.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: blackBoard-test.elf
+ 
+arm-none-eabi-size  blackBoard-test.elf 
+arm-none-eabi-objdump -h -S blackBoard-test.elf  > "blackBoard-test.list"
+   text	   data	    bss	    dec	    hex	filename
+  29756	     16	   2480	  32252	   7dfc	blackBoard-test.elf
+Finished building: default.size.stdout
+ 
+Finished building: blackBoard-test.list
+ 
+15:54:10 **** Incremental Build of configuration Debug for project blackBoard-test ****
+make -j16 all 
+arm-none-eabi-size  blackBoard-test.elf 
+   text	   data	    bss	    dec	    hex	filename
+  29756	     16	   2480	  32252	   7dfc	blackBoard-test.elf
+Finished building: default.size.stdout
+ 
+16:05:45 **** Incremental Build of configuration Debug for project blackBoard-test ****
+make -j16 all 
+arm-none-eabi-size  blackBoard-test.elf 
+   text	   data	    bss	    dec	    hex	filename
+  29756	     16	   2480	  32252	   7dfc	blackBoard-test.elf
+Finished building: default.size.stdout
+ 
+16:06:13 **** Incremental Build of configuration Debug for project blackBoard-test ****
+make -j16 all 
+arm-none-eabi-size  blackBoard-test.elf 
+   text	   data	    bss	    dec	    hex	filename
+  29756	     16	   2480	  32252	   7dfc	blackBoard-test.elf
+Finished building: default.size.stdout
+ 
