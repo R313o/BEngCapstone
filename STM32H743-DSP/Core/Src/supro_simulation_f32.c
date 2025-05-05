@@ -148,114 +148,110 @@ void supro_process(pipe *p)
 
 }
 
+static float32_t pre_scratch[BUFFER_SIZE];
+static float32_t pre_env    [BUFFER_SIZE];
+
 void supro_preamp_f32(pipe *p)
 {
-	//arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BLOCK_SIZE); // temporary scaling until SPENCER corrects pipe scaling
+    float32_t *x     = p->processBuffer;
+    float32_t *scratch = pre_scratch;  // holds x^2, then xpre+xenvBias, then final mix
+    float32_t *env     = pre_env;      // holds filtered envelope and yMap
 
-    float32_t temp[BLOCK_SIZE], envelope[BLOCK_SIZE], xpre[BLOCK_SIZE];
-    float32_t xmapped[BLOCK_SIZE], yMap[BLOCK_SIZE], yDry[BLOCK_SIZE];
-    const float32_t
-        *a     = &supro_parameters[0],                    // Taylor coefs
-        *gPre  = &supro_parameters[SUPRO_P_PRE_GAIN_IDX],    // pre-gain
-        *gPost = &supro_parameters[SUPRO_P_POST_GAIN_IDX],   // post-gain (p[N+11])
-        *gWet  = &supro_parameters[SUPRO_P_BLEND_IDX],    // wet mix
-        *bias  = &supro_parameters[SUPRO_P_BIAS_IDX];     // envelope bias (p[N+4])
+    const float32_t *a     = supro_parameters;
+    const float32_t  gPre  = supro_parameters[SUPRO_P_PRE_GAIN_IDX];
+    const float32_t  gPost = supro_parameters[SUPRO_P_POST_GAIN_IDX];
+    const float32_t  gWet  = supro_parameters[SUPRO_P_BLEND_IDX];
+    const float32_t  bias  = supro_parameters[SUPRO_P_BIAS_IDX];
 
-    /* 1) envelope = sqrt( 2 * LP( x^2 ) ) */
-    arm_mult_f32(p->processBuffer, p->processBuffer, temp, BLOCK_SIZE);
-    //arm_fir_f32(&preamp_fir_5Hz_lowpass, temp, envelope, BLOCK_SIZE);
-    arm_biquad_cascade_df1_f32(&preampLP, temp, envelope, BLOCK_SIZE);
-    arm_scale_f32(envelope, 2.0f, temp, BLOCK_SIZE);
+    /* 1) Compute squared signal into scratch */
+    arm_mult_f32(x, x, scratch, BUFFER_SIZE);
 
-    for(uint32_t i = 0; i < (uint32_t)BLOCK_SIZE; i++){
-        float32_t v = temp[i];
-        envelope[i] = sqrtf(v > 0.0f ? v : 0.0f);
+    /* 2) Low‑pass envelope: scratch→env */
+    arm_biquad_cascade_df1_f32(&preampLP, scratch, env, BUFFER_SIZE);
+
+    /* 3) envelope = sqrt(2 * env) (in env) */
+    arm_scale_f32(env, 2.0f, env, BUFFER_SIZE);
+    for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
+        float32_t v = env[i];
+        env[i] = sqrtf(v > 0.0f ? v : 0.0f);
     }
 
-    /* 2) pre-gain */
-    arm_scale_f32(p->processBuffer, *gPre, xpre, BLOCK_SIZE);
+    /* 4) pre‑gain path: xpre = gPre * x  (in scratch) */
+    arm_scale_f32(x, gPre, scratch, BUFFER_SIZE);
 
-    /* 3) add envelope bias */
-    arm_scale_f32(envelope, *bias, temp, BLOCK_SIZE);
-    arm_add_f32(xpre, temp, xmapped, BLOCK_SIZE);
+    /* 5) add envelope bias: scratch += bias * env */
+    arm_scale_f32(env, bias, env, BUFFER_SIZE);
+    arm_add_f32(scratch, env, scratch, BUFFER_SIZE);
 
-    /* 4) Horner polynomial on xmapped */
-    arm_scale_f32(xmapped,  a[SUPRO_NUM_A_VALS-1], yMap, BLOCK_SIZE);
-    for (int k = SUPRO_NUM_A_VALS-2; k >= 0; --k) {
-        arm_mult_f32(xmapped, yMap, yMap, BLOCK_SIZE);
-        for (uint32_t i = 0; i < BLOCK_SIZE; ++i)
-            yMap[i] += a[k];
+    /* 6) Horner polynomial: yMap into env */
+    uint32_t K = SUPRO_NUM_A_VALS;
+    arm_scale_f32(scratch, a[K-1], env, BUFFER_SIZE);
+    for (int k = K-2; k >= 0; --k) {
+        arm_mult_f32(scratch, env, env, BUFFER_SIZE);
+        for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
+            env[i] += a[k];
+        }
     }
 
-    /* 5) wet/dry mix */
-    arm_scale_f32(yMap, *gWet, temp, BLOCK_SIZE);
-    arm_scale_f32(xpre, 1.0f - *gWet, yDry, BLOCK_SIZE);
-    arm_add_f32(temp, yDry, temp, BLOCK_SIZE);
-
-    /* 6) post-gain */
-    arm_scale_f32(temp, *gPost, p->processBuffer, BLOCK_SIZE);
-
-
+    /* 7) wet/dry mix + post‑gain → final output (reuse scratch) */
+    arm_scale_f32(env, gWet,     env,     BUFFER_SIZE);
+    arm_scale_f32(scratch, 1-gWet, scratch, BUFFER_SIZE);
+    arm_add_f32(env, scratch, scratch, BUFFER_SIZE);
+    arm_scale_f32(scratch, gPost, x,       BUFFER_SIZE);
 }
 
+
+
+static float32_t pow_scratch[BUFFER_SIZE];
 
 void supro_poweramp_f32(pipe *p)
 {
-	//arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BLOCK_SIZE); // temporary scaling until SPENCER corrects pipe scaling
+    const float32_t gPre   = supro_parameters[SUPRO_P_G_PRE_IDX];
+    const float32_t gPost  = supro_parameters[SUPRO_P_G_POST_IDX];
+    const float32_t gBias  = supro_parameters[SUPRO_P_G_BIAS_IDX];
+    const float32_t kN     = supro_parameters[SUPRO_P_KN_IDX];
+    const float32_t kP     = supro_parameters[SUPRO_P_KP_IDX];
+    const float32_t gN     = supro_parameters[SUPRO_P_GN_IDX];
+    const float32_t gP     = supro_parameters[SUPRO_P_GP_IDX];
 
-    float32_t temp[BLOCK_SIZE], envelope[BLOCK_SIZE];
+    float32_t *scratch = pow_scratch;
+    float32_t *x       = p->processBuffer;
 
-    /* 1) envelope = sqrt( 2 * LP( x^2 ) ) */
-    arm_mult_f32(p->processBuffer, p->processBuffer, temp, BLOCK_SIZE);
-    //arm_fir_f32(&poweramp_fir_5Hz_lowpass, temp, envelope, BLOCK_SIZE);
-    arm_biquad_cascade_df1_f32(&powerampLP, temp, envelope, BLOCK_SIZE);
-    arm_scale_f32(envelope, 2.0f, temp, BLOCK_SIZE);
+    // 1) scratch = x^2
+    arm_mult_f32(x, x, scratch, BUFFER_SIZE);
 
-    for(uint32_t i = 0; i < (uint32_t)BLOCK_SIZE; i++){
-        float32_t v = temp[i];
-        envelope[i] = sqrtf(v > 0.0f ? v : 0.0f);
+    // 2) scratch = LP(scratch)
+    arm_biquad_cascade_df1_f32(&powerampLP, scratch, scratch, BUFFER_SIZE);
+
+    // 3) scratch = sqrt(2 * scratch)
+    arm_scale_f32(scratch, 2.0f, scratch, BUFFER_SIZE);
+    for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
+        float32_t v = scratch[i];
+        scratch[i]  = sqrtf(v > 0.0f ? v : 0.0f);
     }
 
-	const float32_t *gPre   = &supro_parameters[SUPRO_P_G_PRE_IDX];
-	const float32_t *gPost  = &supro_parameters[SUPRO_P_G_POST_IDX];
-	const float32_t *gBias  = &supro_parameters[SUPRO_P_G_BIAS_IDX];
+    // 4) precompute tanh constants
+    float32_t tanh_kN = tanhf( kN );
+    float32_t tanh_kP = tanhf( kP );
+    float32_t coeffN  = (tanh_kN*tanh_kN - 1.0f) / gN;
+    float32_t coeffP  = (tanh_kP*tanh_kP - 1.0f) / gP;
 
-	const float32_t *kN     = &supro_parameters[SUPRO_P_KN_IDX];
-	const float32_t *kP     = &supro_parameters[SUPRO_P_KP_IDX];
-	const float32_t *gN     = &supro_parameters[SUPRO_P_GN_IDX];
-	const float32_t *gP     = &supro_parameters[SUPRO_P_GP_IDX];
+    // 5) per‑sample non‑linear mapping + post‑gain
+    for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
+        float32_t env   = scratch[i];
+        float32_t xBias = x[i] - gBias * env;
+        float32_t xPre  = gPre  * xBias;
+        float32_t m;
 
-	/* Pre-compute constants used in every sample */
-	const float32_t kN_val   = *kN,         kP_val   = *kP;
-	const float32_t gN_val   = *gN,         gP_val   = *gP;
-	const float32_t tanh_kN  = tanhf(kN_val);
-	const float32_t tanh_kP  = tanhf(kP_val);
-	const float32_t coeffN   = (tanh_kN*tanh_kN - 1.0f) / gN_val;
-	const float32_t coeffP   = (tanh_kP*tanh_kP - 1.0f) / gP_val;
+        if (xPre > kP) {
+            m = tanh_kP - coeffP * tanhf(gP * xPre - kP);
+        } else if (xPre >= -kN) {
+            m = tanhf(xPre);
+        } else {
+            m = -tanh_kN - coeffN * tanhf(gN * xPre + kN);
+        }
 
-	/* ──────────────────────────────────────────
-	 * 3. Per-sample processing loop
-	 * ────────────────────────────────────────── */
-	for (uint32_t i = 0; i < BLOCK_SIZE; ++i)
-	{
-		/* 3.1 Feed-forward bias & pre-gain (MATLAB: xBias, xPre) */
-		float32_t xBias = p->processBuffer[i] - (*gBias) * envelope[i];
-		float32_t xPre  = (*gPre) * xBias;              /* dry path copy */
-		float32_t m;                                    /* shaped sample */
-
-		/* 3.2 Piece-wise tanh mapping (Eq. 6) */
-		if (xPre > kP_val) {                    /* Region A */
-			m = tanh_kP - coeffP * tanhf(gP_val * xPre - kP_val);
-		} else if (xPre >= -kN_val) {           /* Region B */
-			m = tanhf(xPre);
-		} else {                                /* Region C */
-			m = -tanh_kN - coeffN * tanhf(gN_val * xPre + kN_val);
-		}
-
-		/* 3.3 Wet/dry blend then post-gain */
-		//m = (*gWet) * m + (1.0f - *gWet) * xPre;   /* yMap in MATLAB   */
-		p->processBuffer[i] = (*gPost) * m;        /* y output         */
-	}
-
-
+        x[i] = gPost * m;
+    }
 }
+

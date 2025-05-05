@@ -24,6 +24,7 @@
 
 //#include "pipe.h"
 #include "_MULTI_FX.h"
+#include "mem_manager_MULTI_FX.h"
 //#include "supro_simulation.h"
 
 /* USER CODE END Includes */
@@ -96,18 +97,20 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 
 uint32_t cycles;
-__attribute__((section(".dtcm"), aligned(32))) float state5[BUFFER_SIZE];
-__attribute__((section(".dtcm"), aligned(32))) float statecab[BUFFER_SIZE];
+//__attribute__((section(".dtcm"), aligned(32))) float state5[BUFFER_SIZE];
+//__attribute__((section(".dtcm"), aligned(32))) float statecab[BUFFER_SIZE];
 
-float prev_ffts_EMT[94208 + 46 * 2];
-float prev_ffts_OD_M212[2048 + 1 * 2];
+//float prev_ffts_EMT[94208 + 46 * 2];
+//float prev_ffts_OD_M212[2048 + 1 * 2];
 
- fir_t fir_emt_140_dark_3; /* fir handler */
- fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
+fir_t fir_emt_140_dark_3; /* fir handler */
+fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
 
 
 cabinet_simulation_f32 cabinet_sim;
 convolution_reverb_f32 convolution_reverb;
+
+float *cab_ptr_alloc, *conv_ptr_alloc, *conv_fft_ptr_alloc, *cab_fft_ptr_alloc;
 
 
 /* USER CODE END 0 */
@@ -155,10 +158,14 @@ int main(void)
   SCB_EnableDCache();
   SCB_EnableICache();
 
+  dctm_pool_init();
+  static_pool_init();
+  //pool_f32_init();
+
   // enable DWT cycle counter
   CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;  // turn on trace
   DWT->CYCCNT  = 0;                                // clear counter
-  DWT->CTRL   |= DWT_CTRL_CYCCNTENA_Msk;          // start counter
+  DWT->CTRL   |= DWT_CTRL_CYCCNTENA_Msk;           // start counter
 
   /* USER CODE BEGIN 2 */
   arm_rfft_fast_init_f32(&fft, FFT_SIZE);
@@ -173,13 +180,36 @@ int main(void)
 
   pipeInit(&apipe);
 
-  supro_init_f32(); //replace with fx_int();
+  supro_init_f32();
 
-  fir_emt_140_dark_3_f32_init(&fir_emt_140_dark_3, prev_ffts_EMT);
-  fir_OD_M212_VINT_DYN_201_P05_00_f32_init(&fir_OD_M212_VINT_DYN_201_P05_00, prev_ffts_OD_M212);
+#define NUMSEGMENTS_EMT 46U
 
-  convolution_reverb_f32_init(&convolution_reverb, state5 , &fir_emt_140_dark_3);
-  cabinet_simulation_f32_init(&cabinet_sim, statecab, &fir_OD_M212_VINT_DYN_201_P05_00);
+  conv_fft_ptr_alloc = (float*)_static_mem_alloc((NUMSEGMENTS_EMT*FFT_SIZE + 2*NUMSEGMENTS_EMT)*sizeof(float), _Alignof(float));
+
+  if (conv_fft_ptr_alloc == NULL) while(1);
+
+#define NUMSEGMENTS_CAB 1U
+
+  cab_fft_ptr_alloc = (float*)_static_mem_alloc((NUMSEGMENTS_CAB*FFT_SIZE + 2*NUMSEGMENTS_CAB)*sizeof(float), _Alignof(float));
+
+  if (cab_fft_ptr_alloc == NULL) while(1);
+
+  fir_emt_140_dark_3_f32_init(&fir_emt_140_dark_3, conv_fft_ptr_alloc);
+
+  fir_OD_M212_VINT_DYN_201_P05_00_f32_init(&fir_OD_M212_VINT_DYN_201_P05_00, cab_fft_ptr_alloc);
+
+  conv_ptr_alloc = (float *)_dctm_static_mem_alloc(BUFFER_SIZE*sizeof(float), _Alignof(float));
+
+  if (conv_ptr_alloc == NULL) while(1);
+
+  cab_ptr_alloc = (float *)_dctm_static_mem_alloc(BUFFER_SIZE*sizeof(float), _Alignof(float));
+
+  if (cab_ptr_alloc == NULL) while(1);
+
+  convolution_reverb_f32_init(&convolution_reverb, conv_ptr_alloc , &fir_emt_140_dark_3);
+
+  cabinet_simulation_f32_init(&cabinet_sim, cab_ptr_alloc, &fir_OD_M212_VINT_DYN_201_P05_00);
+
 
   /* USER CODE END 2 */
 
@@ -207,10 +237,11 @@ int main(void)
 		 supro_sim.process(&apipe);
 
 		 cabinet_simulation_f32_process(&cabinet_sim, &apipe);
+
 		 convolution_reverb_f32_process(&convolution_reverb, &apipe);
 
-			//arm_scale_f32(p->processBuffer, 0.0001, p->processBuffer, BUFFER_SIZE);
-			arm_scale_f32(apipe.processBuffer, 0.01,apipe.processBuffer, BUFFER_SIZE);
+		 //arm_scale_f32(p->processBuffer, 0.0001, p->processBuffer, BUFFER_SIZE);
+	     arm_scale_f32(apipe.processBuffer, 1, apipe.processBuffer, BUFFER_SIZE);
 
 		 // cycles = DWT->CYCCNT;
 

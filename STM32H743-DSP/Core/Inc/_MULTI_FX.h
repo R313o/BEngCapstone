@@ -25,6 +25,22 @@
 
 #include "partitioned_fir_convolution_fft.h"
 
+
+
+typedef enum {
+    FX_REVERB,
+    FX_CHORUS,
+	FX_CABINET,
+	FX_SUPRO
+} MULTI_FX_type_t;
+
+typedef struct {
+
+	MULTI_FX_type_t  type;
+
+} MULTI_FX_base_t;
+
+
 /******************************************************************/
 /* supro simulation struct.				                          */
 /******************************************************************/
@@ -45,7 +61,7 @@ extern supro_simulation_f32 supro_sim;
 /**
  * @brief supro simulation iniitialization function. Call once before using process
  */
-extern void supro_init();
+extern void supro_init_f32();
 
 // void supro_init_f32();
 //void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p);
