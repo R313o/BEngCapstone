@@ -1,6 +1,7 @@
 //#include "supro_simulation.h"
 #include "_MULTI_FX.h"
 
+/*
 supro_simulation_f32 supro_sim = {
 
     //.fir1 = &fir_emt_140_dark_3,
@@ -10,7 +11,7 @@ supro_simulation_f32 supro_sim = {
 
 	//.process =&supro_process
 };
-
+*/
 
 #include "h1_fir.h"
 #include "h2_fir.h"
@@ -123,7 +124,7 @@ void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p)
     /* 1) First FIR filter */
     // ...
 	//partitioned_fir_convolution_fft(p, supro_sim.fir1, state, fftOut, zeropad);
-	partitioned_fir_convolution_fft(p, supro_sim.fir1, state);
+	partitioned_fir_convolution_fft(p, self->fir1, state);
     //arm_fir_f32(&h1_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
 
 
@@ -134,7 +135,7 @@ void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p)
     /* Second FIR filter */
 	//partitioned_fir_convolution_fft(p, supro_sim.fir2, state2, fftOut2, zeropad2);
     //arm_fir_f32(&h2_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
-	partitioned_fir_convolution_fft(p, supro_sim.fir2, state2);
+	partitioned_fir_convolution_fft(p, self->fir2, state2);
 
 
 	/* Poweramp shaper */
@@ -142,12 +143,12 @@ void supro_simulation_f32_process(supro_simulation_f32 *self, pipe *p)
 
 	/* Third FIR filter */
 	//partitioned_fir_convolution_fft(p, supro_sim.fir3, state3, fftOut3, zeropad3);
-	partitioned_fir_convolution_fft(p, supro_sim.fir3, state3);
+	partitioned_fir_convolution_fft(p, self->fir3, state3);
     //arm_fir_f32(&h3_fir_f32, p->processBuffer, p->processBuffer, BLOCK_SIZE);
 
 
 	//arm_scale_f32(p->processBuffer, 0.0001, p->processBuffer, BUFFER_SIZE);
-	arm_scale_f32(p->processBuffer, 0.01, p->processBuffer, BUFFER_SIZE);
+	arm_scale_f32(p->processBuffer, 0.005, p->processBuffer, BUFFER_SIZE);
 
 
 }

@@ -13,43 +13,43 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   4 .fini_array   00000004  0807f628  0807f628  00080628  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .data         000000dc  24000000  0807f62c  00081000  2**2
+  5 .data         000000b4  24000000  0807f62c  00081000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
   6 .dtcm_bss     00008060  20000000  20000000  00082000  2**5
                   ALLOC
-  7 .dtcm_data    00000000  20008060  20008060  000810dc  2**0
+  7 .dtcm_data    00000000  20008060  20008060  000810b4  2**0
                   CONTENTS
-  8 .bss          0007c3d0  240000e0  240000e0  000810e0  2**5
+  8 .bss          0007c3d0  240000c0  240000c0  000810c0  2**5
                   ALLOC
-  9 ._user_heap_stack 00000600  2407c4b0  2407c4b0  000810e0  2**0
+  9 ._user_heap_stack 00000600  2407c490  2407c490  000810c0  2**0
                   ALLOC
- 10 .ARM.attributes 0000002e  00000000  00000000  000810dc  2**0
+ 10 .ARM.attributes 0000002e  00000000  00000000  000810b4  2**0
                   CONTENTS, READONLY
- 11 .debug_info   00024ee6  00000000  00000000  0008110a  2**0
+ 11 .debug_info   00024ec0  00000000  00000000  000810e2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 12 .debug_abbrev 00004fc0  00000000  00000000  000a5ff0  2**0
+ 12 .debug_abbrev 00004f98  00000000  00000000  000a5fa2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_loclists 0001018c  00000000  00000000  000aafb0  2**0
+ 13 .debug_loclists 00010193  00000000  00000000  000aaf3a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00001398  00000000  00000000  000bb140  2**3
+ 14 .debug_aranges 00001398  00000000  00000000  000bb0d0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 00001d7e  00000000  00000000  000bc4d8  2**0
+ 15 .debug_rnglists 00001d7e  00000000  00000000  000bc468  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0003a6d6  00000000  00000000  000be256  2**0
+ 16 .debug_macro  0003a6d6  00000000  00000000  000be1e6  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   000283a8  00000000  00000000  000f892c  2**0
+ 17 .debug_line   000283a7  00000000  00000000  000f88bc  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0017519a  00000000  00000000  00120cd4  2**0
+ 18 .debug_str    00175190  00000000  00000000  00120c63  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      000000b3  00000000  00000000  00295e6e  2**0
+ 19 .comment      000000b3  00000000  00000000  00295df3  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000037b0  00000000  00000000  00295f24  2**2
+ 20 .debug_frame  000037b0  00000000  00000000  00295ea8  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000006e  00000000  00000000  002996d4  2**0
+ 21 .debug_line_str 0000006e  00000000  00000000  00299658  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_loc    000041c4  00000000  00000000  00299742  2**0
+ 22 .debug_loc    000041c4  00000000  00000000  002996c6  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 23 .debug_ranges 000000e0  00000000  00000000  0029d906  2**0
+ 23 .debug_ranges 000000e0  00000000  00000000  0029d88a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -66,7 +66,7 @@ Disassembly of section .text:
  80002aa:	2301      	movs	r3, #1
  80002ac:	7023      	strb	r3, [r4, #0]
  80002ae:	bd10      	pop	{r4, pc}
- 80002b0:	240000e0 	.word	0x240000e0
+ 80002b0:	240000c0 	.word	0x240000c0
  80002b4:	00000000 	.word	0x00000000
  80002b8:	08008090 	.word	0x08008090
 
@@ -79,7 +79,7 @@ Disassembly of section .text:
  80002c6:	f3af 8000 	nop.w
  80002ca:	bd08      	pop	{r3, pc}
  80002cc:	00000000 	.word	0x00000000
- 80002d0:	240000e4 	.word	0x240000e4
+ 80002d0:	240000c4 	.word	0x240000c4
  80002d4:	08008090 	.word	0x08008090
 
 080002d8 <arm_bitreversal_32>:
@@ -208,7 +208,7 @@ void cabinet_simulation_f32_process(FX_HANDLER_t *self, pipe *p)
     partitioned_fir_convolution_fft(
  80003c2:	4608      	mov	r0, r1
  80003c4:	e9d3 2103 	ldrd	r2, r1, [r3, #12]
- 80003c8:	f000 bb8a 	b.w	8000ae0 <partitioned_fir_convolution_fft>
+ 80003c8:	f000 bb8c 	b.w	8000ae4 <partitioned_fir_convolution_fft>
 
 080003cc <fx_cabinet_init>:
  * the processing callback.
@@ -227,7 +227,7 @@ void fx_cabinet_init(FX_HANDLER_t *fx)
  80003d0:	4604      	mov	r4, r0
     fx->states[0] = _static_mem_alloc(
  80003d2:	f242 0008 	movw	r0, #8200	@ 0x2008
- 80003d6:	f000 fb6d 	bl	8000ab4 <_static_mem_alloc>
+ 80003d6:	f000 fb6f 	bl	8000ab8 <_static_mem_alloc>
  80003da:	4603      	mov	r3, r0
         (numSegments * FFT_SIZE + 2 * numSegments) * sizeof(float),
         _Alignof(float)
@@ -240,7 +240,7 @@ void fx_cabinet_init(FX_HANDLER_t *fx)
     fx->states[0] = _static_mem_alloc(
  80003e2:	60a3      	str	r3, [r4, #8]
     fx->states[1] = _dctm_static_mem_alloc(
- 80003e4:	f000 fb50 	bl	8000a88 <_dctm_static_mem_alloc>
+ 80003e4:	f000 fb52 	bl	8000a8c <_dctm_static_mem_alloc>
  80003e8:	4603      	mov	r3, r0
         BUFFER_SIZE * sizeof(float),
         _Alignof(float)
@@ -253,7 +253,7 @@ void fx_cabinet_init(FX_HANDLER_t *fx)
     fx->states[1] = _dctm_static_mem_alloc(
  80003ee:	60e3      	str	r3, [r4, #12]
     fx->states[2] = _static_mem_alloc(
- 80003f0:	f000 fb60 	bl	8000ab4 <_static_mem_alloc>
+ 80003f0:	f000 fb62 	bl	8000ab8 <_static_mem_alloc>
  80003f4:	4603      	mov	r3, r0
         sizeof(fir_t),
         _Alignof(fir_t)
@@ -266,7 +266,7 @@ void fx_cabinet_init(FX_HANDLER_t *fx)
     fx->states[2] = _static_mem_alloc(
  80003fa:	6123      	str	r3, [r4, #16]
     fx->states[3] = _static_mem_alloc(
- 80003fc:	f000 fb5a 	bl	8000ab4 <_static_mem_alloc>
+ 80003fc:	f000 fb5c 	bl	8000ab8 <_static_mem_alloc>
  8000400:	4603      	mov	r3, r0
         sizeof(cabinet_simulation_f32),
         _Alignof(cabinet_simulation_f32)
@@ -315,7 +315,7 @@ void convolution_reverb_f32_process(
     partitioned_fir_convolution_fft(
  8000422:	4608      	mov	r0, r1
  8000424:	e9d3 2103 	ldrd	r2, r1, [r3, #12]
- 8000428:	f000 bb5a 	b.w	8000ae0 <partitioned_fir_convolution_fft>
+ 8000428:	f000 bb5c 	b.w	8000ae4 <partitioned_fir_convolution_fft>
 
 0800042c <fx_reverb_init>:
  * convolution_reverb instance, then initializes and assigns the processing callback.
@@ -332,7 +332,7 @@ void fx_reverb_init(FX_HANDLER_t *fx)
  8000430:	4604      	mov	r4, r0
     fx->states[0] = _static_mem_alloc(
  8000432:	4812      	ldr	r0, [pc, #72]	@ (800047c <fx_reverb_init+0x50>)
- 8000434:	f000 fb3e 	bl	8000ab4 <_static_mem_alloc>
+ 8000434:	f000 fb40 	bl	8000ab8 <_static_mem_alloc>
  8000438:	4603      	mov	r3, r0
         (NUMSEGMENTS_EMT * FFT_SIZE + 2 * NUMSEGMENTS_EMT) * sizeof(float),
         _Alignof(float)
@@ -345,7 +345,7 @@ void fx_reverb_init(FX_HANDLER_t *fx)
     fx->states[0] = _static_mem_alloc(
  8000440:	60a3      	str	r3, [r4, #8]
     fx->states[1] = _dctm_static_mem_alloc(
- 8000442:	f000 fb21 	bl	8000a88 <_dctm_static_mem_alloc>
+ 8000442:	f000 fb23 	bl	8000a8c <_dctm_static_mem_alloc>
  8000446:	4603      	mov	r3, r0
         BUFFER_SIZE * sizeof(float),
         _Alignof(float)
@@ -358,7 +358,7 @@ void fx_reverb_init(FX_HANDLER_t *fx)
     fx->states[1] = _dctm_static_mem_alloc(
  800044c:	60e3      	str	r3, [r4, #12]
     fx->states[2] = _static_mem_alloc(
- 800044e:	f000 fb31 	bl	8000ab4 <_static_mem_alloc>
+ 800044e:	f000 fb33 	bl	8000ab8 <_static_mem_alloc>
  8000452:	4603      	mov	r3, r0
         sizeof(fir_t),
         _Alignof(fir_t)
@@ -371,7 +371,7 @@ void fx_reverb_init(FX_HANDLER_t *fx)
     fx->states[2] = _static_mem_alloc(
  8000458:	6123      	str	r3, [r4, #16]
     fx->states[3] = _static_mem_alloc(
- 800045a:	f000 fb2b 	bl	8000ab4 <_static_mem_alloc>
+ 800045a:	f000 fb2d 	bl	8000ab8 <_static_mem_alloc>
  800045e:	4603      	mov	r3, r0
         sizeof(convolution_reverb_f32),
         _Alignof(convolution_reverb_f32)
@@ -517,9 +517,9 @@ void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
  80004f8:	f5a0 4070 	sub.w	r0, r0, #61440	@ 0xf000
  80004fc:	4718      	bx	r3
  80004fe:	bf00      	nop
- 8000500:	24007160 	.word	0x24007160
+ 8000500:	24007140 	.word	0x24007140
  8000504:	e000ed00 	.word	0xe000ed00
- 8000508:	24017178 	.word	0x24017178
+ 8000508:	24017158 	.word	0x24017158
 
 0800050c <HAL_ADC_ConvCpltCallback>:
        int32_t op_size = dsize + (((uint32_t)addr) & (__SCB_DCACHE_LINE_SIZE - 1U));
@@ -556,10 +556,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
  800053c:	f5a0 4070 	sub.w	r0, r0, #61440	@ 0xf000
  8000540:	4718      	bx	r3
  8000542:	bf00      	nop
- 8000544:	24007960 	.word	0x24007960
+ 8000544:	24007940 	.word	0x24007940
  8000548:	e000ed00 	.word	0xe000ed00
- 800054c:	24017178 	.word	0x24017178
- 8000550:	24007160 	.word	0x24007160
+ 800054c:	24017158 	.word	0x24017158
+ 8000550:	24007140 	.word	0x24007140
 
 08000554 <SystemClock_Config>:
 /**
@@ -1044,12 +1044,12 @@ void Error_Handler(void)
  800083a:	e7fe      	b.n	800083a <main+0x202>
  800083c:	58024400 	.word	0x58024400
  8000840:	58020800 	.word	0x58020800
- 8000844:	240172f4 	.word	0x240172f4
+ 8000844:	240172d4 	.word	0x240172d4
  8000848:	40022000 	.word	0x40022000
  800084c:	43210000 	.word	0x43210000
- 8000850:	240171a4 	.word	0x240171a4
+ 8000850:	24017184 	.word	0x24017184
  8000854:	40010400 	.word	0x40010400
- 8000858:	24017268 	.word	0x24017268
+ 8000858:	24017248 	.word	0x24017248
  800085c:	40007400 	.word	0x40007400
     if (SCB->CCR & SCB_CCR_DC_Msk) return;  /* return if DCache is already enabled */
  8000860:	4b6a      	ldr	r3, [pc, #424]	@ (8000a0c <main+0x3d4>)
@@ -1117,11 +1117,11 @@ void Error_Handler(void)
   __ASM volatile ("isb 0xF":::"memory");
  80008dc:	f3bf 8f6f 	isb	sy
   dctm_pool_init();
- 80008e0:	f000 f8ba 	bl	8000a58 <dctm_pool_init>
+ 80008e0:	f000 f8bc 	bl	8000a5c <dctm_pool_init>
   DWT->CYCCNT  = 0;                                // clear counter
  80008e4:	2400      	movs	r4, #0
   static_pool_init();
- 80008e6:	f000 f8c3 	bl	8000a70 <static_pool_init>
+ 80008e6:	f000 f8c5 	bl	8000a74 <static_pool_init>
   CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;  // turn on trace
  80008ea:	4848      	ldr	r0, [pc, #288]	@ (8000a0c <main+0x3d4>)
   DWT->CYCCNT  = 0;                                // clear counter
@@ -1147,7 +1147,7 @@ void Error_Handler(void)
   DWT->CTRL   |= DWT_CTRL_CYCCNTENA_Msk;           // start counter
  8000916:	f042 0201 	orr.w	r2, r2, #1
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 1);
- 800091a:	f8df 8134 	ldr.w	r8, [pc, #308]	@ 8000a50 <main+0x418>
+ 800091a:	f8df 8138 	ldr.w	r8, [pc, #312]	@ 8000a54 <main+0x41c>
   DWT->CTRL   |= DWT_CTRL_CYCCNTENA_Msk;           // start counter
  800091e:	601a      	str	r2, [r3, #0]
   arm_rfft_fast_init_f32(&fft, FFT_SIZE);
@@ -1174,13 +1174,13 @@ void Error_Handler(void)
  800094e:	f005 fe2b 	bl	80065a8 <HAL_TIM_Base_Start>
   pipeInit(&apipe);
  8000952:	4837      	ldr	r0, [pc, #220]	@ (8000a30 <main+0x3f8>)
- 8000954:	f000 fbcc 	bl	80010f0 <pipeInit>
+ 8000954:	f000 fbce 	bl	80010f4 <pipeInit>
   supro_simulation_init_f32(&supro, &fir_h1_gaincorrected, &fir_h2_gaincorrected, &fir_h3_gaincorrected);
  8000958:	4b36      	ldr	r3, [pc, #216]	@ (8000a34 <main+0x3fc>)
  800095a:	4a37      	ldr	r2, [pc, #220]	@ (8000a38 <main+0x400>)
  800095c:	4937      	ldr	r1, [pc, #220]	@ (8000a3c <main+0x404>)
  800095e:	4838      	ldr	r0, [pc, #224]	@ (8000a40 <main+0x408>)
- 8000960:	f000 fd2a 	bl	80013b8 <supro_simulation_init_f32>
+ 8000960:	f000 fd2c 	bl	80013bc <supro_simulation_init_f32>
   fx_reverb_init(&fx_handle_0);
  8000964:	4837      	ldr	r0, [pc, #220]	@ (8000a44 <main+0x40c>)
  8000966:	f7ff fd61 	bl	800042c <fx_reverb_init>
@@ -1216,7 +1216,7 @@ __STATIC_FORCEINLINE void SCB_CleanDCache_by_Addr (uint32_t *addr, int32_t dsize
  8000992:	4639      	mov	r1, r7
  8000994:	482a      	ldr	r0, [pc, #168]	@ (8000a40 <main+0x408>)
  8000996:	f504 5480 	add.w	r4, r4, #4096	@ 0x1000
- 800099a:	f000 fe69 	bl	8001670 <supro_simulation_f32_process>
+ 800099a:	f000 fe6b 	bl	8001674 <supro_simulation_f32_process>
 		 fx_handle_1.process(&fx_handle_1, &apipe); // cabinet
  800099e:	f8db 2004 	ldr.w	r2, [fp, #4]
  80009a2:	4639      	mov	r1, r7
@@ -1227,9 +1227,9 @@ __STATIC_FORCEINLINE void SCB_CleanDCache_by_Addr (uint32_t *addr, int32_t dsize
  80009ac:	4639      	mov	r1, r7
  80009ae:	4825      	ldr	r0, [pc, #148]	@ (8000a44 <main+0x40c>)
  80009b0:	4790      	blx	r2
-	     arm_scale_f32(apipe.processBuffer, 1, apipe.processBuffer, BUFFER_SIZE);
+	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
  80009b2:	4926      	ldr	r1, [pc, #152]	@ (8000a4c <main+0x414>)
- 80009b4:	eeb7 0a00 	vmov.f32	s0, #112	@ 0x3f800000  1.0
+ 80009b4:	ed9f 0a26 	vldr	s0, [pc, #152]	@ 8000a50 <main+0x418>
  80009b8:	f44f 6280 	mov.w	r2, #1024	@ 0x400
  80009bc:	4608      	mov	r0, r1
  80009be:	4d19      	ldr	r5, [pc, #100]	@ (8000a24 <main+0x3ec>)
@@ -1280,1913 +1280,1912 @@ __STATIC_FORCEINLINE void SCB_CleanDCache_by_Addr (uint32_t *addr, int32_t dsize
  8000a0a:	bf00      	nop
  8000a0c:	e000ed00 	.word	0xe000ed00
  8000a10:	e0001000 	.word	0xe0001000
- 8000a14:	24017178 	.word	0x24017178
- 8000a18:	24008160 	.word	0x24008160
- 8000a1c:	240172f4 	.word	0x240172f4
- 8000a20:	24007160 	.word	0x24007160
- 8000a24:	24006160 	.word	0x24006160
- 8000a28:	24017268 	.word	0x24017268
- 8000a2c:	240171a4 	.word	0x240171a4
- 8000a30:	24008178 	.word	0x24008178
+ 8000a14:	24017158 	.word	0x24017158
+ 8000a18:	24008140 	.word	0x24008140
+ 8000a1c:	240172d4 	.word	0x240172d4
+ 8000a20:	24007140 	.word	0x24007140
+ 8000a24:	24006140 	.word	0x24006140
+ 8000a28:	24017248 	.word	0x24017248
+ 8000a2c:	24017184 	.word	0x24017184
+ 8000a30:	24008158 	.word	0x24008158
  8000a34:	24000038 	.word	0x24000038
  8000a38:	2400001c 	.word	0x2400001c
  8000a3c:	24000000 	.word	0x24000000
- 8000a40:	24006100 	.word	0x24006100
- 8000a44:	24006144 	.word	0x24006144
- 8000a48:	24006128 	.word	0x24006128
- 8000a4c:	2400c180 	.word	0x2400c180
- 8000a50:	58020800 	.word	0x58020800
+ 8000a40:	240060e0 	.word	0x240060e0
+ 8000a44:	24006124 	.word	0x24006124
+ 8000a48:	24006108 	.word	0x24006108
+ 8000a4c:	2400c160 	.word	0x2400c160
+ 8000a50:	3c23d70a 	.word	0x3c23d70a
+ 8000a54:	58020800 	.word	0x58020800
 
-08000a54 <Error_Handler>:
+08000a58 <Error_Handler>:
   __ASM volatile ("cpsid i" : : : "memory");
- 8000a54:	b672      	cpsid	i
+ 8000a58:	b672      	cpsid	i
   while (1)
- 8000a56:	e7fe      	b.n	8000a56 <Error_Handler+0x2>
+ 8000a5a:	e7fe      	b.n	8000a5a <Error_Handler+0x2>
 
-08000a58 <dctm_pool_init>:
+08000a5c <dctm_pool_init>:
     return (x + (align - 1u)) & ~(align - 1u);
 }
 
 void dctm_pool_init()
 {
    dtcm_pool_head = 0;  // dtcm is a no-load section of ram thus must be manually initialized to zero
- 8000a58:	2100      	movs	r1, #0
- 8000a5a:	4b03      	ldr	r3, [pc, #12]	@ (8000a68 <dctm_pool_init+0x10>)
+ 8000a5c:	2100      	movs	r1, #0
+ 8000a5e:	4b03      	ldr	r3, [pc, #12]	@ (8000a6c <dctm_pool_init+0x10>)
    memset(dtcm_static_pool, (uint8_t)0, DTCM_STATIC_POOL_SIZE);
- 8000a5c:	f44f 5240 	mov.w	r2, #12288	@ 0x3000
- 8000a60:	4802      	ldr	r0, [pc, #8]	@ (8000a6c <dctm_pool_init+0x14>)
+ 8000a60:	f44f 5240 	mov.w	r2, #12288	@ 0x3000
+ 8000a64:	4802      	ldr	r0, [pc, #8]	@ (8000a70 <dctm_pool_init+0x14>)
    dtcm_pool_head = 0;  // dtcm is a no-load section of ram thus must be manually initialized to zero
- 8000a62:	6019      	str	r1, [r3, #0]
+ 8000a66:	6019      	str	r1, [r3, #0]
    memset(dtcm_static_pool, (uint8_t)0, DTCM_STATIC_POOL_SIZE);
- 8000a64:	f007 b928 	b.w	8007cb8 <memset>
- 8000a68:	20000000 	.word	0x20000000
- 8000a6c:	20000020 	.word	0x20000020
+ 8000a68:	f007 b926 	b.w	8007cb8 <memset>
+ 8000a6c:	20000000 	.word	0x20000000
+ 8000a70:	20000020 	.word	0x20000020
 
-08000a70 <static_pool_init>:
+08000a74 <static_pool_init>:
 }
 
 
 void static_pool_init()
 {
    pool_head = 0;
- 8000a70:	2100      	movs	r1, #0
- 8000a72:	4b03      	ldr	r3, [pc, #12]	@ (8000a80 <static_pool_init+0x10>)
+ 8000a74:	2100      	movs	r1, #0
+ 8000a76:	4b03      	ldr	r3, [pc, #12]	@ (8000a84 <static_pool_init+0x10>)
    memset(static_pool, (uint8_t)0, STATIC_POOL_SIZE);
- 8000a74:	f44f 22c0 	mov.w	r2, #393216	@ 0x60000
- 8000a78:	4802      	ldr	r0, [pc, #8]	@ (8000a84 <static_pool_init+0x14>)
+ 8000a78:	f44f 22c0 	mov.w	r2, #393216	@ 0x60000
+ 8000a7c:	4802      	ldr	r0, [pc, #8]	@ (8000a88 <static_pool_init+0x14>)
    pool_head = 0;
- 8000a7a:	6019      	str	r1, [r3, #0]
+ 8000a7e:	6019      	str	r1, [r3, #0]
    memset(static_pool, (uint8_t)0, STATIC_POOL_SIZE);
- 8000a7c:	f007 b91c 	b.w	8007cb8 <memset>
- 8000a80:	24017358 	.word	0x24017358
- 8000a84:	2401735c 	.word	0x2401735c
+ 8000a80:	f007 b91a 	b.w	8007cb8 <memset>
+ 8000a84:	24017338 	.word	0x24017338
+ 8000a88:	2401733c 	.word	0x2401733c
 
-08000a88 <_dctm_static_mem_alloc>:
+08000a8c <_dctm_static_mem_alloc>:
 }
 
 
 void *_dctm_static_mem_alloc(size_t size, size_t align)
 {
- 8000a88:	b410      	push	{r4}
+ 8000a8c:	b410      	push	{r4}
     size_t off = align_up(dtcm_pool_head, align);
- 8000a8a:	4c08      	ldr	r4, [pc, #32]	@ (8000aac <_dctm_static_mem_alloc+0x24>)
+ 8000a8e:	4c08      	ldr	r4, [pc, #32]	@ (8000ab0 <_dctm_static_mem_alloc+0x24>)
     return (x + (align - 1u)) & ~(align - 1u);
- 8000a8c:	424a      	negs	r2, r1
- 8000a8e:	6823      	ldr	r3, [r4, #0]
- 8000a90:	3b01      	subs	r3, #1
- 8000a92:	440b      	add	r3, r1
- 8000a94:	4013      	ands	r3, r2
+ 8000a90:	424a      	negs	r2, r1
+ 8000a92:	6823      	ldr	r3, [r4, #0]
+ 8000a94:	3b01      	subs	r3, #1
+ 8000a96:	440b      	add	r3, r1
+ 8000a98:	4013      	ands	r3, r2
     if (off + size > DTCM_STATIC_POOL_SIZE)
- 8000a96:	18c2      	adds	r2, r0, r3
- 8000a98:	f5b2 5f40 	cmp.w	r2, #12288	@ 0x3000
- 8000a9c:	d805      	bhi.n	8000aaa <_dctm_static_mem_alloc+0x22>
+ 8000a9a:	18c2      	adds	r2, r0, r3
+ 8000a9c:	f5b2 5f40 	cmp.w	r2, #12288	@ 0x3000
+ 8000aa0:	d805      	bhi.n	8000aae <_dctm_static_mem_alloc+0x22>
     	_memory_alloc_error_handler();// return NULL;                             // out of memory
     dtcm_pool_head = off + size;
     return &dtcm_static_pool[off];
- 8000a9e:	4804      	ldr	r0, [pc, #16]	@ (8000ab0 <_dctm_static_mem_alloc+0x28>)
+ 8000aa2:	4804      	ldr	r0, [pc, #16]	@ (8000ab4 <_dctm_static_mem_alloc+0x28>)
     dtcm_pool_head = off + size;
- 8000aa0:	6022      	str	r2, [r4, #0]
+ 8000aa4:	6022      	str	r2, [r4, #0]
 }
- 8000aa2:	4418      	add	r0, r3
- 8000aa4:	f85d 4b04 	ldr.w	r4, [sp], #4
- 8000aa8:	4770      	bx	lr
- 8000aaa:	e7fe      	b.n	8000aaa <_dctm_static_mem_alloc+0x22>
- 8000aac:	20000000 	.word	0x20000000
- 8000ab0:	20000020 	.word	0x20000020
+ 8000aa6:	4418      	add	r0, r3
+ 8000aa8:	f85d 4b04 	ldr.w	r4, [sp], #4
+ 8000aac:	4770      	bx	lr
+ 8000aae:	e7fe      	b.n	8000aae <_dctm_static_mem_alloc+0x22>
+ 8000ab0:	20000000 	.word	0x20000000
+ 8000ab4:	20000020 	.word	0x20000020
 
-08000ab4 <_static_mem_alloc>:
+08000ab8 <_static_mem_alloc>:
 
 
 void *_static_mem_alloc(size_t size, size_t align)
 {
- 8000ab4:	b410      	push	{r4}
+ 8000ab8:	b410      	push	{r4}
     size_t off = align_up(pool_head, align);
- 8000ab6:	4c08      	ldr	r4, [pc, #32]	@ (8000ad8 <_static_mem_alloc+0x24>)
+ 8000aba:	4c08      	ldr	r4, [pc, #32]	@ (8000adc <_static_mem_alloc+0x24>)
     return (x + (align - 1u)) & ~(align - 1u);
- 8000ab8:	424a      	negs	r2, r1
- 8000aba:	6823      	ldr	r3, [r4, #0]
- 8000abc:	3b01      	subs	r3, #1
- 8000abe:	440b      	add	r3, r1
- 8000ac0:	4013      	ands	r3, r2
+ 8000abc:	424a      	negs	r2, r1
+ 8000abe:	6823      	ldr	r3, [r4, #0]
+ 8000ac0:	3b01      	subs	r3, #1
+ 8000ac2:	440b      	add	r3, r1
+ 8000ac4:	4013      	ands	r3, r2
     if (off + size > STATIC_POOL_SIZE)
- 8000ac2:	18c2      	adds	r2, r0, r3
- 8000ac4:	f5b2 2fc0 	cmp.w	r2, #393216	@ 0x60000
- 8000ac8:	d805      	bhi.n	8000ad6 <_static_mem_alloc+0x22>
+ 8000ac6:	18c2      	adds	r2, r0, r3
+ 8000ac8:	f5b2 2fc0 	cmp.w	r2, #393216	@ 0x60000
+ 8000acc:	d805      	bhi.n	8000ada <_static_mem_alloc+0x22>
     	_memory_alloc_error_handler(); //return NULL;                             // out of memory
     pool_head = off + size;
     return &static_pool[off];
- 8000aca:	4804      	ldr	r0, [pc, #16]	@ (8000adc <_static_mem_alloc+0x28>)
+ 8000ace:	4804      	ldr	r0, [pc, #16]	@ (8000ae0 <_static_mem_alloc+0x28>)
     pool_head = off + size;
- 8000acc:	6022      	str	r2, [r4, #0]
+ 8000ad0:	6022      	str	r2, [r4, #0]
 }
- 8000ace:	4418      	add	r0, r3
- 8000ad0:	f85d 4b04 	ldr.w	r4, [sp], #4
- 8000ad4:	4770      	bx	lr
- 8000ad6:	e7fe      	b.n	8000ad6 <_static_mem_alloc+0x22>
- 8000ad8:	24017358 	.word	0x24017358
- 8000adc:	2401735c 	.word	0x2401735c
+ 8000ad2:	4418      	add	r0, r3
+ 8000ad4:	f85d 4b04 	ldr.w	r4, [sp], #4
+ 8000ad8:	4770      	bx	lr
+ 8000ada:	e7fe      	b.n	8000ada <_static_mem_alloc+0x22>
+ 8000adc:	24017338 	.word	0x24017338
+ 8000ae0:	2401733c 	.word	0x2401733c
 
-08000ae0 <partitioned_fir_convolution_fft>:
+08000ae4 <partitioned_fir_convolution_fft>:
 __attribute__((section(".dtcm"), aligned(32))) float zeropad[FFT_SIZE];
 float fftOut[FFT_SIZE];
 
 
 void partitioned_fir_convolution_fft(pipe *pipe, fir_t *fir, float* overlap_state_buf )
 {
- 8000ae0:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+ 8000ae4:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
 
 	float *zeropaddedinput = zeropad;
 	float *overlap         = overlap_state_buf;
 
     // prepare input
     arm_copy_f32(pipe->processBuffer, zeropaddedinput, BUFFER_SIZE);
- 8000ae4:	f244 0408 	movw	r4, #16392	@ 0x4008
+ 8000ae8:	f244 0408 	movw	r4, #16392	@ 0x4008
 {
- 8000ae8:	b08b      	sub	sp, #44	@ 0x2c
- 8000aea:	4613      	mov	r3, r2
- 8000aec:	460d      	mov	r5, r1
+ 8000aec:	b08b      	sub	sp, #44	@ 0x2c
+ 8000aee:	4613      	mov	r3, r2
+ 8000af0:	460d      	mov	r5, r1
     arm_copy_f32(pipe->processBuffer, zeropaddedinput, BUFFER_SIZE);
- 8000aee:	4404      	add	r4, r0
- 8000af0:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8000af4:	4933      	ldr	r1, [pc, #204]	@ (8000bc4 <partitioned_fir_convolution_fft+0xe4>)
- 8000af6:	4620      	mov	r0, r4
+ 8000af2:	4404      	add	r4, r0
+ 8000af4:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8000af8:	4933      	ldr	r1, [pc, #204]	@ (8000bc8 <partitioned_fir_convolution_fft+0xe4>)
+ 8000afa:	4620      	mov	r0, r4
 {
- 8000af8:	9307      	str	r3, [sp, #28]
+ 8000afc:	9307      	str	r3, [sp, #28]
     arm_copy_f32(pipe->processBuffer, zeropaddedinput, BUFFER_SIZE);
- 8000afa:	f005 fee3 	bl	80068c4 <arm_copy_f32>
+ 8000afe:	f005 fee1 	bl	80068c4 <arm_copy_f32>
     arm_fill_f32(0.0f, &zeropaddedinput[BUFFER_SIZE], BUFFER_SIZE);
- 8000afe:	ed9f 0a32 	vldr	s0, [pc, #200]	@ 8000bc8 <partitioned_fir_convolution_fft+0xe8>
- 8000b02:	f44f 6180 	mov.w	r1, #1024	@ 0x400
- 8000b06:	4831      	ldr	r0, [pc, #196]	@ (8000bcc <partitioned_fir_convolution_fft+0xec>)
- 8000b08:	f005 febe 	bl	8006888 <arm_fill_f32>
+ 8000b02:	ed9f 0a32 	vldr	s0, [pc, #200]	@ 8000bcc <partitioned_fir_convolution_fft+0xe8>
+ 8000b06:	f44f 6180 	mov.w	r1, #1024	@ 0x400
+ 8000b0a:	4831      	ldr	r0, [pc, #196]	@ (8000bd0 <partitioned_fir_convolution_fft+0xec>)
+ 8000b0c:	f005 febc 	bl	8006888 <arm_fill_f32>
 
     // forward FFT
     arm_rfft_fast_f32(&fft, zeropaddedinput, fftOut, 0);
- 8000b0c:	2300      	movs	r3, #0
- 8000b0e:	4a30      	ldr	r2, [pc, #192]	@ (8000bd0 <partitioned_fir_convolution_fft+0xf0>)
- 8000b10:	492c      	ldr	r1, [pc, #176]	@ (8000bc4 <partitioned_fir_convolution_fft+0xe4>)
- 8000b12:	4830      	ldr	r0, [pc, #192]	@ (8000bd4 <partitioned_fir_convolution_fft+0xf4>)
- 8000b14:	f005 ffb8 	bl	8006a88 <arm_rfft_fast_f32>
+ 8000b10:	2300      	movs	r3, #0
+ 8000b12:	4a30      	ldr	r2, [pc, #192]	@ (8000bd4 <partitioned_fir_convolution_fft+0xf0>)
+ 8000b14:	492c      	ldr	r1, [pc, #176]	@ (8000bc8 <partitioned_fir_convolution_fft+0xe4>)
+ 8000b16:	4830      	ldr	r0, [pc, #192]	@ (8000bd8 <partitioned_fir_convolution_fft+0xf4>)
+ 8000b18:	f005 ffb6 	bl	8006a88 <arm_rfft_fast_f32>
 
     // save index and spectrum
     fir->prev_fftidx = fir->curr_fftidx;
     arm_copy_f32(fftOut, fir->prev_ffts[fir->curr_fftidx], FFT_SIZE);
- 8000b18:	482d      	ldr	r0, [pc, #180]	@ (8000bd0 <partitioned_fir_convolution_fft+0xf0>)
- 8000b1a:	e9d5 2301 	ldrd	r2, r3, [r5, #4]
- 8000b1e:	f852 1023 	ldr.w	r1, [r2, r3, lsl #2]
- 8000b22:	f44f 6200 	mov.w	r2, #2048	@ 0x800
+ 8000b1c:	482d      	ldr	r0, [pc, #180]	@ (8000bd4 <partitioned_fir_convolution_fft+0xf0>)
+ 8000b1e:	e9d5 2301 	ldrd	r2, r3, [r5, #4]
+ 8000b22:	f852 1023 	ldr.w	r1, [r2, r3, lsl #2]
+ 8000b26:	f44f 6200 	mov.w	r2, #2048	@ 0x800
     fir->prev_fftidx = fir->curr_fftidx;
- 8000b26:	60eb      	str	r3, [r5, #12]
+ 8000b2a:	60eb      	str	r3, [r5, #12]
     arm_copy_f32(fftOut, fir->prev_ffts[fir->curr_fftidx], FFT_SIZE);
- 8000b28:	f005 fecc 	bl	80068c4 <arm_copy_f32>
+ 8000b2c:	f005 feca 	bl	80068c4 <arm_copy_f32>
 
     arm_fill_f32(0.0f, fftOut, FFT_SIZE);              /* clear accumulator */
- 8000b2c:	4828      	ldr	r0, [pc, #160]	@ (8000bd0 <partitioned_fir_convolution_fft+0xf0>)
- 8000b2e:	f44f 6100 	mov.w	r1, #2048	@ 0x800
- 8000b32:	ed9f 0a25 	vldr	s0, [pc, #148]	@ 8000bc8 <partitioned_fir_convolution_fft+0xe8>
- 8000b36:	f005 fea7 	bl	8006888 <arm_fill_f32>
+ 8000b30:	4828      	ldr	r0, [pc, #160]	@ (8000bd4 <partitioned_fir_convolution_fft+0xf0>)
+ 8000b32:	f44f 6100 	mov.w	r1, #2048	@ 0x800
+ 8000b36:	ed9f 0a25 	vldr	s0, [pc, #148]	@ 8000bcc <partitioned_fir_convolution_fft+0xe8>
+ 8000b3a:	f005 fea5 	bl	8006888 <arm_fill_f32>
 
     const uint32_t segs = fir->numSegments;
- 8000b3a:	692b      	ldr	r3, [r5, #16]
- 8000b3c:	f8df e090 	ldr.w	lr, [pc, #144]	@ 8000bd0 <partitioned_fir_convolution_fft+0xf0>
+ 8000b3e:	692b      	ldr	r3, [r5, #16]
+ 8000b40:	f8df e090 	ldr.w	lr, [pc, #144]	@ 8000bd4 <partitioned_fir_convolution_fft+0xf0>
     uint32_t i = 0;
- 8000b40:	f04f 0c00 	mov.w	ip, #0
+ 8000b44:	f04f 0c00 	mov.w	ip, #0
     const uint32_t segs = fir->numSegments;
- 8000b44:	9303      	str	r3, [sp, #12]
+ 8000b48:	9303      	str	r3, [sp, #12]
     uint32_t idx = fir->prev_fftidx;
 
     // partitioned convolution with pointer arithmetic
     do {
         const float32_t *restrict xPtr = fir->prev_ffts[idx];
- 8000b46:	686b      	ldr	r3, [r5, #4]
- 8000b48:	f50e 50ff 	add.w	r0, lr, #8160	@ 0x1fe0
+ 8000b4a:	686b      	ldr	r3, [r5, #4]
+ 8000b4c:	f50e 50ff 	add.w	r0, lr, #8160	@ 0x1fe0
 		}
 		if (idx-- == 0) {
 			idx = segs - 1;
 		}
 
     } while (idx != fir->curr_fftidx);
- 8000b4c:	68aa      	ldr	r2, [r5, #8]
- 8000b4e:	f50e 5700 	add.w	r7, lr, #8192	@ 0x2000
+ 8000b50:	68aa      	ldr	r2, [r5, #8]
+ 8000b52:	f50e 5700 	add.w	r7, lr, #8192	@ 0x2000
         const float32_t *restrict xPtr = fir->prev_ffts[idx];
- 8000b52:	9305      	str	r3, [sp, #20]
+ 8000b56:	9305      	str	r3, [sp, #20]
         const float32_t *restrict hPtr = fir->ir_ffts[i];
- 8000b54:	682b      	ldr	r3, [r5, #0]
+ 8000b58:	682b      	ldr	r3, [r5, #0]
     } while (idx != fir->curr_fftidx);
- 8000b56:	9204      	str	r2, [sp, #16]
+ 8000b5a:	9204      	str	r2, [sp, #16]
         const float32_t *restrict hPtr = fir->ir_ffts[i];
- 8000b58:	9306      	str	r3, [sp, #24]
- 8000b5a:	f50e 5380 	add.w	r3, lr, #4096	@ 0x1000
+ 8000b5c:	9306      	str	r3, [sp, #24]
+ 8000b5e:	f50e 5380 	add.w	r3, lr, #4096	@ 0x1000
     uint32_t idx = fir->prev_fftidx;
- 8000b5e:	68ee      	ldr	r6, [r5, #12]
+ 8000b62:	68ee      	ldr	r6, [r5, #12]
                      float accR = __builtin_fmaf(xr, hr,
- 8000b60:	f603 72f8 	addw	r2, r3, #4088	@ 0xff8
- 8000b64:	f603 7be8 	addw	fp, r3, #4072	@ 0xfe8
+ 8000b64:	f603 72f8 	addw	r2, r3, #4088	@ 0xff8
+ 8000b68:	f603 7be8 	addw	fp, r3, #4072	@ 0xfe8
                      float accI = __builtin_fmaf(xr, hi,
- 8000b68:	f603 7aec 	addw	sl, r3, #4076	@ 0xfec
+ 8000b6c:	f603 7aec 	addw	sl, r3, #4076	@ 0xfec
                      float accR = __builtin_fmaf(xr, hr,
- 8000b6c:	f503 697f 	add.w	r9, r3, #4080	@ 0xff0
+ 8000b70:	f503 697f 	add.w	r9, r3, #4080	@ 0xff0
                      float accI = __builtin_fmaf(xr, hi,
- 8000b70:	f603 78f4 	addw	r8, r3, #4084	@ 0xff4
- 8000b74:	f603 73fc 	addw	r3, r3, #4092	@ 0xffc
+ 8000b74:	f603 78f4 	addw	r8, r3, #4084	@ 0xff4
+ 8000b78:	f603 73fc 	addw	r3, r3, #4092	@ 0xffc
                      float accR = __builtin_fmaf(xr, hr,
- 8000b78:	9201      	str	r2, [sp, #4]
+ 8000b7c:	9201      	str	r2, [sp, #4]
                      float accI = __builtin_fmaf(xr, hi,
- 8000b7a:	9302      	str	r3, [sp, #8]
- 8000b7c:	e9cd 4508 	strd	r4, r5, [sp, #32]
+ 8000b7e:	9302      	str	r3, [sp, #8]
+ 8000b80:	e9cd 4508 	strd	r4, r5, [sp, #32]
         const float32_t *restrict xPtr = fir->prev_ffts[idx];
- 8000b80:	9b05      	ldr	r3, [sp, #20]
+ 8000b84:	9b05      	ldr	r3, [sp, #20]
                  yPtr[0] += xPtr[0] * hPtr[0];
- 8000b82:	ed9e 7a00 	vldr	s14, [lr]
+ 8000b86:	ed9e 7a00 	vldr	s14, [lr]
         const float32_t *restrict xPtr = fir->prev_ffts[idx];
- 8000b86:	f853 5026 	ldr.w	r5, [r3, r6, lsl #2]
+ 8000b8a:	f853 5026 	ldr.w	r5, [r3, r6, lsl #2]
         const float32_t *restrict hPtr = fir->ir_ffts[i];
- 8000b8a:	9b06      	ldr	r3, [sp, #24]
+ 8000b8e:	9b06      	ldr	r3, [sp, #24]
                  yPtr[1] += xPtr[1] * hPtr[1];
- 8000b8c:	edde 7a01 	vldr	s15, [lr, #4]
- 8000b90:	f105 0158 	add.w	r1, r5, #88	@ 0x58
+ 8000b90:	edde 7a01 	vldr	s15, [lr, #4]
+ 8000b94:	f105 0158 	add.w	r1, r5, #88	@ 0x58
         const float32_t *restrict hPtr = fir->ir_ffts[i];
- 8000b94:	f853 402c 	ldr.w	r4, [r3, ip, lsl #2]
+ 8000b98:	f853 402c 	ldr.w	r4, [r3, ip, lsl #2]
                  yPtr[0] += xPtr[0] * hPtr[0];
- 8000b98:	ed95 5a00 	vldr	s10, [r5]
- 8000b9c:	edd4 5a00 	vldr	s11, [r4]
- 8000ba0:	f104 0258 	add.w	r2, r4, #88	@ 0x58
+ 8000b9c:	ed95 5a00 	vldr	s10, [r5]
+ 8000ba0:	edd4 5a00 	vldr	s11, [r4]
+ 8000ba4:	f104 0258 	add.w	r2, r4, #88	@ 0x58
                  yPtr[1] += xPtr[1] * hPtr[1];
- 8000ba4:	ed95 6a01 	vldr	s12, [r5, #4]
- 8000ba8:	edd4 6a01 	vldr	s13, [r4, #4]
+ 8000ba8:	ed95 6a01 	vldr	s12, [r5, #4]
+ 8000bac:	edd4 6a01 	vldr	s13, [r4, #4]
                  yPtr[0] += xPtr[0] * hPtr[0];
- 8000bac:	eea5 7a25 	vfma.f32	s14, s10, s11
+ 8000bb0:	eea5 7a25 	vfma.f32	s14, s10, s11
                  yPtr[1] += xPtr[1] * hPtr[1];
- 8000bb0:	eee6 7a26 	vfma.f32	s15, s12, s13
+ 8000bb4:	eee6 7a26 	vfma.f32	s15, s12, s13
                  yPtr[0] += xPtr[0] * hPtr[0];
- 8000bb4:	ed8e 7a00 	vstr	s14, [lr]
+ 8000bb8:	ed8e 7a00 	vstr	s14, [lr]
                  yPtr[1] += xPtr[1] * hPtr[1];
- 8000bb8:	edce 7a01 	vstr	s15, [lr, #4]
+ 8000bbc:	edce 7a01 	vstr	s15, [lr, #4]
                  for (uint32_t u = FFT_SIZE / 20;  u--;  ) {
- 8000bbc:	f8df e010 	ldr.w	lr, [pc, #16]	@ 8000bd0 <partitioned_fir_convolution_fft+0xf0>
- 8000bc0:	4673      	mov	r3, lr
- 8000bc2:	e009      	b.n	8000bd8 <partitioned_fir_convolution_fft+0xf8>
- 8000bc4:	20003020 	.word	0x20003020
- 8000bc8:	00000000 	.word	0x00000000
- 8000bcc:	20004020 	.word	0x20004020
- 8000bd0:	2407735c 	.word	0x2407735c
- 8000bd4:	24008160 	.word	0x24008160
+ 8000bc0:	f8df e010 	ldr.w	lr, [pc, #16]	@ 8000bd4 <partitioned_fir_convolution_fft+0xf0>
+ 8000bc4:	4673      	mov	r3, lr
+ 8000bc6:	e009      	b.n	8000bdc <partitioned_fir_convolution_fft+0xf8>
+ 8000bc8:	20003020 	.word	0x20003020
+ 8000bcc:	00000000 	.word	0x00000000
+ 8000bd0:	20004020 	.word	0x20004020
+ 8000bd4:	2407733c 	.word	0x2407733c
+ 8000bd8:	24008140 	.word	0x24008140
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000bd8:	ed51 7a13 	vldr	s15, [r1, #-76]	@ 0xffffffb4
+ 8000bdc:	ed51 7a13 	vldr	s15, [r1, #-76]	@ 0xffffffb4
                  for (uint32_t u = FFT_SIZE / 20;  u--;  ) {
- 8000bdc:	3350      	adds	r3, #80	@ 0x50
+ 8000be0:	3350      	adds	r3, #80	@ 0x50
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000bde:	ed52 2a14 	vldr	s5, [r2, #-80]	@ 0xffffffb0
+ 8000be2:	ed52 2a14 	vldr	s5, [r2, #-80]	@ 0xffffffb0
                  for (uint32_t u = FFT_SIZE / 20;  u--;  ) {
- 8000be2:	3150      	adds	r1, #80	@ 0x50
+ 8000be6:	3150      	adds	r1, #80	@ 0x50
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000be4:	ed52 3a13 	vldr	s7, [r2, #-76]	@ 0xffffffb4
+ 8000be8:	ed52 3a13 	vldr	s7, [r2, #-76]	@ 0xffffffb4
                  for (uint32_t u = FFT_SIZE / 20;  u--;  ) {
- 8000be8:	3250      	adds	r2, #80	@ 0x50
+ 8000bec:	3250      	adds	r2, #80	@ 0x50
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000bea:	ed13 4a12 	vldr	s8, [r3, #-72]	@ 0xffffffb8
+ 8000bee:	ed13 4a12 	vldr	s8, [r3, #-72]	@ 0xffffffb8
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000bee:	ed53 4a11 	vldr	s9, [r3, #-68]	@ 0xffffffbc
+ 8000bf2:	ed53 4a11 	vldr	s9, [r3, #-68]	@ 0xffffffbc
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000bf2:	eea7 4ae3 	vfms.f32	s8, s15, s7
+ 8000bf6:	eea7 4ae3 	vfms.f32	s8, s15, s7
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000bf6:	ed11 3a28 	vldr	s6, [r1, #-160]	@ 0xffffff60
+ 8000bfa:	ed11 3a28 	vldr	s6, [r1, #-160]	@ 0xffffff60
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000bfa:	eee7 4aa2 	vfma.f32	s9, s15, s5
+ 8000bfe:	eee7 4aa2 	vfma.f32	s9, s15, s5
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000bfe:	ed13 5a10 	vldr	s10, [r3, #-64]	@ 0xffffffc0
+ 8000c02:	ed13 5a10 	vldr	s10, [r3, #-64]	@ 0xffffffc0
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c02:	ed53 5a0f 	vldr	s11, [r3, #-60]	@ 0xffffffc4
+ 8000c06:	ed53 5a0f 	vldr	s11, [r3, #-60]	@ 0xffffffc4
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c06:	ed53 6a0e 	vldr	s13, [r3, #-56]	@ 0xffffffc8
+ 8000c0a:	ed53 6a0e 	vldr	s13, [r3, #-56]	@ 0xffffffc8
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c0a:	ed13 6a0d 	vldr	s12, [r3, #-52]	@ 0xffffffcc
+ 8000c0e:	ed13 6a0d 	vldr	s12, [r3, #-52]	@ 0xffffffcc
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c0e:	ed13 7a0c 	vldr	s14, [r3, #-48]	@ 0xffffffd0
+ 8000c12:	ed13 7a0c 	vldr	s14, [r3, #-48]	@ 0xffffffd0
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c12:	eea3 4a22 	vfma.f32	s8, s6, s5
+ 8000c16:	eea3 4a22 	vfma.f32	s8, s6, s5
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c16:	ed53 7a0b 	vldr	s15, [r3, #-44]	@ 0xffffffd4
+ 8000c1a:	ed53 7a0b 	vldr	s15, [r3, #-44]	@ 0xffffffd4
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c1a:	eee3 4a23 	vfma.f32	s9, s6, s7
+ 8000c1e:	eee3 4a23 	vfma.f32	s9, s6, s7
                          *yPtr     = accR;
- 8000c1e:	ed03 4a12 	vstr	s8, [r3, #-72]	@ 0xffffffb8
+ 8000c22:	ed03 4a12 	vstr	s8, [r3, #-72]	@ 0xffffffb8
                          *(yPtr+1) = accI;
- 8000c22:	ed43 4a11 	vstr	s9, [r3, #-68]	@ 0xffffffbc
+ 8000c26:	ed43 4a11 	vstr	s9, [r3, #-68]	@ 0xffffffbc
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000c26:	ed52 3a26 	vldr	s7, [r2, #-152]	@ 0xffffff68
- 8000c2a:	ed52 4a25 	vldr	s9, [r2, #-148]	@ 0xffffff6c
+ 8000c2a:	ed52 3a26 	vldr	s7, [r2, #-152]	@ 0xffffff68
+ 8000c2e:	ed52 4a25 	vldr	s9, [r2, #-148]	@ 0xffffff6c
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000c2e:	ed11 3a25 	vldr	s6, [r1, #-148]	@ 0xffffff6c
- 8000c32:	ed11 4a26 	vldr	s8, [r1, #-152]	@ 0xffffff68
+ 8000c32:	ed11 3a25 	vldr	s6, [r1, #-148]	@ 0xffffff6c
+ 8000c36:	ed11 4a26 	vldr	s8, [r1, #-152]	@ 0xffffff68
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c36:	eea3 5a64 	vfms.f32	s10, s6, s9
+ 8000c3a:	eea3 5a64 	vfms.f32	s10, s6, s9
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c3a:	eee3 5a23 	vfma.f32	s11, s6, s7
+ 8000c3e:	eee3 5a23 	vfma.f32	s11, s6, s7
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c3e:	eea4 5a23 	vfma.f32	s10, s8, s7
+ 8000c42:	eea4 5a23 	vfma.f32	s10, s8, s7
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c42:	eee4 5a24 	vfma.f32	s11, s8, s9
+ 8000c46:	eee4 5a24 	vfma.f32	s11, s8, s9
                          *yPtr     = accR;
- 8000c46:	ed03 5a10 	vstr	s10, [r3, #-64]	@ 0xffffffc0
+ 8000c4a:	ed03 5a10 	vstr	s10, [r3, #-64]	@ 0xffffffc0
                          *(yPtr+1) = accI;
- 8000c4a:	ed43 5a0f 	vstr	s11, [r3, #-60]	@ 0xffffffc4
+ 8000c4e:	ed43 5a0f 	vstr	s11, [r3, #-60]	@ 0xffffffc4
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000c4e:	ed11 4a23 	vldr	s8, [r1, #-140]	@ 0xffffff74
+ 8000c52:	ed11 4a23 	vldr	s8, [r1, #-140]	@ 0xffffff74
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000c52:	ed52 5a24 	vldr	s11, [r2, #-144]	@ 0xffffff70
- 8000c56:	ed52 4a23 	vldr	s9, [r2, #-140]	@ 0xffffff74
+ 8000c56:	ed52 5a24 	vldr	s11, [r2, #-144]	@ 0xffffff70
+ 8000c5a:	ed52 4a23 	vldr	s9, [r2, #-140]	@ 0xffffff74
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c5a:	eea4 6a25 	vfma.f32	s12, s8, s11
+ 8000c5e:	eea4 6a25 	vfma.f32	s12, s8, s11
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000c5e:	ed11 5a24 	vldr	s10, [r1, #-144]	@ 0xffffff70
+ 8000c62:	ed11 5a24 	vldr	s10, [r1, #-144]	@ 0xffffff70
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c62:	eee4 6a64 	vfms.f32	s13, s8, s9
+ 8000c66:	eee4 6a64 	vfms.f32	s13, s8, s9
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c66:	eea5 6a24 	vfma.f32	s12, s10, s9
+ 8000c6a:	eea5 6a24 	vfma.f32	s12, s10, s9
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c6a:	eee5 6a25 	vfma.f32	s13, s10, s11
+ 8000c6e:	eee5 6a25 	vfma.f32	s13, s10, s11
                          *(yPtr+1) = accI;
- 8000c6e:	ed03 6a0d 	vstr	s12, [r3, #-52]	@ 0xffffffcc
+ 8000c72:	ed03 6a0d 	vstr	s12, [r3, #-52]	@ 0xffffffcc
                          *yPtr     = accR;
- 8000c72:	ed43 6a0e 	vstr	s13, [r3, #-56]	@ 0xffffffc8
+ 8000c76:	ed43 6a0e 	vstr	s13, [r3, #-56]	@ 0xffffffc8
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000c76:	ed11 5a21 	vldr	s10, [r1, #-132]	@ 0xffffff7c
+ 8000c7a:	ed11 5a21 	vldr	s10, [r1, #-132]	@ 0xffffff7c
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000c7a:	ed52 5a22 	vldr	s11, [r2, #-136]	@ 0xffffff78
- 8000c7e:	ed52 6a21 	vldr	s13, [r2, #-132]	@ 0xffffff7c
+ 8000c7e:	ed52 5a22 	vldr	s11, [r2, #-136]	@ 0xffffff78
+ 8000c82:	ed52 6a21 	vldr	s13, [r2, #-132]	@ 0xffffff7c
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c82:	eee5 7a25 	vfma.f32	s15, s10, s11
+ 8000c86:	eee5 7a25 	vfma.f32	s15, s10, s11
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000c86:	ed11 6a22 	vldr	s12, [r1, #-136]	@ 0xffffff78
+ 8000c8a:	ed11 6a22 	vldr	s12, [r1, #-136]	@ 0xffffff78
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c8a:	eea5 7a66 	vfms.f32	s14, s10, s13
+ 8000c8e:	eea5 7a66 	vfms.f32	s14, s10, s13
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000c8e:	eee6 7a26 	vfma.f32	s15, s12, s13
+ 8000c92:	eee6 7a26 	vfma.f32	s15, s12, s13
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000c92:	eea6 7a25 	vfma.f32	s14, s12, s11
+ 8000c96:	eea6 7a25 	vfma.f32	s14, s12, s11
                          *(yPtr+1) = accI;
- 8000c96:	ed43 7a0b 	vstr	s15, [r3, #-44]	@ 0xffffffd4
+ 8000c9a:	ed43 7a0b 	vstr	s15, [r3, #-44]	@ 0xffffffd4
                          *yPtr     = accR;
- 8000c9a:	ed03 7a0c 	vstr	s14, [r3, #-48]	@ 0xffffffd0
+ 8000c9e:	ed03 7a0c 	vstr	s14, [r3, #-48]	@ 0xffffffd0
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000c9e:	ed11 3a20 	vldr	s6, [r1, #-128]	@ 0xffffff80
- 8000ca2:	ed51 7a1f 	vldr	s15, [r1, #-124]	@ 0xffffff84
+ 8000ca2:	ed11 3a20 	vldr	s6, [r1, #-128]	@ 0xffffff80
+ 8000ca6:	ed51 7a1f 	vldr	s15, [r1, #-124]	@ 0xffffff84
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000ca6:	ed52 3a1f 	vldr	s7, [r2, #-124]	@ 0xffffff84
- 8000caa:	ed52 2a20 	vldr	s5, [r2, #-128]	@ 0xffffff80
+ 8000caa:	ed52 3a1f 	vldr	s7, [r2, #-124]	@ 0xffffff84
+ 8000cae:	ed52 2a20 	vldr	s5, [r2, #-128]	@ 0xffffff80
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000cae:	ed13 4a0a 	vldr	s8, [r3, #-40]	@ 0xffffffd8
+ 8000cb2:	ed13 4a0a 	vldr	s8, [r3, #-40]	@ 0xffffffd8
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000cb2:	ed53 4a09 	vldr	s9, [r3, #-36]	@ 0xffffffdc
+ 8000cb6:	ed53 4a09 	vldr	s9, [r3, #-36]	@ 0xffffffdc
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000cb6:	eea7 4ae3 	vfms.f32	s8, s15, s7
+ 8000cba:	eea7 4ae3 	vfms.f32	s8, s15, s7
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000cba:	ed53 5a08 	vldr	s11, [r3, #-32]	@ 0xffffffe0
+ 8000cbe:	ed53 5a08 	vldr	s11, [r3, #-32]	@ 0xffffffe0
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000cbe:	eee7 4aa2 	vfma.f32	s9, s15, s5
+ 8000cc2:	eee7 4aa2 	vfma.f32	s9, s15, s5
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000cc2:	ed13 5a07 	vldr	s10, [r3, #-28]	@ 0xffffffe4
+ 8000cc6:	ed13 5a07 	vldr	s10, [r3, #-28]	@ 0xffffffe4
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000cc6:	ed13 6a06 	vldr	s12, [r3, #-24]	@ 0xffffffe8
+ 8000cca:	ed13 6a06 	vldr	s12, [r3, #-24]	@ 0xffffffe8
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000cca:	ed53 6a05 	vldr	s13, [r3, #-20]	@ 0xffffffec
+ 8000cce:	ed53 6a05 	vldr	s13, [r3, #-20]	@ 0xffffffec
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000cce:	ed53 7a04 	vldr	s15, [r3, #-16]
+ 8000cd2:	ed53 7a04 	vldr	s15, [r3, #-16]
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000cd2:	ed13 7a03 	vldr	s14, [r3, #-12]
+ 8000cd6:	ed13 7a03 	vldr	s14, [r3, #-12]
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000cd6:	eea3 4a22 	vfma.f32	s8, s6, s5
+ 8000cda:	eea3 4a22 	vfma.f32	s8, s6, s5
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000cda:	eee3 4a23 	vfma.f32	s9, s6, s7
+ 8000cde:	eee3 4a23 	vfma.f32	s9, s6, s7
                          *yPtr     = accR;
- 8000cde:	ed03 4a0a 	vstr	s8, [r3, #-40]	@ 0xffffffd8
+ 8000ce2:	ed03 4a0a 	vstr	s8, [r3, #-40]	@ 0xffffffd8
                          *(yPtr+1) = accI;
- 8000ce2:	ed43 4a09 	vstr	s9, [r3, #-36]	@ 0xffffffdc
+ 8000ce6:	ed43 4a09 	vstr	s9, [r3, #-36]	@ 0xffffffdc
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000ce6:	ed52 4a1e 	vldr	s9, [r2, #-120]	@ 0xffffff88
+ 8000cea:	ed52 4a1e 	vldr	s9, [r2, #-120]	@ 0xffffff88
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000cea:	ed11 3a1d 	vldr	s6, [r1, #-116]	@ 0xffffff8c
+ 8000cee:	ed11 3a1d 	vldr	s6, [r1, #-116]	@ 0xffffff8c
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000cee:	ed52 3a1d 	vldr	s7, [r2, #-116]	@ 0xffffff8c
+ 8000cf2:	ed52 3a1d 	vldr	s7, [r2, #-116]	@ 0xffffff8c
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000cf2:	eea3 5a24 	vfma.f32	s10, s6, s9
+ 8000cf6:	eea3 5a24 	vfma.f32	s10, s6, s9
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000cf6:	ed11 4a1e 	vldr	s8, [r1, #-120]	@ 0xffffff88
+ 8000cfa:	ed11 4a1e 	vldr	s8, [r1, #-120]	@ 0xffffff88
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000cfa:	eee3 5a63 	vfms.f32	s11, s6, s7
+ 8000cfe:	eee3 5a63 	vfms.f32	s11, s6, s7
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000cfe:	eea4 5a23 	vfma.f32	s10, s8, s7
+ 8000d02:	eea4 5a23 	vfma.f32	s10, s8, s7
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d02:	eee4 5a24 	vfma.f32	s11, s8, s9
+ 8000d06:	eee4 5a24 	vfma.f32	s11, s8, s9
                          *(yPtr+1) = accI;
- 8000d06:	ed03 5a07 	vstr	s10, [r3, #-28]	@ 0xffffffe4
+ 8000d0a:	ed03 5a07 	vstr	s10, [r3, #-28]	@ 0xffffffe4
                          *yPtr     = accR;
- 8000d0a:	ed43 5a08 	vstr	s11, [r3, #-32]	@ 0xffffffe0
+ 8000d0e:	ed43 5a08 	vstr	s11, [r3, #-32]	@ 0xffffffe0
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000d0e:	ed11 4a1b 	vldr	s8, [r1, #-108]	@ 0xffffff94
+ 8000d12:	ed11 4a1b 	vldr	s8, [r1, #-108]	@ 0xffffff94
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000d12:	ed52 4a1c 	vldr	s9, [r2, #-112]	@ 0xffffff90
- 8000d16:	ed52 5a1b 	vldr	s11, [r2, #-108]	@ 0xffffff94
+ 8000d16:	ed52 4a1c 	vldr	s9, [r2, #-112]	@ 0xffffff90
+ 8000d1a:	ed52 5a1b 	vldr	s11, [r2, #-108]	@ 0xffffff94
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000d1a:	eee4 6a24 	vfma.f32	s13, s8, s9
+ 8000d1e:	eee4 6a24 	vfma.f32	s13, s8, s9
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000d1e:	ed11 5a1c 	vldr	s10, [r1, #-112]	@ 0xffffff90
+ 8000d22:	ed11 5a1c 	vldr	s10, [r1, #-112]	@ 0xffffff90
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d22:	eea4 6a65 	vfms.f32	s12, s8, s11
+ 8000d26:	eea4 6a65 	vfms.f32	s12, s8, s11
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000d26:	eee5 6a25 	vfma.f32	s13, s10, s11
+ 8000d2a:	eee5 6a25 	vfma.f32	s13, s10, s11
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d2a:	eea5 6a24 	vfma.f32	s12, s10, s9
+ 8000d2e:	eea5 6a24 	vfma.f32	s12, s10, s9
                          *(yPtr+1) = accI;
- 8000d2e:	ed43 6a05 	vstr	s13, [r3, #-20]	@ 0xffffffec
+ 8000d32:	ed43 6a05 	vstr	s13, [r3, #-20]	@ 0xffffffec
                          *yPtr     = accR;
- 8000d32:	ed03 6a06 	vstr	s12, [r3, #-24]	@ 0xffffffe8
+ 8000d36:	ed03 6a06 	vstr	s12, [r3, #-24]	@ 0xffffffe8
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000d36:	ed52 6a1a 	vldr	s13, [r2, #-104]	@ 0xffffff98
- 8000d3a:	ed52 5a19 	vldr	s11, [r2, #-100]	@ 0xffffff9c
+ 8000d3a:	ed52 6a1a 	vldr	s13, [r2, #-104]	@ 0xffffff98
+ 8000d3e:	ed52 5a19 	vldr	s11, [r2, #-100]	@ 0xffffff9c
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000d3e:	ed11 5a19 	vldr	s10, [r1, #-100]	@ 0xffffff9c
- 8000d42:	ed11 6a1a 	vldr	s12, [r1, #-104]	@ 0xffffff98
+ 8000d42:	ed11 5a19 	vldr	s10, [r1, #-100]	@ 0xffffff9c
+ 8000d46:	ed11 6a1a 	vldr	s12, [r1, #-104]	@ 0xffffff98
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000d46:	eea5 7a26 	vfma.f32	s14, s10, s13
+ 8000d4a:	eea5 7a26 	vfma.f32	s14, s10, s13
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d4a:	eee5 7a65 	vfms.f32	s15, s10, s11
+ 8000d4e:	eee5 7a65 	vfms.f32	s15, s10, s11
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000d4e:	eea6 7a25 	vfma.f32	s14, s12, s11
+ 8000d52:	eea6 7a25 	vfma.f32	s14, s12, s11
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d52:	eee6 7a26 	vfma.f32	s15, s12, s13
+ 8000d56:	eee6 7a26 	vfma.f32	s15, s12, s13
                          *(yPtr+1) = accI;
- 8000d56:	ed03 7a03 	vstr	s14, [r3, #-12]
+ 8000d5a:	ed03 7a03 	vstr	s14, [r3, #-12]
                          *yPtr     = accR;
- 8000d5a:	ed43 7a04 	vstr	s15, [r3, #-16]
+ 8000d5e:	ed43 7a04 	vstr	s15, [r3, #-16]
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000d5e:	ed11 5a18 	vldr	s10, [r1, #-96]	@ 0xffffffa0
+ 8000d62:	ed11 5a18 	vldr	s10, [r1, #-96]	@ 0xffffffa0
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000d62:	ed52 5a17 	vldr	s11, [r2, #-92]	@ 0xffffffa4
+ 8000d66:	ed52 5a17 	vldr	s11, [r2, #-92]	@ 0xffffffa4
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000d66:	ed11 4a17 	vldr	s8, [r1, #-92]	@ 0xffffffa4
+ 8000d6a:	ed11 4a17 	vldr	s8, [r1, #-92]	@ 0xffffffa4
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000d6a:	ed52 4a18 	vldr	s9, [r2, #-96]	@ 0xffffffa0
+ 8000d6e:	ed52 4a18 	vldr	s9, [r2, #-96]	@ 0xffffffa0
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d6e:	ed13 6a02 	vldr	s12, [r3, #-8]
+ 8000d72:	ed13 6a02 	vldr	s12, [r3, #-8]
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000d72:	ed53 6a01 	vldr	s13, [r3, #-4]
+ 8000d76:	ed53 6a01 	vldr	s13, [r3, #-4]
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d76:	eea4 6a65 	vfms.f32	s12, s8, s11
+ 8000d7a:	eea4 6a65 	vfms.f32	s12, s8, s11
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d7a:	ed93 7a00 	vldr	s14, [r3]
+ 8000d7e:	ed93 7a00 	vldr	s14, [r3]
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000d7e:	eee4 6a24 	vfma.f32	s13, s8, s9
+ 8000d82:	eee4 6a24 	vfma.f32	s13, s8, s9
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000d82:	edd3 7a01 	vldr	s15, [r3, #4]
+ 8000d86:	edd3 7a01 	vldr	s15, [r3, #4]
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000d86:	eea5 6a24 	vfma.f32	s12, s10, s9
+ 8000d8a:	eea5 6a24 	vfma.f32	s12, s10, s9
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000d8a:	eee5 6a25 	vfma.f32	s13, s10, s11
+ 8000d8e:	eee5 6a25 	vfma.f32	s13, s10, s11
                          *yPtr     = accR;
- 8000d8e:	ed03 6a02 	vstr	s12, [r3, #-8]
+ 8000d92:	ed03 6a02 	vstr	s12, [r3, #-8]
                          *(yPtr+1) = accI;
- 8000d92:	ed43 6a01 	vstr	s13, [r3, #-4]
+ 8000d96:	ed43 6a01 	vstr	s13, [r3, #-4]
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000d96:	ed11 5a15 	vldr	s10, [r1, #-84]	@ 0xffffffac
+ 8000d9a:	ed11 5a15 	vldr	s10, [r1, #-84]	@ 0xffffffac
                          float hr = *hPtr++; float hi = *hPtr++;
- 8000d9a:	ed52 5a16 	vldr	s11, [r2, #-88]	@ 0xffffffa8
- 8000d9e:	ed52 6a15 	vldr	s13, [r2, #-84]	@ 0xffffffac
+ 8000d9e:	ed52 5a16 	vldr	s11, [r2, #-88]	@ 0xffffffa8
+ 8000da2:	ed52 6a15 	vldr	s13, [r2, #-84]	@ 0xffffffac
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000da2:	eee5 7a25 	vfma.f32	s15, s10, s11
+ 8000da6:	eee5 7a25 	vfma.f32	s15, s10, s11
                          float xr = *xPtr++; float xi = *xPtr++;
- 8000da6:	ed11 6a16 	vldr	s12, [r1, #-88]	@ 0xffffffa8
+ 8000daa:	ed11 6a16 	vldr	s12, [r1, #-88]	@ 0xffffffa8
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000daa:	eea5 7a66 	vfms.f32	s14, s10, s13
+ 8000dae:	eea5 7a66 	vfms.f32	s14, s10, s13
                          float accI = __builtin_fmaf(xr, hi, __builtin_fmaf(xi, hr, *(yPtr+1)));
- 8000dae:	eee6 7a26 	vfma.f32	s15, s12, s13
+ 8000db2:	eee6 7a26 	vfma.f32	s15, s12, s13
                          float accR = __builtin_fmaf(xr, hr, __builtin_fmaf(-xi, hi, *yPtr));
- 8000db2:	eea6 7a25 	vfma.f32	s14, s12, s11
+ 8000db6:	eea6 7a25 	vfma.f32	s14, s12, s11
                          *(yPtr+1) = accI;
- 8000db6:	edc3 7a01 	vstr	s15, [r3, #4]
+ 8000dba:	edc3 7a01 	vstr	s15, [r3, #4]
                          *yPtr     = accR;
- 8000dba:	ed83 7a00 	vstr	s14, [r3]
+ 8000dbe:	ed83 7a00 	vstr	s14, [r3]
                  for (uint32_t u = FFT_SIZE / 20;  u--;  ) {
- 8000dbe:	4283      	cmp	r3, r0
- 8000dc0:	f47f af0a 	bne.w	8000bd8 <partitioned_fir_convolution_fft+0xf8>
+ 8000dc2:	4283      	cmp	r3, r0
+ 8000dc4:	f47f af0a 	bne.w	8000bdc <partitioned_fir_convolution_fft+0xf8>
                      float accR = __builtin_fmaf(xr, hr,
- 8000dc4:	9b01      	ldr	r3, [sp, #4]
+ 8000dc8:	9b01      	ldr	r3, [sp, #4]
 		if (++i >= segs) {
- 8000dc6:	f10c 0c01 	add.w	ip, ip, #1
+ 8000dca:	f10c 0c01 	add.w	ip, ip, #1
                      float accI = __builtin_fmaf(xr, hi,
- 8000dca:	9a02      	ldr	r2, [sp, #8]
+ 8000dce:	9a02      	ldr	r2, [sp, #8]
                      float accR = __builtin_fmaf(xr, hr,
- 8000dcc:	ed93 7a00 	vldr	s14, [r3]
+ 8000dd0:	ed93 7a00 	vldr	s14, [r3]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000dd0:	f505 5380 	add.w	r3, r5, #4096	@ 0x1000
+ 8000dd4:	f505 5380 	add.w	r3, r5, #4096	@ 0x1000
                      float accI = __builtin_fmaf(xr, hi,
- 8000dd4:	edd2 7a00 	vldr	s15, [r2]
+ 8000dd8:	edd2 7a00 	vldr	s15, [r2]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000dd8:	f505 5500 	add.w	r5, r5, #8192	@ 0x2000
+ 8000ddc:	f505 5500 	add.w	r5, r5, #8192	@ 0x2000
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000ddc:	f504 5280 	add.w	r2, r4, #4096	@ 0x1000
- 8000de0:	f504 5400 	add.w	r4, r4, #8192	@ 0x2000
+ 8000de0:	f504 5280 	add.w	r2, r4, #4096	@ 0x1000
+ 8000de4:	f504 5400 	add.w	r4, r4, #8192	@ 0x2000
                      float accR = __builtin_fmaf(xr, hr,
- 8000de4:	ed97 5a00 	vldr	s10, [r7]
+ 8000de8:	ed97 5a00 	vldr	s10, [r7]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000de8:	ed95 2a01 	vldr	s4, [r5, #4]
+ 8000dec:	ed95 2a01 	vldr	s4, [r5, #4]
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000dec:	edd4 2a01 	vldr	s5, [r4, #4]
+ 8000df0:	edd4 2a01 	vldr	s5, [r4, #4]
 			i = 0;
- 8000df0:	9903      	ldr	r1, [sp, #12]
+ 8000df4:	9903      	ldr	r1, [sp, #12]
                      float accR = __builtin_fmaf(xr, hr,
- 8000df2:	eea2 5a62 	vfms.f32	s10, s4, s5
+ 8000df6:	eea2 5a62 	vfms.f32	s10, s4, s5
                      float accI = __builtin_fmaf(xr, hi,
- 8000df6:	edd7 5a01 	vldr	s11, [r7, #4]
+ 8000dfa:	edd7 5a01 	vldr	s11, [r7, #4]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000dfa:	ed95 3a00 	vldr	s6, [r5]
+ 8000dfe:	ed95 3a00 	vldr	s6, [r5]
 			i = 0;
- 8000dfe:	4561      	cmp	r1, ip
- 8000e00:	bf98      	it	ls
- 8000e02:	f04f 0c00 	movls.w	ip, #0
+ 8000e02:	4561      	cmp	r1, ip
+ 8000e04:	bf98      	it	ls
+ 8000e06:	f04f 0c00 	movls.w	ip, #0
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000e06:	edd4 3a00 	vldr	s7, [r4]
+ 8000e0a:	edd4 3a00 	vldr	s7, [r4]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000e0a:	f603 71ec 	addw	r1, r3, #4076	@ 0xfec
+ 8000e0e:	f603 71ec 	addw	r1, r3, #4076	@ 0xfec
                      float accR = __builtin_fmaf(xr, hr,
- 8000e0e:	ed9b 4a00 	vldr	s8, [fp]
+ 8000e12:	ed9b 4a00 	vldr	s8, [fp]
                      float accI = __builtin_fmaf(xr, hi,
- 8000e12:	eee2 5a23 	vfma.f32	s11, s4, s7
- 8000e16:	edda 4a00 	vldr	s9, [sl]
+ 8000e16:	eee2 5a23 	vfma.f32	s11, s4, s7
+ 8000e1a:	edda 4a00 	vldr	s9, [sl]
                      float accR = __builtin_fmaf(xr, hr,
- 8000e1a:	ed99 6a00 	vldr	s12, [r9]
- 8000e1e:	eea3 5a23 	vfma.f32	s10, s6, s7
+ 8000e1e:	ed99 6a00 	vldr	s12, [r9]
+ 8000e22:	eea3 5a23 	vfma.f32	s10, s6, s7
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000e22:	edd1 3a00 	vldr	s7, [r1]
+ 8000e26:	edd1 3a00 	vldr	s7, [r1]
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000e26:	f602 71e8 	addw	r1, r2, #4072	@ 0xfe8
+ 8000e2a:	f602 71e8 	addw	r1, r2, #4072	@ 0xfe8
                      float accI = __builtin_fmaf(xr, hi,
- 8000e2a:	edd8 6a00 	vldr	s13, [r8]
+ 8000e2e:	edd8 6a00 	vldr	s13, [r8]
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000e2e:	edd1 0a00 	vldr	s1, [r1]
- 8000e32:	f602 71ec 	addw	r1, r2, #4076	@ 0xfec
+ 8000e32:	edd1 0a00 	vldr	s1, [r1]
+ 8000e36:	f602 71ec 	addw	r1, r2, #4076	@ 0xfec
                      float accI = __builtin_fmaf(xr, hi,
- 8000e36:	eee3 5a22 	vfma.f32	s11, s6, s5
+ 8000e3a:	eee3 5a22 	vfma.f32	s11, s6, s5
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000e3a:	edd1 1a00 	vldr	s3, [r1]
+ 8000e3e:	edd1 1a00 	vldr	s3, [r1]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000e3e:	f603 71f4 	addw	r1, r3, #4084	@ 0xff4
+ 8000e42:	f603 71f4 	addw	r1, r3, #4084	@ 0xff4
                      float accI = __builtin_fmaf(xr, hi,
- 8000e42:	eee3 4aa0 	vfma.f32	s9, s7, s1
+ 8000e46:	eee3 4aa0 	vfma.f32	s9, s7, s1
                      float accR = __builtin_fmaf(xr, hr,
- 8000e46:	eea3 4ae1 	vfms.f32	s8, s7, s3
+ 8000e4a:	eea3 4ae1 	vfms.f32	s8, s7, s3
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000e4a:	edd1 3a00 	vldr	s7, [r1]
+ 8000e4e:	edd1 3a00 	vldr	s7, [r1]
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000e4e:	f502 617f 	add.w	r1, r2, #4080	@ 0xff0
- 8000e52:	ed91 2a00 	vldr	s4, [r1]
- 8000e56:	f602 71f4 	addw	r1, r2, #4084	@ 0xff4
- 8000e5a:	edd1 2a00 	vldr	s5, [r1]
+ 8000e52:	f502 617f 	add.w	r1, r2, #4080	@ 0xff0
+ 8000e56:	ed91 2a00 	vldr	s4, [r1]
+ 8000e5a:	f602 71f4 	addw	r1, r2, #4084	@ 0xff4
+ 8000e5e:	edd1 2a00 	vldr	s5, [r1]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000e5e:	f603 71fc 	addw	r1, r3, #4092	@ 0xffc
+ 8000e62:	f603 71fc 	addw	r1, r3, #4092	@ 0xffc
                      float accI = __builtin_fmaf(xr, hi,
- 8000e62:	eee3 6a82 	vfma.f32	s13, s7, s4
+ 8000e66:	eee3 6a82 	vfma.f32	s13, s7, s4
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000e66:	ed91 1a00 	vldr	s2, [r1]
+ 8000e6a:	ed91 1a00 	vldr	s2, [r1]
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000e6a:	f602 71f8 	addw	r1, r2, #4088	@ 0xff8
- 8000e6e:	f602 72fc 	addw	r2, r2, #4092	@ 0xffc
+ 8000e6e:	f602 71f8 	addw	r1, r2, #4088	@ 0xff8
+ 8000e72:	f602 72fc 	addw	r2, r2, #4092	@ 0xffc
                      float accR = __builtin_fmaf(xr, hr,
- 8000e72:	eea3 6ae2 	vfms.f32	s12, s7, s5
+ 8000e76:	eea3 6ae2 	vfms.f32	s12, s7, s5
                      float hr = *hPtr++;  float hi = *hPtr++;
- 8000e76:	ed91 3a00 	vldr	s6, [r1]
- 8000e7a:	edd2 3a00 	vldr	s7, [r2]
+ 8000e7a:	ed91 3a00 	vldr	s6, [r1]
+ 8000e7e:	edd2 3a00 	vldr	s7, [r2]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000e7e:	f603 72e8 	addw	r2, r3, #4072	@ 0xfe8
+ 8000e82:	f603 72e8 	addw	r2, r3, #4072	@ 0xfe8
                      float accI = __builtin_fmaf(xr, hi,
- 8000e82:	eee1 7a03 	vfma.f32	s15, s2, s6
+ 8000e86:	eee1 7a03 	vfma.f32	s15, s2, s6
                      float accR = __builtin_fmaf(xr, hr,
- 8000e86:	eea1 7a63 	vfms.f32	s14, s2, s7
+ 8000e8a:	eea1 7a63 	vfms.f32	s14, s2, s7
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000e8a:	ed92 1a00 	vldr	s2, [r2]
- 8000e8e:	f503 627f 	add.w	r2, r3, #4080	@ 0xff0
- 8000e92:	f603 73f8 	addw	r3, r3, #4088	@ 0xff8
+ 8000e8e:	ed92 1a00 	vldr	s2, [r2]
+ 8000e92:	f503 627f 	add.w	r2, r3, #4080	@ 0xff0
+ 8000e96:	f603 73f8 	addw	r3, r3, #4088	@ 0xff8
                      float accR = __builtin_fmaf(xr, hr,
- 8000e96:	eea1 4a20 	vfma.f32	s8, s2, s1
+ 8000e9a:	eea1 4a20 	vfma.f32	s8, s2, s1
                      float accI = __builtin_fmaf(xr, hi,
- 8000e9a:	eee1 4a21 	vfma.f32	s9, s2, s3
+ 8000e9e:	eee1 4a21 	vfma.f32	s9, s2, s3
                      *yPtr     = accR;
- 8000e9e:	ed8b 4a00 	vstr	s8, [fp]
+ 8000ea2:	ed8b 4a00 	vstr	s8, [fp]
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000ea2:	ed92 4a00 	vldr	s8, [r2]
+ 8000ea6:	ed92 4a00 	vldr	s8, [r2]
                      *(yPtr+1) = accI;
- 8000ea6:	edca 4a00 	vstr	s9, [sl]
+ 8000eaa:	edca 4a00 	vstr	s9, [sl]
                      float accR = __builtin_fmaf(xr, hr,
- 8000eaa:	eea4 6a02 	vfma.f32	s12, s8, s4
+ 8000eae:	eea4 6a02 	vfma.f32	s12, s8, s4
                      float xr = *xPtr++;  float xi = *xPtr++;
- 8000eae:	edd3 4a00 	vldr	s9, [r3]
+ 8000eb2:	edd3 4a00 	vldr	s9, [r3]
                      float accI = __builtin_fmaf(xr, hi,
- 8000eb2:	eee4 6a22 	vfma.f32	s13, s8, s5
+ 8000eb6:	eee4 6a22 	vfma.f32	s13, s8, s5
                      *yPtr     = accR;
- 8000eb6:	ed87 5a00 	vstr	s10, [r7]
+ 8000eba:	ed87 5a00 	vstr	s10, [r7]
                      float accR = __builtin_fmaf(xr, hr,
- 8000eba:	eea4 7a83 	vfma.f32	s14, s9, s6
+ 8000ebe:	eea4 7a83 	vfma.f32	s14, s9, s6
                      *(yPtr+1) = accI;
- 8000ebe:	edc7 5a01 	vstr	s11, [r7, #4]
+ 8000ec2:	edc7 5a01 	vstr	s11, [r7, #4]
                      float accI = __builtin_fmaf(xr, hi,
- 8000ec2:	eee4 7aa3 	vfma.f32	s15, s9, s7
+ 8000ec6:	eee4 7aa3 	vfma.f32	s15, s9, s7
                      *yPtr     = accR;
- 8000ec6:	ed89 6a00 	vstr	s12, [r9]
+ 8000eca:	ed89 6a00 	vstr	s12, [r9]
                      *(yPtr+1) = accI;
- 8000eca:	edc8 6a00 	vstr	s13, [r8]
+ 8000ece:	edc8 6a00 	vstr	s13, [r8]
                      *yPtr     = accR;
- 8000ece:	9b01      	ldr	r3, [sp, #4]
+ 8000ed2:	9b01      	ldr	r3, [sp, #4]
                      *(yPtr+1) = accI;
- 8000ed0:	9a02      	ldr	r2, [sp, #8]
+ 8000ed4:	9a02      	ldr	r2, [sp, #8]
                      *yPtr     = accR;
- 8000ed2:	ed83 7a00 	vstr	s14, [r3]
+ 8000ed6:	ed83 7a00 	vstr	s14, [r3]
                      *(yPtr+1) = accI;
- 8000ed6:	edc2 7a00 	vstr	s15, [r2]
+ 8000eda:	edc2 7a00 	vstr	s15, [r2]
 		if (idx-- == 0) {
- 8000eda:	b396      	cbz	r6, 8000f42 <partitioned_fir_convolution_fft+0x462>
- 8000edc:	3e01      	subs	r6, #1
+ 8000ede:	b396      	cbz	r6, 8000f46 <partitioned_fir_convolution_fft+0x462>
+ 8000ee0:	3e01      	subs	r6, #1
     } while (idx != fir->curr_fftidx);
- 8000ede:	9b04      	ldr	r3, [sp, #16]
- 8000ee0:	42b3      	cmp	r3, r6
- 8000ee2:	f47f ae4d 	bne.w	8000b80 <partitioned_fir_convolution_fft+0xa0>
+ 8000ee2:	9b04      	ldr	r3, [sp, #16]
+ 8000ee4:	42b3      	cmp	r3, r6
+ 8000ee6:	f47f ae4d 	bne.w	8000b84 <partitioned_fir_convolution_fft+0xa0>
 
     // advance write index
     if (++fir->curr_fftidx >= segs) {
         fir->curr_fftidx = 0;
- 8000ee6:	9e03      	ldr	r6, [sp, #12]
+ 8000eea:	9e03      	ldr	r6, [sp, #12]
     if (++fir->curr_fftidx >= segs) {
- 8000ee8:	3301      	adds	r3, #1
+ 8000eec:	3301      	adds	r3, #1
     }
 
     // inverse FFT
     arm_rfft_fast_f32(&fft, fftOut, zeropaddedinput, 1);
- 8000eea:	4a17      	ldr	r2, [pc, #92]	@ (8000f48 <partitioned_fir_convolution_fft+0x468>)
+ 8000eee:	4a17      	ldr	r2, [pc, #92]	@ (8000f4c <partitioned_fir_convolution_fft+0x468>)
         fir->curr_fftidx = 0;
- 8000eec:	42b3      	cmp	r3, r6
- 8000eee:	bf28      	it	cs
- 8000ef0:	2300      	movcs	r3, #0
+ 8000ef0:	42b3      	cmp	r3, r6
+ 8000ef2:	bf28      	it	cs
+ 8000ef4:	2300      	movcs	r3, #0
     arm_rfft_fast_f32(&fft, fftOut, zeropaddedinput, 1);
- 8000ef2:	4916      	ldr	r1, [pc, #88]	@ (8000f4c <partitioned_fir_convolution_fft+0x46c>)
- 8000ef4:	4816      	ldr	r0, [pc, #88]	@ (8000f50 <partitioned_fir_convolution_fft+0x470>)
+ 8000ef6:	4916      	ldr	r1, [pc, #88]	@ (8000f50 <partitioned_fir_convolution_fft+0x46c>)
+ 8000ef8:	4816      	ldr	r0, [pc, #88]	@ (8000f54 <partitioned_fir_convolution_fft+0x470>)
     if (++fir->curr_fftidx >= segs) {
- 8000ef6:	e9dd 4508 	ldrd	r4, r5, [sp, #32]
- 8000efa:	60ab      	str	r3, [r5, #8]
+ 8000efa:	e9dd 4508 	ldrd	r4, r5, [sp, #32]
+ 8000efe:	60ab      	str	r3, [r5, #8]
     arm_rfft_fast_f32(&fft, fftOut, zeropaddedinput, 1);
- 8000efc:	2301      	movs	r3, #1
- 8000efe:	f005 fdc3 	bl	8006a88 <arm_rfft_fast_f32>
+ 8000f00:	2301      	movs	r3, #1
+ 8000f02:	f005 fdc1 	bl	8006a88 <arm_rfft_fast_f32>
 
     // overlap-add and scaling
     const float32_t invN = 1.0f / (float32_t)segs;
- 8000f02:	ee07 6a90 	vmov	s15, r6
- 8000f06:	eeb7 7a00 	vmov.f32	s14, #112	@ 0x3f800000  1.0
- 8000f0a:	4a0f      	ldr	r2, [pc, #60]	@ (8000f48 <partitioned_fir_convolution_fft+0x468>)
- 8000f0c:	eef8 7a67 	vcvt.f32.u32	s15, s15
- 8000f10:	9b07      	ldr	r3, [sp, #28]
- 8000f12:	f502 5180 	add.w	r1, r2, #4096	@ 0x1000
- 8000f16:	eec7 6a27 	vdiv.f32	s13, s14, s15
+ 8000f06:	ee07 6a90 	vmov	s15, r6
+ 8000f0a:	eeb7 7a00 	vmov.f32	s14, #112	@ 0x3f800000  1.0
+ 8000f0e:	4a0f      	ldr	r2, [pc, #60]	@ (8000f4c <partitioned_fir_convolution_fft+0x468>)
+ 8000f10:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 8000f14:	9b07      	ldr	r3, [sp, #28]
+ 8000f16:	f502 5180 	add.w	r1, r2, #4096	@ 0x1000
+ 8000f1a:	eec7 6a27 	vdiv.f32	s13, s14, s15
     for (uint32_t k = 0;  k < BUFFER_SIZE;  ++k) {
- 8000f1a:	460d      	mov	r5, r1
+ 8000f1e:	460d      	mov	r5, r1
         float32_t s = zeropaddedinput[k]            * invN;
- 8000f1c:	ecf2 7a01 	vldmia	r2!, {s15}
+ 8000f20:	ecf2 7a01 	vldmia	r2!, {s15}
         float32_t o = overlap[k]                    * invN;
- 8000f20:	ed93 7a00 	vldr	s14, [r3]
+ 8000f24:	ed93 7a00 	vldr	s14, [r3]
     for (uint32_t k = 0;  k < BUFFER_SIZE;  ++k) {
- 8000f24:	4295      	cmp	r5, r2
+ 8000f28:	4295      	cmp	r5, r2
         pipe->processBuffer[k] = s + o;
- 8000f26:	ee77 7a87 	vadd.f32	s15, s15, s14
- 8000f2a:	ee67 7aa6 	vmul.f32	s15, s15, s13
- 8000f2e:	ece4 7a01 	vstmia	r4!, {s15}
+ 8000f2a:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 8000f2e:	ee67 7aa6 	vmul.f32	s15, s15, s13
+ 8000f32:	ece4 7a01 	vstmia	r4!, {s15}
         overlap[k]             = zeropaddedinput[BUFFER_SIZE + k];
- 8000f32:	f851 0b04 	ldr.w	r0, [r1], #4
- 8000f36:	f843 0b04 	str.w	r0, [r3], #4
+ 8000f36:	f851 0b04 	ldr.w	r0, [r1], #4
+ 8000f3a:	f843 0b04 	str.w	r0, [r3], #4
     for (uint32_t k = 0;  k < BUFFER_SIZE;  ++k) {
- 8000f3a:	d1ef      	bne.n	8000f1c <partitioned_fir_convolution_fft+0x43c>
+ 8000f3e:	d1ef      	bne.n	8000f20 <partitioned_fir_convolution_fft+0x43c>
     }
 
 }
- 8000f3c:	b00b      	add	sp, #44	@ 0x2c
- 8000f3e:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+ 8000f40:	b00b      	add	sp, #44	@ 0x2c
+ 8000f42:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
 			idx = segs - 1;
- 8000f42:	9b03      	ldr	r3, [sp, #12]
- 8000f44:	1e5e      	subs	r6, r3, #1
- 8000f46:	e7ca      	b.n	8000ede <partitioned_fir_convolution_fft+0x3fe>
- 8000f48:	20003020 	.word	0x20003020
- 8000f4c:	2407735c 	.word	0x2407735c
- 8000f50:	24008160 	.word	0x24008160
+ 8000f46:	9b03      	ldr	r3, [sp, #12]
+ 8000f48:	1e5e      	subs	r6, r3, #1
+ 8000f4a:	e7ca      	b.n	8000ee2 <partitioned_fir_convolution_fft+0x3fe>
+ 8000f4c:	20003020 	.word	0x20003020
+ 8000f50:	2407733c 	.word	0x2407733c
+ 8000f54:	24008140 	.word	0x24008140
 
-08000f54 <pipe_getDelayBuffer>:
+08000f58 <pipe_getDelayBuffer>:
 
 float32_t *pipe_getDelayBuffer(pipe *self, uint16_t n)
 {
     uint32_t offset = n * BUFFER_SIZE;
 
     uint32_t index = (self->delayIndex + DELAY_BUFFER_SIZE - offset) % DELAY_BUFFER_SIZE;
- 8000f54:	f500 4370 	add.w	r3, r0, #61440	@ 0xf000
- 8000f58:	4a09      	ldr	r2, [pc, #36]	@ (8000f80 <pipe_getDelayBuffer+0x2c>)
+ 8000f58:	f500 4370 	add.w	r3, r0, #61440	@ 0xf000
+ 8000f5c:	4a09      	ldr	r2, [pc, #36]	@ (8000f84 <pipe_getDelayBuffer+0x2c>)
 
     return &self->delayBuffer[index];
- 8000f5a:	f241 4c02 	movw	ip, #5122	@ 0x1402
+ 8000f5e:	f241 4c02 	movw	ip, #5122	@ 0x1402
     uint32_t index = (self->delayIndex + DELAY_BUFFER_SIZE - offset) % DELAY_BUFFER_SIZE;
- 8000f5e:	68db      	ldr	r3, [r3, #12]
- 8000f60:	f503 5320 	add.w	r3, r3, #10240	@ 0x2800
- 8000f64:	eba3 2181 	sub.w	r1, r3, r1, lsl #10
- 8000f68:	fba2 2301 	umull	r2, r3, r2, r1
- 8000f6c:	0b5b      	lsrs	r3, r3, #13
- 8000f6e:	eb03 0383 	add.w	r3, r3, r3, lsl #2
- 8000f72:	eba1 21c3 	sub.w	r1, r1, r3, lsl #11
+ 8000f62:	68db      	ldr	r3, [r3, #12]
+ 8000f64:	f503 5320 	add.w	r3, r3, #10240	@ 0x2800
+ 8000f68:	eba3 2181 	sub.w	r1, r3, r1, lsl #10
+ 8000f6c:	fba2 2301 	umull	r2, r3, r2, r1
+ 8000f70:	0b5b      	lsrs	r3, r3, #13
+ 8000f72:	eb03 0383 	add.w	r3, r3, r3, lsl #2
+ 8000f76:	eba1 21c3 	sub.w	r1, r1, r3, lsl #11
     return &self->delayBuffer[index];
- 8000f76:	448c      	add	ip, r1
+ 8000f7a:	448c      	add	ip, r1
 }
- 8000f78:	eb00 008c 	add.w	r0, r0, ip, lsl #2
- 8000f7c:	4770      	bx	lr
- 8000f7e:	bf00      	nop
- 8000f80:	cccccccd 	.word	0xcccccccd
+ 8000f7c:	eb00 008c 	add.w	r0, r0, ip, lsl #2
+ 8000f80:	4770      	bx	lr
+ 8000f82:	bf00      	nop
+ 8000f84:	cccccccd 	.word	0xcccccccd
 
-08000f84 <pipe_loadProcess>:
+08000f88 <pipe_loadProcess>:
     }
 }
 
 static void pipe_loadProcess(pipe *self)
 {
 	arm_copy_f32(self->inBuffer, self->processBuffer, BUFFER_SIZE);
- 8000f84:	f244 0108 	movw	r1, #16392	@ 0x4008
- 8000f88:	f500 4380 	add.w	r3, r0, #16384	@ 0x4000
- 8000f8c:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8000f90:	4401      	add	r1, r0
- 8000f92:	6818      	ldr	r0, [r3, #0]
- 8000f94:	f005 bc96 	b.w	80068c4 <arm_copy_f32>
+ 8000f88:	f244 0108 	movw	r1, #16392	@ 0x4008
+ 8000f8c:	f500 4380 	add.w	r3, r0, #16384	@ 0x4000
+ 8000f90:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8000f94:	4401      	add	r1, r0
+ 8000f96:	6818      	ldr	r0, [r3, #0]
+ 8000f98:	f005 bc94 	b.w	80068c4 <arm_copy_f32>
 
-08000f98 <pipe_updateDelayBuffer>:
+08000f9c <pipe_updateDelayBuffer>:
 {
- 8000f98:	b510      	push	{r4, lr}
+ 8000f9c:	b510      	push	{r4, lr}
     arm_copy_f32(self->inBuffer, &self->delayBuffer[self->delayIndex], BUFFER_SIZE);
- 8000f9a:	f500 4470 	add.w	r4, r0, #61440	@ 0xf000
- 8000f9e:	f241 4102 	movw	r1, #5122	@ 0x1402
- 8000fa2:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8000fa6:	68e3      	ldr	r3, [r4, #12]
- 8000fa8:	4419      	add	r1, r3
- 8000faa:	f500 4380 	add.w	r3, r0, #16384	@ 0x4000
- 8000fae:	eb00 0181 	add.w	r1, r0, r1, lsl #2
- 8000fb2:	6818      	ldr	r0, [r3, #0]
- 8000fb4:	f005 fc86 	bl	80068c4 <arm_copy_f32>
+ 8000f9e:	f500 4470 	add.w	r4, r0, #61440	@ 0xf000
+ 8000fa2:	f241 4102 	movw	r1, #5122	@ 0x1402
+ 8000fa6:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8000faa:	68e3      	ldr	r3, [r4, #12]
+ 8000fac:	4419      	add	r1, r3
+ 8000fae:	f500 4380 	add.w	r3, r0, #16384	@ 0x4000
+ 8000fb2:	eb00 0181 	add.w	r1, r0, r1, lsl #2
+ 8000fb6:	6818      	ldr	r0, [r3, #0]
+ 8000fb8:	f005 fc84 	bl	80068c4 <arm_copy_f32>
     self->delayIndex += BUFFER_SIZE;
- 8000fb8:	68e3      	ldr	r3, [r4, #12]
- 8000fba:	f503 6380 	add.w	r3, r3, #1024	@ 0x400
+ 8000fbc:	68e3      	ldr	r3, [r4, #12]
+ 8000fbe:	f503 6380 	add.w	r3, r3, #1024	@ 0x400
         self->delayIndex = 0;
- 8000fbe:	f5b3 5f20 	cmp.w	r3, #10240	@ 0x2800
- 8000fc2:	bf28      	it	cs
- 8000fc4:	2300      	movcs	r3, #0
- 8000fc6:	60e3      	str	r3, [r4, #12]
+ 8000fc2:	f5b3 5f20 	cmp.w	r3, #10240	@ 0x2800
+ 8000fc6:	bf28      	it	cs
+ 8000fc8:	2300      	movcs	r3, #0
+ 8000fca:	60e3      	str	r3, [r4, #12]
 }
- 8000fc8:	bd10      	pop	{r4, pc}
- 8000fca:	bf00      	nop
+ 8000fcc:	bd10      	pop	{r4, pc}
+ 8000fce:	bf00      	nop
 
-08000fcc <pipe_updateDACOutput>:
+08000fd0 <pipe_updateDACOutput>:
 {
- 8000fcc:	b570      	push	{r4, r5, r6, lr}
+ 8000fd0:	b570      	push	{r4, r5, r6, lr}
     arm_offset_f32(self->outBuffer, 1.0f, self->outBuffer, BUFFER_SIZE);
- 8000fce:	f500 4580 	add.w	r5, r0, #16384	@ 0x4000
+ 8000fd2:	f500 4580 	add.w	r5, r0, #16384	@ 0x4000
     uint8_t half = (self->ppState == 0) ? 1 : 0;
- 8000fd2:	f500 4370 	add.w	r3, r0, #61440	@ 0xf000
+ 8000fd6:	f500 4370 	add.w	r3, r0, #61440	@ 0xf000
 {
- 8000fd6:	460c      	mov	r4, r1
+ 8000fda:	460c      	mov	r4, r1
     arm_offset_f32(self->outBuffer, 1.0f, self->outBuffer, BUFFER_SIZE);
- 8000fd8:	eeb7 0a00 	vmov.f32	s0, #112	@ 0x3f800000  1.0
- 8000fdc:	6869      	ldr	r1, [r5, #4]
- 8000fde:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8000fdc:	eeb7 0a00 	vmov.f32	s0, #112	@ 0x3f800000  1.0
+ 8000fe0:	6869      	ldr	r1, [r5, #4]
+ 8000fe2:	f44f 6280 	mov.w	r2, #1024	@ 0x400
     uint8_t half = (self->ppState == 0) ? 1 : 0;
- 8000fe2:	7a1e      	ldrb	r6, [r3, #8]
+ 8000fe6:	7a1e      	ldrb	r6, [r3, #8]
     arm_offset_f32(self->outBuffer, 1.0f, self->outBuffer, BUFFER_SIZE);
- 8000fe4:	4608      	mov	r0, r1
- 8000fe6:	f006 fac5 	bl	8007574 <arm_offset_f32>
+ 8000fe8:	4608      	mov	r0, r1
+ 8000fea:	f006 fac3 	bl	8007574 <arm_offset_f32>
     arm_scale_f32(self->outBuffer, DAC_VOLTS2BITS, self->outBuffer, BUFFER_SIZE);
- 8000fea:	6869      	ldr	r1, [r5, #4]
+ 8000fee:	6869      	ldr	r1, [r5, #4]
     uint8_t half = (self->ppState == 0) ? 1 : 0;
- 8000fec:	fab6 f686 	clz	r6, r6
+ 8000ff0:	fab6 f686 	clz	r6, r6
     arm_scale_f32(self->outBuffer, DAC_VOLTS2BITS, self->outBuffer, BUFFER_SIZE);
- 8000ff0:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8000ff4:	4608      	mov	r0, r1
- 8000ff6:	ed9f 0a0b 	vldr	s0, [pc, #44]	@ 8001024 <pipe_updateDACOutput+0x58>
- 8000ffa:	f006 fa85 	bl	8007508 <arm_scale_f32>
- 8000ffe:	686a      	ldr	r2, [r5, #4]
+ 8000ff4:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8000ff8:	4608      	mov	r0, r1
+ 8000ffa:	ed9f 0a0b 	vldr	s0, [pc, #44]	@ 8001028 <pipe_updateDACOutput+0x58>
+ 8000ffe:	f006 fa83 	bl	8007508 <arm_scale_f32>
+ 8001002:	686a      	ldr	r2, [r5, #4]
     uint8_t half = (self->ppState == 0) ? 1 : 0;
- 8001000:	0976      	lsrs	r6, r6, #5
+ 8001004:	0976      	lsrs	r6, r6, #5
     for (i = 0; i < BUFFER_SIZE; i++)
- 8001002:	f502 5080 	add.w	r0, r2, #4096	@ 0x1000
- 8001006:	eb04 21c6 	add.w	r1, r4, r6, lsl #11
+ 8001006:	f502 5080 	add.w	r0, r2, #4096	@ 0x1000
+ 800100a:	eb04 21c6 	add.w	r1, r4, r6, lsl #11
         dacBuffer[BUFFER_SIZE * half + i] = (uint16_t)self->outBuffer[i];
- 800100a:	ecf2 7a01 	vldmia	r2!, {s15}
- 800100e:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 800100e:	ecf2 7a01 	vldmia	r2!, {s15}
+ 8001012:	eefc 7ae7 	vcvt.u32.f32	s15, s15
     for (i = 0; i < BUFFER_SIZE; i++)
- 8001012:	4290      	cmp	r0, r2
+ 8001016:	4290      	cmp	r0, r2
         dacBuffer[BUFFER_SIZE * half + i] = (uint16_t)self->outBuffer[i];
- 8001014:	ee17 3a90 	vmov	r3, s15
- 8001018:	b29b      	uxth	r3, r3
- 800101a:	f821 3b02 	strh.w	r3, [r1], #2
+ 8001018:	ee17 3a90 	vmov	r3, s15
+ 800101c:	b29b      	uxth	r3, r3
+ 800101e:	f821 3b02 	strh.w	r3, [r1], #2
     for (i = 0; i < BUFFER_SIZE; i++)
- 800101e:	d1f4      	bne.n	800100a <pipe_updateDACOutput+0x3e>
+ 8001022:	d1f4      	bne.n	800100e <pipe_updateDACOutput+0x3e>
 }
- 8001020:	bd70      	pop	{r4, r5, r6, pc}
- 8001022:	bf00      	nop
- 8001024:	45000000 	.word	0x45000000
+ 8001024:	bd70      	pop	{r4, r5, r6, pc}
+ 8001026:	bf00      	nop
+ 8001028:	45000000 	.word	0x45000000
 
-08001028 <pipe_ADC_Complete>:
+0800102c <pipe_ADC_Complete>:
 {
- 8001028:	b538      	push	{r3, r4, r5, lr}
- 800102a:	f500 5580 	add.w	r5, r0, #4096	@ 0x1000
- 800102e:	4604      	mov	r4, r0
+ 800102c:	b538      	push	{r3, r4, r5, lr}
+ 800102e:	f500 5580 	add.w	r5, r0, #4096	@ 0x1000
+ 8001032:	4604      	mov	r4, r0
     for (i = 0; i < BUFFER_SIZE; i++)
- 8001030:	f501 6c00 	add.w	ip, r1, #2048	@ 0x800
- 8001034:	f500 5e00 	add.w	lr, r0, #8192	@ 0x2000
- 8001038:	462a      	mov	r2, r5
+ 8001034:	f501 6c00 	add.w	ip, r1, #2048	@ 0x800
+ 8001038:	f500 5e00 	add.w	lr, r0, #8192	@ 0x2000
+ 800103c:	462a      	mov	r2, r5
         self->inBuffer2[i] = (float32_t)adcInput[BUFFER_SIZE + i];
- 800103a:	f83c 3b02 	ldrh.w	r3, [ip], #2
- 800103e:	b29b      	uxth	r3, r3
- 8001040:	ee07 3a90 	vmov	s15, r3
- 8001044:	eef8 7a67 	vcvt.f32.u32	s15, s15
- 8001048:	ece2 7a01 	vstmia	r2!, {s15}
+ 800103e:	f83c 3b02 	ldrh.w	r3, [ip], #2
+ 8001042:	b29b      	uxth	r3, r3
+ 8001044:	ee07 3a90 	vmov	s15, r3
+ 8001048:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 800104c:	ece2 7a01 	vstmia	r2!, {s15}
     for (i = 0; i < BUFFER_SIZE; i++)
- 800104c:	4572      	cmp	r2, lr
- 800104e:	d1f4      	bne.n	800103a <pipe_ADC_Complete+0x12>
+ 8001050:	4572      	cmp	r2, lr
+ 8001052:	d1f4      	bne.n	800103e <pipe_ADC_Complete+0x12>
     arm_scale_f32(self->inBuffer2, ADC_BITS2VOLTS, self->inBuffer2, BUFFER_SIZE);
- 8001050:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8001054:	4629      	mov	r1, r5
- 8001056:	ed9f 0a0d 	vldr	s0, [pc, #52]	@ 800108c <pipe_ADC_Complete+0x64>
- 800105a:	4628      	mov	r0, r5
- 800105c:	f006 fa54 	bl	8007508 <arm_scale_f32>
+ 8001054:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8001058:	4629      	mov	r1, r5
+ 800105a:	ed9f 0a0d 	vldr	s0, [pc, #52]	@ 8001090 <pipe_ADC_Complete+0x64>
+ 800105e:	4628      	mov	r0, r5
+ 8001060:	f006 fa52 	bl	8007508 <arm_scale_f32>
     arm_offset_f32(self->inBuffer2, -1.0f, self->inBuffer2, BUFFER_SIZE);
- 8001060:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8001064:	4629      	mov	r1, r5
- 8001066:	eebf 0a00 	vmov.f32	s0, #240	@ 0xbf800000 -1.0
- 800106a:	4628      	mov	r0, r5
- 800106c:	f006 fa82 	bl	8007574 <arm_offset_f32>
+ 8001064:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8001068:	4629      	mov	r1, r5
+ 800106a:	eebf 0a00 	vmov.f32	s0, #240	@ 0xbf800000 -1.0
+ 800106e:	4628      	mov	r0, r5
+ 8001070:	f006 fa80 	bl	8007574 <arm_offset_f32>
     self->inBuffer  = self->inBuffer2;
- 8001070:	f504 4280 	add.w	r2, r4, #16384	@ 0x4000
+ 8001074:	f504 4280 	add.w	r2, r4, #16384	@ 0x4000
     self->ppState   = 0;
- 8001074:	f504 4370 	add.w	r3, r4, #61440	@ 0xf000
+ 8001078:	f504 4370 	add.w	r3, r4, #61440	@ 0xf000
     self->outBuffer = self->outBuffer2;
- 8001078:	f504 5440 	add.w	r4, r4, #12288	@ 0x3000
+ 800107c:	f504 5440 	add.w	r4, r4, #12288	@ 0x3000
     self->ppState   = 0;
- 800107c:	2100      	movs	r1, #0
+ 8001080:	2100      	movs	r1, #0
     self->outBuffer = self->outBuffer2;
- 800107e:	e9c2 5400 	strd	r5, r4, [r2]
+ 8001082:	e9c2 5400 	strd	r5, r4, [r2]
     self->bufferReady = true;
- 8001082:	2201      	movs	r2, #1
+ 8001086:	2201      	movs	r2, #1
     self->ppState   = 0;
- 8001084:	7219      	strb	r1, [r3, #8]
+ 8001088:	7219      	strb	r1, [r3, #8]
     self->bufferReady = true;
- 8001086:	741a      	strb	r2, [r3, #16]
+ 800108a:	741a      	strb	r2, [r3, #16]
 }
- 8001088:	bd38      	pop	{r3, r4, r5, pc}
- 800108a:	bf00      	nop
- 800108c:	38000000 	.word	0x38000000
+ 800108c:	bd38      	pop	{r3, r4, r5, pc}
+ 800108e:	bf00      	nop
+ 8001090:	38000000 	.word	0x38000000
 
-08001090 <pipe_ADC_HalfComplete>:
+08001094 <pipe_ADC_HalfComplete>:
 {
- 8001090:	b510      	push	{r4, lr}
- 8001092:	468c      	mov	ip, r1
- 8001094:	4604      	mov	r4, r0
+ 8001094:	b510      	push	{r4, lr}
+ 8001096:	468c      	mov	ip, r1
+ 8001098:	4604      	mov	r4, r0
     for (i = 0; i < BUFFER_SIZE; i++)
- 8001096:	4602      	mov	r2, r0
- 8001098:	f500 5e80 	add.w	lr, r0, #4096	@ 0x1000
+ 800109a:	4602      	mov	r2, r0
+ 800109c:	f500 5e80 	add.w	lr, r0, #4096	@ 0x1000
         self->inBuffer1[i] = (float32_t)adcInput[i];
- 800109c:	f83c 3b02 	ldrh.w	r3, [ip], #2
- 80010a0:	b29b      	uxth	r3, r3
- 80010a2:	ee07 3a90 	vmov	s15, r3
- 80010a6:	eef8 7a67 	vcvt.f32.u32	s15, s15
- 80010aa:	ece2 7a01 	vstmia	r2!, {s15}
+ 80010a0:	f83c 3b02 	ldrh.w	r3, [ip], #2
+ 80010a4:	b29b      	uxth	r3, r3
+ 80010a6:	ee07 3a90 	vmov	s15, r3
+ 80010aa:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 80010ae:	ece2 7a01 	vstmia	r2!, {s15}
     for (i = 0; i < BUFFER_SIZE; i++)
- 80010ae:	4572      	cmp	r2, lr
- 80010b0:	d1f4      	bne.n	800109c <pipe_ADC_HalfComplete+0xc>
+ 80010b2:	4572      	cmp	r2, lr
+ 80010b4:	d1f4      	bne.n	80010a0 <pipe_ADC_HalfComplete+0xc>
     arm_scale_f32(self->inBuffer1, ADC_BITS2VOLTS, self->inBuffer1, BUFFER_SIZE);
- 80010b2:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 80010b6:	4621      	mov	r1, r4
- 80010b8:	ed9f 0a0c 	vldr	s0, [pc, #48]	@ 80010ec <pipe_ADC_HalfComplete+0x5c>
- 80010bc:	4620      	mov	r0, r4
- 80010be:	f006 fa23 	bl	8007508 <arm_scale_f32>
+ 80010b6:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 80010ba:	4621      	mov	r1, r4
+ 80010bc:	ed9f 0a0c 	vldr	s0, [pc, #48]	@ 80010f0 <pipe_ADC_HalfComplete+0x5c>
+ 80010c0:	4620      	mov	r0, r4
+ 80010c2:	f006 fa21 	bl	8007508 <arm_scale_f32>
     arm_offset_f32(self->inBuffer1, -1.0f, self->inBuffer1, BUFFER_SIZE);
- 80010c2:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 80010c6:	4621      	mov	r1, r4
- 80010c8:	4620      	mov	r0, r4
- 80010ca:	eebf 0a00 	vmov.f32	s0, #240	@ 0xbf800000 -1.0
- 80010ce:	f006 fa51 	bl	8007574 <arm_offset_f32>
+ 80010c6:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 80010ca:	4621      	mov	r1, r4
+ 80010cc:	4620      	mov	r0, r4
+ 80010ce:	eebf 0a00 	vmov.f32	s0, #240	@ 0xbf800000 -1.0
+ 80010d2:	f006 fa4f 	bl	8007574 <arm_offset_f32>
     self->ppState   = 1;
- 80010d2:	2201      	movs	r2, #1
- 80010d4:	f504 4370 	add.w	r3, r4, #61440	@ 0xf000
+ 80010d6:	2201      	movs	r2, #1
+ 80010d8:	f504 4370 	add.w	r3, r4, #61440	@ 0xf000
     self->inBuffer  = self->inBuffer1;
- 80010d8:	f504 4180 	add.w	r1, r4, #16384	@ 0x4000
+ 80010dc:	f504 4180 	add.w	r1, r4, #16384	@ 0x4000
     self->outBuffer = self->outBuffer1;
- 80010dc:	f504 5000 	add.w	r0, r4, #8192	@ 0x2000
- 80010e0:	e9c1 4000 	strd	r4, r0, [r1]
+ 80010e0:	f504 5000 	add.w	r0, r4, #8192	@ 0x2000
+ 80010e4:	e9c1 4000 	strd	r4, r0, [r1]
     self->ppState   = 1;
- 80010e4:	721a      	strb	r2, [r3, #8]
+ 80010e8:	721a      	strb	r2, [r3, #8]
     self->bufferReady = true;
- 80010e6:	741a      	strb	r2, [r3, #16]
+ 80010ea:	741a      	strb	r2, [r3, #16]
 }
- 80010e8:	bd10      	pop	{r4, pc}
- 80010ea:	bf00      	nop
- 80010ec:	38000000 	.word	0x38000000
+ 80010ec:	bd10      	pop	{r4, pc}
+ 80010ee:	bf00      	nop
+ 80010f0:	38000000 	.word	0x38000000
 
-080010f0 <pipeInit>:
+080010f4 <pipeInit>:
 }
 
 void pipeInit(pipe *self)
 {
- 80010f0:	4684      	mov	ip, r0
+ 80010f4:	4684      	mov	ip, r0
     self->delayIndex = 0;
     self->bufferReady = false;
 
     self->adcHalfComplete = pipe_ADC_HalfComplete;
     self->adcComplete     = pipe_ADC_Complete;
     self->updateDelayBuffer = pipe_updateDelayBuffer;
- 80010f2:	4811      	ldr	r0, [pc, #68]	@ (8001138 <pipeInit+0x48>)
+ 80010f6:	4811      	ldr	r0, [pc, #68]	@ (800113c <pipeInit+0x48>)
     self->ppState   = 0;
- 80010f4:	2100      	movs	r1, #0
+ 80010f8:	2100      	movs	r1, #0
     self->inBuffer  = self->inBuffer2;
- 80010f6:	f50c 4280 	add.w	r2, ip, #16384	@ 0x4000
+ 80010fa:	f50c 4280 	add.w	r2, ip, #16384	@ 0x4000
     self->ppState   = 0;
- 80010fa:	f50c 4370 	add.w	r3, ip, #61440	@ 0xf000
+ 80010fe:	f50c 4370 	add.w	r3, ip, #61440	@ 0xf000
 {
- 80010fe:	b470      	push	{r4, r5, r6}
+ 8001102:	b470      	push	{r4, r5, r6}
     self->inBuffer  = self->inBuffer2;
- 8001100:	f50c 5680 	add.w	r6, ip, #4096	@ 0x1000
+ 8001104:	f50c 5680 	add.w	r6, ip, #4096	@ 0x1000
     self->adcHalfComplete = pipe_ADC_HalfComplete;
- 8001104:	4d0d      	ldr	r5, [pc, #52]	@ (800113c <pipeInit+0x4c>)
+ 8001108:	4d0d      	ldr	r5, [pc, #52]	@ (8001140 <pipeInit+0x4c>)
     self->adcComplete     = pipe_ADC_Complete;
- 8001106:	4c0e      	ldr	r4, [pc, #56]	@ (8001140 <pipeInit+0x50>)
+ 800110a:	4c0e      	ldr	r4, [pc, #56]	@ (8001144 <pipeInit+0x50>)
     self->inBuffer  = self->inBuffer2;
- 8001108:	6016      	str	r6, [r2, #0]
+ 800110c:	6016      	str	r6, [r2, #0]
     self->outBuffer = self->outBuffer2;
- 800110a:	f50c 5640 	add.w	r6, ip, #12288	@ 0x3000
- 800110e:	6056      	str	r6, [r2, #4]
+ 800110e:	f50c 5640 	add.w	r6, ip, #12288	@ 0x3000
+ 8001112:	6056      	str	r6, [r2, #4]
     self->updateDACOutput = pipe_updateDACOutput;
- 8001110:	4a0c      	ldr	r2, [pc, #48]	@ (8001144 <pipeInit+0x54>)
+ 8001114:	4a0c      	ldr	r2, [pc, #48]	@ (8001148 <pipeInit+0x54>)
     self->adcHalfComplete = pipe_ADC_HalfComplete;
- 8001112:	615d      	str	r5, [r3, #20]
+ 8001116:	615d      	str	r5, [r3, #20]
     self->ppState   = 0;
- 8001114:	7219      	strb	r1, [r3, #8]
+ 8001118:	7219      	strb	r1, [r3, #8]
     self->adcComplete     = pipe_ADC_Complete;
- 8001116:	619c      	str	r4, [r3, #24]
+ 800111a:	619c      	str	r4, [r3, #24]
     self->delayIndex = 0;
- 8001118:	60d9      	str	r1, [r3, #12]
+ 800111c:	60d9      	str	r1, [r3, #12]
     self->bufferReady = false;
- 800111a:	7419      	strb	r1, [r3, #16]
+ 800111e:	7419      	strb	r1, [r3, #16]
     self->updateDACOutput = pipe_updateDACOutput;
- 800111c:	e9c3 0207 	strd	r0, r2, [r3, #28]
+ 8001120:	e9c3 0207 	strd	r0, r2, [r3, #28]
     self->getDelayBuffer = pipe_getDelayBuffer;
- 8001120:	4809      	ldr	r0, [pc, #36]	@ (8001148 <pipeInit+0x58>)
+ 8001124:	4809      	ldr	r0, [pc, #36]	@ (800114c <pipeInit+0x58>)
     self->loadProcess = pipe_loadProcess;
- 8001122:	4a0a      	ldr	r2, [pc, #40]	@ (800114c <pipeInit+0x5c>)
- 8001124:	e9c3 0209 	strd	r0, r2, [r3, #36]	@ 0x24
+ 8001126:	4a0a      	ldr	r2, [pc, #40]	@ (8001150 <pipeInit+0x5c>)
+ 8001128:	e9c3 0209 	strd	r0, r2, [r3, #36]	@ 0x24
 
     for(int i = 0; i < BUFFER_SIZE ; i++) {
 
     	self->processBuffer[i] = 0;
- 8001128:	f244 0008 	movw	r0, #16392	@ 0x4008
- 800112c:	f44f 5280 	mov.w	r2, #4096	@ 0x1000
- 8001130:	4460      	add	r0, ip
+ 800112c:	f244 0008 	movw	r0, #16392	@ 0x4008
+ 8001130:	f44f 5280 	mov.w	r2, #4096	@ 0x1000
+ 8001134:	4460      	add	r0, ip
 
     }
 
 }
- 8001132:	bc70      	pop	{r4, r5, r6}
+ 8001136:	bc70      	pop	{r4, r5, r6}
     	self->processBuffer[i] = 0;
- 8001134:	f006 bdc0 	b.w	8007cb8 <memset>
- 8001138:	08000f99 	.word	0x08000f99
- 800113c:	08001091 	.word	0x08001091
- 8001140:	08001029 	.word	0x08001029
- 8001144:	08000fcd 	.word	0x08000fcd
- 8001148:	08000f55 	.word	0x08000f55
- 800114c:	08000f85 	.word	0x08000f85
+ 8001138:	f006 bdbe 	b.w	8007cb8 <memset>
+ 800113c:	08000f9d 	.word	0x08000f9d
+ 8001140:	08001095 	.word	0x08001095
+ 8001144:	0800102d 	.word	0x0800102d
+ 8001148:	08000fd1 	.word	0x08000fd1
+ 800114c:	08000f59 	.word	0x08000f59
+ 8001150:	08000f89 	.word	0x08000f89
 
-08001150 <HAL_MspInit>:
+08001154 <HAL_MspInit>:
 
   /* USER CODE BEGIN MspInit 0 */
 
   /* USER CODE END MspInit 0 */
 
   __HAL_RCC_SYSCFG_CLK_ENABLE();
- 8001150:	4b07      	ldr	r3, [pc, #28]	@ (8001170 <HAL_MspInit+0x20>)
+ 8001154:	4b07      	ldr	r3, [pc, #28]	@ (8001174 <HAL_MspInit+0x20>)
 {
- 8001152:	b082      	sub	sp, #8
+ 8001156:	b082      	sub	sp, #8
   __HAL_RCC_SYSCFG_CLK_ENABLE();
- 8001154:	f8d3 20f4 	ldr.w	r2, [r3, #244]	@ 0xf4
- 8001158:	f042 0202 	orr.w	r2, r2, #2
- 800115c:	f8c3 20f4 	str.w	r2, [r3, #244]	@ 0xf4
- 8001160:	f8d3 30f4 	ldr.w	r3, [r3, #244]	@ 0xf4
- 8001164:	f003 0302 	and.w	r3, r3, #2
- 8001168:	9301      	str	r3, [sp, #4]
- 800116a:	9b01      	ldr	r3, [sp, #4]
+ 8001158:	f8d3 20f4 	ldr.w	r2, [r3, #244]	@ 0xf4
+ 800115c:	f042 0202 	orr.w	r2, r2, #2
+ 8001160:	f8c3 20f4 	str.w	r2, [r3, #244]	@ 0xf4
+ 8001164:	f8d3 30f4 	ldr.w	r3, [r3, #244]	@ 0xf4
+ 8001168:	f003 0302 	and.w	r3, r3, #2
+ 800116c:	9301      	str	r3, [sp, #4]
+ 800116e:	9b01      	ldr	r3, [sp, #4]
   /* System interrupt init*/
 
   /* USER CODE BEGIN MspInit 1 */
 
   /* USER CODE END MspInit 1 */
 }
- 800116c:	b002      	add	sp, #8
- 800116e:	4770      	bx	lr
- 8001170:	58024400 	.word	0x58024400
+ 8001170:	b002      	add	sp, #8
+ 8001172:	4770      	bx	lr
+ 8001174:	58024400 	.word	0x58024400
 
-08001174 <HAL_ADC_MspInit>:
+08001178 <HAL_ADC_MspInit>:
 * This function configures the hardware resources used in this example
 * @param hadc: ADC handle pointer
 * @retval None
 */
 void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 {
- 8001174:	b570      	push	{r4, r5, r6, lr}
- 8001176:	b0b8      	sub	sp, #224	@ 0xe0
+ 8001178:	b570      	push	{r4, r5, r6, lr}
+ 800117a:	b0b8      	sub	sp, #224	@ 0xe0
   GPIO_InitTypeDef GPIO_InitStruct = {0};
- 8001178:	2100      	movs	r1, #0
+ 800117c:	2100      	movs	r1, #0
 {
- 800117a:	4604      	mov	r4, r0
+ 800117e:	4604      	mov	r4, r0
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
- 800117c:	22c0      	movs	r2, #192	@ 0xc0
- 800117e:	a808      	add	r0, sp, #32
+ 8001180:	22c0      	movs	r2, #192	@ 0xc0
+ 8001182:	a808      	add	r0, sp, #32
   GPIO_InitTypeDef GPIO_InitStruct = {0};
- 8001180:	9106      	str	r1, [sp, #24]
- 8001182:	e9cd 1102 	strd	r1, r1, [sp, #8]
- 8001186:	e9cd 1104 	strd	r1, r1, [sp, #16]
+ 8001184:	9106      	str	r1, [sp, #24]
+ 8001186:	e9cd 1102 	strd	r1, r1, [sp, #8]
+ 800118a:	e9cd 1104 	strd	r1, r1, [sp, #16]
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
- 800118a:	f006 fd95 	bl	8007cb8 <memset>
+ 800118e:	f006 fd93 	bl	8007cb8 <memset>
   if(hadc->Instance==ADC1)
- 800118e:	4b31      	ldr	r3, [pc, #196]	@ (8001254 <HAL_ADC_MspInit+0xe0>)
- 8001190:	6822      	ldr	r2, [r4, #0]
- 8001192:	429a      	cmp	r2, r3
- 8001194:	d001      	beq.n	800119a <HAL_ADC_MspInit+0x26>
+ 8001192:	4b31      	ldr	r3, [pc, #196]	@ (8001258 <HAL_ADC_MspInit+0xe0>)
+ 8001194:	6822      	ldr	r2, [r4, #0]
+ 8001196:	429a      	cmp	r2, r3
+ 8001198:	d001      	beq.n	800119e <HAL_ADC_MspInit+0x26>
 
   /* USER CODE END ADC1_MspInit 1 */
 
   }
 
 }
- 8001196:	b038      	add	sp, #224	@ 0xe0
- 8001198:	bd70      	pop	{r4, r5, r6, pc}
+ 800119a:	b038      	add	sp, #224	@ 0xe0
+ 800119c:	bd70      	pop	{r4, r5, r6, pc}
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_ADC;
- 800119a:	2300      	movs	r3, #0
- 800119c:	f44f 2200 	mov.w	r2, #524288	@ 0x80000
+ 800119e:	2300      	movs	r3, #0
+ 80011a0:	f44f 2200 	mov.w	r2, #524288	@ 0x80000
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
- 80011a0:	a808      	add	r0, sp, #32
+ 80011a4:	a808      	add	r0, sp, #32
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_ADC;
- 80011a2:	e9cd 2308 	strd	r2, r3, [sp, #32]
+ 80011a6:	e9cd 2308 	strd	r2, r3, [sp, #32]
     PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_CLKP;
- 80011a6:	f44f 3300 	mov.w	r3, #131072	@ 0x20000
- 80011aa:	9331      	str	r3, [sp, #196]	@ 0xc4
+ 80011aa:	f44f 3300 	mov.w	r3, #131072	@ 0x20000
+ 80011ae:	9331      	str	r3, [sp, #196]	@ 0xc4
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
- 80011ac:	f003 fea4 	bl	8004ef8 <HAL_RCCEx_PeriphCLKConfig>
- 80011b0:	2800      	cmp	r0, #0
- 80011b2:	d148      	bne.n	8001246 <HAL_ADC_MspInit+0xd2>
+ 80011b0:	f003 fea2 	bl	8004ef8 <HAL_RCCEx_PeriphCLKConfig>
+ 80011b4:	2800      	cmp	r0, #0
+ 80011b6:	d148      	bne.n	800124a <HAL_ADC_MspInit+0xd2>
     __HAL_RCC_ADC12_CLK_ENABLE();
- 80011b4:	4b28      	ldr	r3, [pc, #160]	@ (8001258 <HAL_ADC_MspInit+0xe4>)
+ 80011b8:	4b28      	ldr	r3, [pc, #160]	@ (800125c <HAL_ADC_MspInit+0xe4>)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
- 80011b6:	2600      	movs	r6, #0
+ 80011ba:	2600      	movs	r6, #0
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80011b8:	a902      	add	r1, sp, #8
+ 80011bc:	a902      	add	r1, sp, #8
     hdma_adc1.Instance = DMA1_Stream0;
- 80011ba:	4d28      	ldr	r5, [pc, #160]	@ (800125c <HAL_ADC_MspInit+0xe8>)
+ 80011be:	4d28      	ldr	r5, [pc, #160]	@ (8001260 <HAL_ADC_MspInit+0xe8>)
     __HAL_RCC_ADC12_CLK_ENABLE();
- 80011bc:	f8d3 20d8 	ldr.w	r2, [r3, #216]	@ 0xd8
- 80011c0:	f042 0220 	orr.w	r2, r2, #32
- 80011c4:	f8c3 20d8 	str.w	r2, [r3, #216]	@ 0xd8
- 80011c8:	f8d3 20d8 	ldr.w	r2, [r3, #216]	@ 0xd8
- 80011cc:	f002 0220 	and.w	r2, r2, #32
- 80011d0:	9200      	str	r2, [sp, #0]
- 80011d2:	9a00      	ldr	r2, [sp, #0]
+ 80011c0:	f8d3 20d8 	ldr.w	r2, [r3, #216]	@ 0xd8
+ 80011c4:	f042 0220 	orr.w	r2, r2, #32
+ 80011c8:	f8c3 20d8 	str.w	r2, [r3, #216]	@ 0xd8
+ 80011cc:	f8d3 20d8 	ldr.w	r2, [r3, #216]	@ 0xd8
+ 80011d0:	f002 0220 	and.w	r2, r2, #32
+ 80011d4:	9200      	str	r2, [sp, #0]
+ 80011d6:	9a00      	ldr	r2, [sp, #0]
     __HAL_RCC_GPIOA_CLK_ENABLE();
- 80011d4:	f8d3 20e0 	ldr.w	r2, [r3, #224]	@ 0xe0
- 80011d8:	f042 0201 	orr.w	r2, r2, #1
- 80011dc:	f8c3 20e0 	str.w	r2, [r3, #224]	@ 0xe0
+ 80011d8:	f8d3 20e0 	ldr.w	r2, [r3, #224]	@ 0xe0
+ 80011dc:	f042 0201 	orr.w	r2, r2, #1
+ 80011e0:	f8c3 20e0 	str.w	r2, [r3, #224]	@ 0xe0
     GPIO_InitStruct.Pin = GPIO_PIN_0;
- 80011e0:	2201      	movs	r2, #1
+ 80011e4:	2201      	movs	r2, #1
     __HAL_RCC_GPIOA_CLK_ENABLE();
- 80011e2:	f8d3 30e0 	ldr.w	r3, [r3, #224]	@ 0xe0
+ 80011e6:	f8d3 30e0 	ldr.w	r3, [r3, #224]	@ 0xe0
     GPIO_InitStruct.Pull = GPIO_NOPULL;
- 80011e6:	9604      	str	r6, [sp, #16]
+ 80011ea:	9604      	str	r6, [sp, #16]
     __HAL_RCC_GPIOA_CLK_ENABLE();
- 80011e8:	f003 0301 	and.w	r3, r3, #1
- 80011ec:	9301      	str	r3, [sp, #4]
+ 80011ec:	f003 0301 	and.w	r3, r3, #1
+ 80011f0:	9301      	str	r3, [sp, #4]
     GPIO_InitStruct.Pin = GPIO_PIN_0;
- 80011ee:	2303      	movs	r3, #3
+ 80011f2:	2303      	movs	r3, #3
     __HAL_RCC_GPIOA_CLK_ENABLE();
- 80011f0:	9801      	ldr	r0, [sp, #4]
+ 80011f4:	9801      	ldr	r0, [sp, #4]
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80011f2:	481b      	ldr	r0, [pc, #108]	@ (8001260 <HAL_ADC_MspInit+0xec>)
+ 80011f6:	481b      	ldr	r0, [pc, #108]	@ (8001264 <HAL_ADC_MspInit+0xec>)
     GPIO_InitStruct.Pin = GPIO_PIN_0;
- 80011f4:	e9cd 2302 	strd	r2, r3, [sp, #8]
+ 80011f8:	e9cd 2302 	strd	r2, r3, [sp, #8]
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80011f8:	f002 fdd0 	bl	8003d9c <HAL_GPIO_Init>
+ 80011fc:	f002 fdce 	bl	8003d9c <HAL_GPIO_Init>
     hdma_adc1.Instance = DMA1_Stream0;
- 80011fc:	4a19      	ldr	r2, [pc, #100]	@ (8001264 <HAL_ADC_MspInit+0xf0>)
+ 8001200:	4a19      	ldr	r2, [pc, #100]	@ (8001268 <HAL_ADC_MspInit+0xf0>)
     hdma_adc1.Init.Request = DMA_REQUEST_ADC1;
- 80011fe:	2309      	movs	r3, #9
+ 8001202:	2309      	movs	r3, #9
     if (HAL_DMA_Init(&hdma_adc1) != HAL_OK)
- 8001200:	4628      	mov	r0, r5
+ 8001204:	4628      	mov	r0, r5
     hdma_adc1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
- 8001202:	626e      	str	r6, [r5, #36]	@ 0x24
+ 8001206:	626e      	str	r6, [r5, #36]	@ 0x24
     hdma_adc1.Init.Request = DMA_REQUEST_ADC1;
- 8001204:	e885 004c 	stmia.w	r5, {r2, r3, r6}
+ 8001208:	e885 004c 	stmia.w	r5, {r2, r3, r6}
     hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
- 8001208:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 800120c:	f44f 6280 	mov.w	r2, #1024	@ 0x400
     hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
- 800120c:	f44f 6300 	mov.w	r3, #2048	@ 0x800
+ 8001210:	f44f 6300 	mov.w	r3, #2048	@ 0x800
     hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
- 8001210:	e9c5 6203 	strd	r6, r2, [r5, #12]
+ 8001214:	e9c5 6203 	strd	r6, r2, [r5, #12]
     hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
- 8001214:	616b      	str	r3, [r5, #20]
+ 8001218:	616b      	str	r3, [r5, #20]
     hdma_adc1.Init.Mode = DMA_CIRCULAR;
- 8001216:	f44f 5200 	mov.w	r2, #8192	@ 0x2000
- 800121a:	f44f 7380 	mov.w	r3, #256	@ 0x100
- 800121e:	e9c5 2306 	strd	r2, r3, [r5, #24]
+ 800121a:	f44f 5200 	mov.w	r2, #8192	@ 0x2000
+ 800121e:	f44f 7380 	mov.w	r3, #256	@ 0x100
+ 8001222:	e9c5 2306 	strd	r2, r3, [r5, #24]
     hdma_adc1.Init.Priority = DMA_PRIORITY_HIGH;
- 8001222:	f44f 3300 	mov.w	r3, #131072	@ 0x20000
- 8001226:	622b      	str	r3, [r5, #32]
+ 8001226:	f44f 3300 	mov.w	r3, #131072	@ 0x20000
+ 800122a:	622b      	str	r3, [r5, #32]
     if (HAL_DMA_Init(&hdma_adc1) != HAL_OK)
- 8001228:	f001 fde2 	bl	8002df0 <HAL_DMA_Init>
- 800122c:	b970      	cbnz	r0, 800124c <HAL_ADC_MspInit+0xd8>
+ 800122c:	f001 fde0 	bl	8002df0 <HAL_DMA_Init>
+ 8001230:	b970      	cbnz	r0, 8001250 <HAL_ADC_MspInit+0xd8>
     HAL_NVIC_SetPriority(ADC_IRQn, 0, 0);
- 800122e:	2200      	movs	r2, #0
- 8001230:	2012      	movs	r0, #18
+ 8001232:	2200      	movs	r2, #0
+ 8001234:	2012      	movs	r0, #18
     __HAL_LINKDMA(hadc,DMA_Handle,hdma_adc1);
- 8001232:	64e5      	str	r5, [r4, #76]	@ 0x4c
+ 8001236:	64e5      	str	r5, [r4, #76]	@ 0x4c
     HAL_NVIC_SetPriority(ADC_IRQn, 0, 0);
- 8001234:	4611      	mov	r1, r2
+ 8001238:	4611      	mov	r1, r2
     __HAL_LINKDMA(hadc,DMA_Handle,hdma_adc1);
- 8001236:	63ac      	str	r4, [r5, #56]	@ 0x38
+ 800123a:	63ac      	str	r4, [r5, #56]	@ 0x38
     HAL_NVIC_SetPriority(ADC_IRQn, 0, 0);
- 8001238:	f001 fa92 	bl	8002760 <HAL_NVIC_SetPriority>
+ 800123c:	f001 fa90 	bl	8002760 <HAL_NVIC_SetPriority>
     HAL_NVIC_EnableIRQ(ADC_IRQn);
- 800123c:	2012      	movs	r0, #18
- 800123e:	f001 facb 	bl	80027d8 <HAL_NVIC_EnableIRQ>
+ 8001240:	2012      	movs	r0, #18
+ 8001242:	f001 fac9 	bl	80027d8 <HAL_NVIC_EnableIRQ>
 }
- 8001242:	b038      	add	sp, #224	@ 0xe0
- 8001244:	bd70      	pop	{r4, r5, r6, pc}
+ 8001246:	b038      	add	sp, #224	@ 0xe0
+ 8001248:	bd70      	pop	{r4, r5, r6, pc}
       Error_Handler();
- 8001246:	f7ff fc05 	bl	8000a54 <Error_Handler>
- 800124a:	e7b3      	b.n	80011b4 <HAL_ADC_MspInit+0x40>
+ 800124a:	f7ff fc05 	bl	8000a58 <Error_Handler>
+ 800124e:	e7b3      	b.n	80011b8 <HAL_ADC_MspInit+0x40>
       Error_Handler();
- 800124c:	f7ff fc02 	bl	8000a54 <Error_Handler>
- 8001250:	e7ed      	b.n	800122e <HAL_ADC_MspInit+0xba>
- 8001252:	bf00      	nop
- 8001254:	40022000 	.word	0x40022000
- 8001258:	58024400 	.word	0x58024400
- 800125c:	2401727c 	.word	0x2401727c
- 8001260:	58020000 	.word	0x58020000
- 8001264:	40020010 	.word	0x40020010
+ 8001250:	f7ff fc02 	bl	8000a58 <Error_Handler>
+ 8001254:	e7ed      	b.n	8001232 <HAL_ADC_MspInit+0xba>
+ 8001256:	bf00      	nop
+ 8001258:	40022000 	.word	0x40022000
+ 800125c:	58024400 	.word	0x58024400
+ 8001260:	2401725c 	.word	0x2401725c
+ 8001264:	58020000 	.word	0x58020000
+ 8001268:	40020010 	.word	0x40020010
 
-08001268 <HAL_DAC_MspInit>:
+0800126c <HAL_DAC_MspInit>:
 * @retval None
 */
 void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   if(hdac->Instance==DAC1)
- 8001268:	4b2c      	ldr	r3, [pc, #176]	@ (800131c <HAL_DAC_MspInit+0xb4>)
- 800126a:	6802      	ldr	r2, [r0, #0]
+ 800126c:	4b2c      	ldr	r3, [pc, #176]	@ (8001320 <HAL_DAC_MspInit+0xb4>)
+ 800126e:	6802      	ldr	r2, [r0, #0]
 {
- 800126c:	b570      	push	{r4, r5, r6, lr}
+ 8001270:	b570      	push	{r4, r5, r6, lr}
   if(hdac->Instance==DAC1)
- 800126e:	429a      	cmp	r2, r3
+ 8001272:	429a      	cmp	r2, r3
 {
- 8001270:	b088      	sub	sp, #32
+ 8001274:	b088      	sub	sp, #32
   GPIO_InitTypeDef GPIO_InitStruct = {0};
- 8001272:	f04f 0400 	mov.w	r4, #0
- 8001276:	e9cd 4402 	strd	r4, r4, [sp, #8]
- 800127a:	9404      	str	r4, [sp, #16]
- 800127c:	e9cd 4405 	strd	r4, r4, [sp, #20]
+ 8001276:	f04f 0400 	mov.w	r4, #0
+ 800127a:	e9cd 4402 	strd	r4, r4, [sp, #8]
+ 800127e:	9404      	str	r4, [sp, #16]
+ 8001280:	e9cd 4405 	strd	r4, r4, [sp, #20]
   if(hdac->Instance==DAC1)
- 8001280:	d001      	beq.n	8001286 <HAL_DAC_MspInit+0x1e>
+ 8001284:	d001      	beq.n	800128a <HAL_DAC_MspInit+0x1e>
 
   /* USER CODE END DAC1_MspInit 1 */
 
   }
 
 }
- 8001282:	b008      	add	sp, #32
- 8001284:	bd70      	pop	{r4, r5, r6, pc}
+ 8001286:	b008      	add	sp, #32
+ 8001288:	bd70      	pop	{r4, r5, r6, pc}
     __HAL_RCC_DAC12_CLK_ENABLE();
- 8001286:	4b26      	ldr	r3, [pc, #152]	@ (8001320 <HAL_DAC_MspInit+0xb8>)
- 8001288:	4605      	mov	r5, r0
+ 800128a:	4b26      	ldr	r3, [pc, #152]	@ (8001324 <HAL_DAC_MspInit+0xb8>)
+ 800128c:	4605      	mov	r5, r0
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 800128a:	a902      	add	r1, sp, #8
+ 800128e:	a902      	add	r1, sp, #8
     hdma_dac1_ch1.Instance = DMA1_Stream1;
- 800128c:	4e25      	ldr	r6, [pc, #148]	@ (8001324 <HAL_DAC_MspInit+0xbc>)
+ 8001290:	4e25      	ldr	r6, [pc, #148]	@ (8001328 <HAL_DAC_MspInit+0xbc>)
     __HAL_RCC_DAC12_CLK_ENABLE();
- 800128e:	f8d3 20e8 	ldr.w	r2, [r3, #232]	@ 0xe8
- 8001292:	f042 5200 	orr.w	r2, r2, #536870912	@ 0x20000000
- 8001296:	f8c3 20e8 	str.w	r2, [r3, #232]	@ 0xe8
- 800129a:	f8d3 20e8 	ldr.w	r2, [r3, #232]	@ 0xe8
- 800129e:	f002 5200 	and.w	r2, r2, #536870912	@ 0x20000000
- 80012a2:	9200      	str	r2, [sp, #0]
- 80012a4:	9a00      	ldr	r2, [sp, #0]
+ 8001292:	f8d3 20e8 	ldr.w	r2, [r3, #232]	@ 0xe8
+ 8001296:	f042 5200 	orr.w	r2, r2, #536870912	@ 0x20000000
+ 800129a:	f8c3 20e8 	str.w	r2, [r3, #232]	@ 0xe8
+ 800129e:	f8d3 20e8 	ldr.w	r2, [r3, #232]	@ 0xe8
+ 80012a2:	f002 5200 	and.w	r2, r2, #536870912	@ 0x20000000
+ 80012a6:	9200      	str	r2, [sp, #0]
+ 80012a8:	9a00      	ldr	r2, [sp, #0]
     __HAL_RCC_GPIOA_CLK_ENABLE();
- 80012a6:	f8d3 20e0 	ldr.w	r2, [r3, #224]	@ 0xe0
- 80012aa:	f042 0201 	orr.w	r2, r2, #1
- 80012ae:	f8c3 20e0 	str.w	r2, [r3, #224]	@ 0xe0
+ 80012aa:	f8d3 20e0 	ldr.w	r2, [r3, #224]	@ 0xe0
+ 80012ae:	f042 0201 	orr.w	r2, r2, #1
+ 80012b2:	f8c3 20e0 	str.w	r2, [r3, #224]	@ 0xe0
     GPIO_InitStruct.Pin = GPIO_PIN_4;
- 80012b2:	2210      	movs	r2, #16
+ 80012b6:	2210      	movs	r2, #16
     __HAL_RCC_GPIOA_CLK_ENABLE();
- 80012b4:	f8d3 30e0 	ldr.w	r3, [r3, #224]	@ 0xe0
- 80012b8:	f003 0301 	and.w	r3, r3, #1
- 80012bc:	9301      	str	r3, [sp, #4]
+ 80012b8:	f8d3 30e0 	ldr.w	r3, [r3, #224]	@ 0xe0
+ 80012bc:	f003 0301 	and.w	r3, r3, #1
+ 80012c0:	9301      	str	r3, [sp, #4]
     GPIO_InitStruct.Pin = GPIO_PIN_4;
- 80012be:	2303      	movs	r3, #3
+ 80012c2:	2303      	movs	r3, #3
     __HAL_RCC_GPIOA_CLK_ENABLE();
- 80012c0:	9801      	ldr	r0, [sp, #4]
+ 80012c4:	9801      	ldr	r0, [sp, #4]
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80012c2:	4819      	ldr	r0, [pc, #100]	@ (8001328 <HAL_DAC_MspInit+0xc0>)
+ 80012c6:	4819      	ldr	r0, [pc, #100]	@ (800132c <HAL_DAC_MspInit+0xc0>)
     GPIO_InitStruct.Pin = GPIO_PIN_4;
- 80012c4:	e9cd 2302 	strd	r2, r3, [sp, #8]
+ 80012c8:	e9cd 2302 	strd	r2, r3, [sp, #8]
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80012c8:	f002 fd68 	bl	8003d9c <HAL_GPIO_Init>
+ 80012cc:	f002 fd66 	bl	8003d9c <HAL_GPIO_Init>
     hdma_dac1_ch1.Instance = DMA1_Stream1;
- 80012cc:	4a17      	ldr	r2, [pc, #92]	@ (800132c <HAL_DAC_MspInit+0xc4>)
+ 80012d0:	4a17      	ldr	r2, [pc, #92]	@ (8001330 <HAL_DAC_MspInit+0xc4>)
     hdma_dac1_ch1.Init.Request = DMA_REQUEST_DAC1;
- 80012ce:	2343      	movs	r3, #67	@ 0x43
+ 80012d2:	2343      	movs	r3, #67	@ 0x43
     if (HAL_DMA_Init(&hdma_dac1_ch1) != HAL_OK)
- 80012d0:	4630      	mov	r0, r6
+ 80012d4:	4630      	mov	r0, r6
     hdma_dac1_ch1.Init.PeriphInc = DMA_PINC_DISABLE;
- 80012d2:	60f4      	str	r4, [r6, #12]
+ 80012d6:	60f4      	str	r4, [r6, #12]
     hdma_dac1_ch1.Init.Priority = DMA_PRIORITY_LOW;
- 80012d4:	6234      	str	r4, [r6, #32]
+ 80012d8:	6234      	str	r4, [r6, #32]
     hdma_dac1_ch1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
- 80012d6:	6274      	str	r4, [r6, #36]	@ 0x24
+ 80012da:	6274      	str	r4, [r6, #36]	@ 0x24
     hdma_dac1_ch1.Init.Request = DMA_REQUEST_DAC1;
- 80012d8:	e9c6 2300 	strd	r2, r3, [r6]
+ 80012dc:	e9c6 2300 	strd	r2, r3, [r6]
     hdma_dac1_ch1.Init.Direction = DMA_MEMORY_TO_PERIPH;
- 80012dc:	2240      	movs	r2, #64	@ 0x40
+ 80012e0:	2240      	movs	r2, #64	@ 0x40
     hdma_dac1_ch1.Init.MemInc = DMA_MINC_ENABLE;
- 80012de:	f44f 6380 	mov.w	r3, #1024	@ 0x400
+ 80012e2:	f44f 6380 	mov.w	r3, #1024	@ 0x400
     hdma_dac1_ch1.Init.Direction = DMA_MEMORY_TO_PERIPH;
- 80012e2:	60b2      	str	r2, [r6, #8]
+ 80012e6:	60b2      	str	r2, [r6, #8]
     hdma_dac1_ch1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
- 80012e4:	f44f 6200 	mov.w	r2, #2048	@ 0x800
+ 80012e8:	f44f 6200 	mov.w	r2, #2048	@ 0x800
     hdma_dac1_ch1.Init.MemInc = DMA_MINC_ENABLE;
- 80012e8:	6133      	str	r3, [r6, #16]
+ 80012ec:	6133      	str	r3, [r6, #16]
     hdma_dac1_ch1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
- 80012ea:	f44f 5300 	mov.w	r3, #8192	@ 0x2000
- 80012ee:	e9c6 2305 	strd	r2, r3, [r6, #20]
+ 80012ee:	f44f 5300 	mov.w	r3, #8192	@ 0x2000
+ 80012f2:	e9c6 2305 	strd	r2, r3, [r6, #20]
     hdma_dac1_ch1.Init.Mode = DMA_CIRCULAR;
- 80012f2:	f44f 7380 	mov.w	r3, #256	@ 0x100
- 80012f6:	61f3      	str	r3, [r6, #28]
+ 80012f6:	f44f 7380 	mov.w	r3, #256	@ 0x100
+ 80012fa:	61f3      	str	r3, [r6, #28]
     if (HAL_DMA_Init(&hdma_dac1_ch1) != HAL_OK)
- 80012f8:	f001 fd7a 	bl	8002df0 <HAL_DMA_Init>
- 80012fc:	b958      	cbnz	r0, 8001316 <HAL_DAC_MspInit+0xae>
+ 80012fc:	f001 fd78 	bl	8002df0 <HAL_DMA_Init>
+ 8001300:	b958      	cbnz	r0, 800131a <HAL_DAC_MspInit+0xae>
     HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 0, 0);
- 80012fe:	2200      	movs	r2, #0
+ 8001302:	2200      	movs	r2, #0
     __HAL_LINKDMA(hdac,DMA_Handle1,hdma_dac1_ch1);
- 8001300:	60ae      	str	r6, [r5, #8]
+ 8001304:	60ae      	str	r6, [r5, #8]
     HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 0, 0);
- 8001302:	2036      	movs	r0, #54	@ 0x36
+ 8001306:	2036      	movs	r0, #54	@ 0x36
     __HAL_LINKDMA(hdac,DMA_Handle1,hdma_dac1_ch1);
- 8001304:	63b5      	str	r5, [r6, #56]	@ 0x38
+ 8001308:	63b5      	str	r5, [r6, #56]	@ 0x38
     HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 0, 0);
- 8001306:	4611      	mov	r1, r2
- 8001308:	f001 fa2a 	bl	8002760 <HAL_NVIC_SetPriority>
+ 800130a:	4611      	mov	r1, r2
+ 800130c:	f001 fa28 	bl	8002760 <HAL_NVIC_SetPriority>
     HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
- 800130c:	2036      	movs	r0, #54	@ 0x36
- 800130e:	f001 fa63 	bl	80027d8 <HAL_NVIC_EnableIRQ>
+ 8001310:	2036      	movs	r0, #54	@ 0x36
+ 8001312:	f001 fa61 	bl	80027d8 <HAL_NVIC_EnableIRQ>
 }
- 8001312:	b008      	add	sp, #32
- 8001314:	bd70      	pop	{r4, r5, r6, pc}
+ 8001316:	b008      	add	sp, #32
+ 8001318:	bd70      	pop	{r4, r5, r6, pc}
       Error_Handler();
- 8001316:	f7ff fb9d 	bl	8000a54 <Error_Handler>
- 800131a:	e7f0      	b.n	80012fe <HAL_DAC_MspInit+0x96>
- 800131c:	40007400 	.word	0x40007400
- 8001320:	58024400 	.word	0x58024400
- 8001324:	240171f0 	.word	0x240171f0
- 8001328:	58020000 	.word	0x58020000
- 800132c:	40020028 	.word	0x40020028
+ 800131a:	f7ff fb9d 	bl	8000a58 <Error_Handler>
+ 800131e:	e7f0      	b.n	8001302 <HAL_DAC_MspInit+0x96>
+ 8001320:	40007400 	.word	0x40007400
+ 8001324:	58024400 	.word	0x58024400
+ 8001328:	240171d0 	.word	0x240171d0
+ 800132c:	58020000 	.word	0x58020000
+ 8001330:	40020028 	.word	0x40020028
 
-08001330 <HAL_TIM_Base_MspInit>:
+08001334 <HAL_TIM_Base_MspInit>:
 * @param htim_base: TIM_Base handle pointer
 * @retval None
 */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 {
   if(htim_base->Instance==TIM8)
- 8001330:	4b0a      	ldr	r3, [pc, #40]	@ (800135c <HAL_TIM_Base_MspInit+0x2c>)
- 8001332:	6802      	ldr	r2, [r0, #0]
- 8001334:	429a      	cmp	r2, r3
- 8001336:	d000      	beq.n	800133a <HAL_TIM_Base_MspInit+0xa>
- 8001338:	4770      	bx	lr
+ 8001334:	4b0a      	ldr	r3, [pc, #40]	@ (8001360 <HAL_TIM_Base_MspInit+0x2c>)
+ 8001336:	6802      	ldr	r2, [r0, #0]
+ 8001338:	429a      	cmp	r2, r3
+ 800133a:	d000      	beq.n	800133e <HAL_TIM_Base_MspInit+0xa>
+ 800133c:	4770      	bx	lr
   {
   /* USER CODE BEGIN TIM8_MspInit 0 */
 
   /* USER CODE END TIM8_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_TIM8_CLK_ENABLE();
- 800133a:	4b09      	ldr	r3, [pc, #36]	@ (8001360 <HAL_TIM_Base_MspInit+0x30>)
+ 800133e:	4b09      	ldr	r3, [pc, #36]	@ (8001364 <HAL_TIM_Base_MspInit+0x30>)
 {
- 800133c:	b082      	sub	sp, #8
+ 8001340:	b082      	sub	sp, #8
     __HAL_RCC_TIM8_CLK_ENABLE();
- 800133e:	f8d3 20f0 	ldr.w	r2, [r3, #240]	@ 0xf0
- 8001342:	f042 0202 	orr.w	r2, r2, #2
- 8001346:	f8c3 20f0 	str.w	r2, [r3, #240]	@ 0xf0
- 800134a:	f8d3 30f0 	ldr.w	r3, [r3, #240]	@ 0xf0
- 800134e:	f003 0302 	and.w	r3, r3, #2
- 8001352:	9301      	str	r3, [sp, #4]
- 8001354:	9b01      	ldr	r3, [sp, #4]
+ 8001342:	f8d3 20f0 	ldr.w	r2, [r3, #240]	@ 0xf0
+ 8001346:	f042 0202 	orr.w	r2, r2, #2
+ 800134a:	f8c3 20f0 	str.w	r2, [r3, #240]	@ 0xf0
+ 800134e:	f8d3 30f0 	ldr.w	r3, [r3, #240]	@ 0xf0
+ 8001352:	f003 0302 	and.w	r3, r3, #2
+ 8001356:	9301      	str	r3, [sp, #4]
+ 8001358:	9b01      	ldr	r3, [sp, #4]
 
   /* USER CODE END TIM8_MspInit 1 */
 
   }
 
 }
- 8001356:	b002      	add	sp, #8
- 8001358:	4770      	bx	lr
- 800135a:	bf00      	nop
- 800135c:	40010400 	.word	0x40010400
- 8001360:	58024400 	.word	0x58024400
+ 800135a:	b002      	add	sp, #8
+ 800135c:	4770      	bx	lr
+ 800135e:	bf00      	nop
+ 8001360:	40010400 	.word	0x40010400
+ 8001364:	58024400 	.word	0x58024400
 
-08001364 <NMI_Handler>:
+08001368 <NMI_Handler>:
 {
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
    while (1)
- 8001364:	e7fe      	b.n	8001364 <NMI_Handler>
- 8001366:	bf00      	nop
+ 8001368:	e7fe      	b.n	8001368 <NMI_Handler>
+ 800136a:	bf00      	nop
 
-08001368 <HardFault_Handler>:
+0800136c <HardFault_Handler>:
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
 
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
- 8001368:	e7fe      	b.n	8001368 <HardFault_Handler>
- 800136a:	bf00      	nop
+ 800136c:	e7fe      	b.n	800136c <HardFault_Handler>
+ 800136e:	bf00      	nop
 
-0800136c <MemManage_Handler>:
+08001370 <MemManage_Handler>:
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
 
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
- 800136c:	e7fe      	b.n	800136c <MemManage_Handler>
- 800136e:	bf00      	nop
+ 8001370:	e7fe      	b.n	8001370 <MemManage_Handler>
+ 8001372:	bf00      	nop
 
-08001370 <BusFault_Handler>:
+08001374 <BusFault_Handler>:
 void BusFault_Handler(void)
 {
   /* USER CODE BEGIN BusFault_IRQn 0 */
 
   /* USER CODE END BusFault_IRQn 0 */
   while (1)
- 8001370:	e7fe      	b.n	8001370 <BusFault_Handler>
- 8001372:	bf00      	nop
+ 8001374:	e7fe      	b.n	8001374 <BusFault_Handler>
+ 8001376:	bf00      	nop
 
-08001374 <UsageFault_Handler>:
+08001378 <UsageFault_Handler>:
 void UsageFault_Handler(void)
 {
   /* USER CODE BEGIN UsageFault_IRQn 0 */
 
   /* USER CODE END UsageFault_IRQn 0 */
   while (1)
- 8001374:	e7fe      	b.n	8001374 <UsageFault_Handler>
- 8001376:	bf00      	nop
+ 8001378:	e7fe      	b.n	8001378 <UsageFault_Handler>
+ 800137a:	bf00      	nop
 
-08001378 <SVC_Handler>:
+0800137c <SVC_Handler>:
 
   /* USER CODE END SVCall_IRQn 0 */
   /* USER CODE BEGIN SVCall_IRQn 1 */
 
   /* USER CODE END SVCall_IRQn 1 */
 }
- 8001378:	4770      	bx	lr
- 800137a:	bf00      	nop
+ 800137c:	4770      	bx	lr
+ 800137e:	bf00      	nop
 
-0800137c <DebugMon_Handler>:
+08001380 <DebugMon_Handler>:
 
 /**
   * @brief This function handles Debug monitor.
   */
 void DebugMon_Handler(void)
- 800137c:	4770      	bx	lr
- 800137e:	bf00      	nop
+ 8001380:	4770      	bx	lr
+ 8001382:	bf00      	nop
 
-08001380 <PendSV_Handler>:
+08001384 <PendSV_Handler>:
 }
 
 /**
   * @brief This function handles Pendable request for system service.
   */
 void PendSV_Handler(void)
- 8001380:	4770      	bx	lr
- 8001382:	bf00      	nop
+ 8001384:	4770      	bx	lr
+ 8001386:	bf00      	nop
 
-08001384 <SysTick_Handler>:
+08001388 <SysTick_Handler>:
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
- 8001384:	f000 ba92 	b.w	80018ac <HAL_IncTick>
+ 8001388:	f000 ba90 	b.w	80018ac <HAL_IncTick>
 
-08001388 <DMA1_Stream0_IRQHandler>:
+0800138c <DMA1_Stream0_IRQHandler>:
 void DMA1_Stream0_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Stream0_IRQn 0 */
 
   /* USER CODE END DMA1_Stream0_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc1);
- 8001388:	4801      	ldr	r0, [pc, #4]	@ (8001390 <DMA1_Stream0_IRQHandler+0x8>)
- 800138a:	f002 baf5 	b.w	8003978 <HAL_DMA_IRQHandler>
- 800138e:	bf00      	nop
- 8001390:	2401727c 	.word	0x2401727c
+ 800138c:	4801      	ldr	r0, [pc, #4]	@ (8001394 <DMA1_Stream0_IRQHandler+0x8>)
+ 800138e:	f002 baf3 	b.w	8003978 <HAL_DMA_IRQHandler>
+ 8001392:	bf00      	nop
+ 8001394:	2401725c 	.word	0x2401725c
 
-08001394 <DMA1_Stream1_IRQHandler>:
+08001398 <DMA1_Stream1_IRQHandler>:
 void DMA1_Stream1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Stream1_IRQn 0 */
 
   /* USER CODE END DMA1_Stream1_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_dac1_ch1);
- 8001394:	4801      	ldr	r0, [pc, #4]	@ (800139c <DMA1_Stream1_IRQHandler+0x8>)
- 8001396:	f002 baef 	b.w	8003978 <HAL_DMA_IRQHandler>
- 800139a:	bf00      	nop
- 800139c:	240171f0 	.word	0x240171f0
+ 8001398:	4801      	ldr	r0, [pc, #4]	@ (80013a0 <DMA1_Stream1_IRQHandler+0x8>)
+ 800139a:	f002 baed 	b.w	8003978 <HAL_DMA_IRQHandler>
+ 800139e:	bf00      	nop
+ 80013a0:	240171d0 	.word	0x240171d0
 
-080013a0 <ADC_IRQHandler>:
+080013a4 <ADC_IRQHandler>:
 void ADC_IRQHandler(void)
 {
   /* USER CODE BEGIN ADC_IRQn 0 */
 
   /* USER CODE END ADC_IRQn 0 */
   HAL_ADC_IRQHandler(&hadc1);
- 80013a0:	4801      	ldr	r0, [pc, #4]	@ (80013a8 <ADC_IRQHandler+0x8>)
- 80013a2:	f000 baa5 	b.w	80018f0 <HAL_ADC_IRQHandler>
- 80013a6:	bf00      	nop
- 80013a8:	240172f4 	.word	0x240172f4
+ 80013a4:	4801      	ldr	r0, [pc, #4]	@ (80013ac <ADC_IRQHandler+0x8>)
+ 80013a6:	f000 baa3 	b.w	80018f0 <HAL_ADC_IRQHandler>
+ 80013aa:	bf00      	nop
+ 80013ac:	240172d4 	.word	0x240172d4
 
-080013ac <TIM6_DAC_IRQHandler>:
+080013b0 <TIM6_DAC_IRQHandler>:
 void TIM6_DAC_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
 
   /* USER CODE END TIM6_DAC_IRQn 0 */
   HAL_DAC_IRQHandler(&hdac1);
- 80013ac:	4801      	ldr	r0, [pc, #4]	@ (80013b4 <TIM6_DAC_IRQHandler+0x8>)
- 80013ae:	f001 bb37 	b.w	8002a20 <HAL_DAC_IRQHandler>
- 80013b2:	bf00      	nop
- 80013b4:	24017268 	.word	0x24017268
+ 80013b0:	4801      	ldr	r0, [pc, #4]	@ (80013b8 <TIM6_DAC_IRQHandler+0x8>)
+ 80013b2:	f001 bb35 	b.w	8002a20 <HAL_DAC_IRQHandler>
+ 80013b6:	bf00      	nop
+ 80013b8:	24017248 	.word	0x24017248
 
-080013b8 <supro_simulation_init_f32>:
+080013bc <supro_simulation_init_f32>:
     1.99907439945f,     /* -(-1.9990744) */
    -0.99907482762f      /* -( 0.99907483) */
 };
 
 void supro_simulation_init_f32(supro_simulation_f32 *self, fir_t *fir1, fir_t *fir2, fir_t*fir3) //float32_t *state
 {
- 80013b8:	b570      	push	{r4, r5, r6, lr}
- 80013ba:	461d      	mov	r5, r3
+ 80013bc:	b570      	push	{r4, r5, r6, lr}
+ 80013be:	461d      	mov	r5, r3
     self->fir2  = fir2;
     self->fir3  = fir3;
    // self->state = state;
 
 
     arm_biquad_cascade_df1_init_f32(&preampLP,  LP_STAGES,
- 80013bc:	4c08      	ldr	r4, [pc, #32]	@ (80013e0 <supro_simulation_init_f32+0x28>)
- 80013be:	4b09      	ldr	r3, [pc, #36]	@ (80013e4 <supro_simulation_init_f32+0x2c>)
+ 80013c0:	4c08      	ldr	r4, [pc, #32]	@ (80013e4 <supro_simulation_init_f32+0x28>)
+ 80013c2:	4b09      	ldr	r3, [pc, #36]	@ (80013e8 <supro_simulation_init_f32+0x2c>)
     self->fir3  = fir3;
- 80013c0:	6245      	str	r5, [r0, #36]	@ 0x24
+ 80013c4:	6245      	str	r5, [r0, #36]	@ 0x24
     self->fir2  = fir2;
- 80013c2:	e9c0 1207 	strd	r1, r2, [r0, #28]
+ 80013c6:	e9c0 1207 	strd	r1, r2, [r0, #28]
     arm_biquad_cascade_df1_init_f32(&preampLP,  LP_STAGES,
- 80013c6:	4622      	mov	r2, r4
- 80013c8:	2101      	movs	r1, #1
- 80013ca:	4807      	ldr	r0, [pc, #28]	@ (80013e8 <supro_simulation_init_f32+0x30>)
- 80013cc:	f005 ffc2 	bl	8007354 <arm_biquad_cascade_df1_init_f32>
+ 80013ca:	4622      	mov	r2, r4
+ 80013cc:	2101      	movs	r1, #1
+ 80013ce:	4807      	ldr	r0, [pc, #28]	@ (80013ec <supro_simulation_init_f32+0x30>)
+ 80013d0:	f005 ffc0 	bl	8007354 <arm_biquad_cascade_df1_init_f32>
                                     (float32_t *)LP5Hz_Biquad,
                                     preampLP_State);
     arm_biquad_cascade_df1_init_f32(&powerampLP, LP_STAGES,
- 80013d0:	4622      	mov	r2, r4
- 80013d2:	4b06      	ldr	r3, [pc, #24]	@ (80013ec <supro_simulation_init_f32+0x34>)
- 80013d4:	2101      	movs	r1, #1
- 80013d6:	4806      	ldr	r0, [pc, #24]	@ (80013f0 <supro_simulation_init_f32+0x38>)
+ 80013d4:	4622      	mov	r2, r4
+ 80013d6:	4b06      	ldr	r3, [pc, #24]	@ (80013f0 <supro_simulation_init_f32+0x34>)
+ 80013d8:	2101      	movs	r1, #1
+ 80013da:	4806      	ldr	r0, [pc, #24]	@ (80013f4 <supro_simulation_init_f32+0x38>)
 	//arm_fir_init_f32(&h1_fir_f32, h1_fir_LEN, (float32_t *)&h1_fir_coeffs[0], &h1_fir[0], (uint32_t)BLOCK_SIZE);
 	//arm_fir_init_f32(&h2_fir_f32, h2_fir_LEN, (float32_t *)&h2_fir_coeffs[0], &h2_fir[0], (uint32_t)BLOCK_SIZE);
 	//arm_fir_init_f32(&h3_fir_f32, h3_fir_LEN, (float32_t *)&h3_fir_coeffs[0], &h3_fir[0], (uint32_t)BLOCK_SIZE);
 
 
 }
- 80013d8:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+ 80013dc:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
     arm_biquad_cascade_df1_init_f32(&powerampLP, LP_STAGES,
- 80013dc:	f005 bfba 	b.w	8007354 <arm_biquad_cascade_df1_init_f32>
- 80013e0:	0806c0c0 	.word	0x0806c0c0
- 80013e4:	20005040 	.word	0x20005040
- 80013e8:	2407c368 	.word	0x2407c368
- 80013ec:	20005020 	.word	0x20005020
- 80013f0:	2407c35c 	.word	0x2407c35c
+ 80013e0:	f005 bfb8 	b.w	8007354 <arm_biquad_cascade_df1_init_f32>
+ 80013e4:	0806c0c0 	.word	0x0806c0c0
+ 80013e8:	20005040 	.word	0x20005040
+ 80013ec:	2407c348 	.word	0x2407c348
+ 80013f0:	20005020 	.word	0x20005020
+ 80013f4:	2407c33c 	.word	0x2407c33c
 
-080013f4 <supro_preamp_f32>:
+080013f8 <supro_preamp_f32>:
 
 static float32_t pre_scratch[BUFFER_SIZE];
 static float32_t pre_env    [BUFFER_SIZE];
 
 void supro_preamp_f32(pipe *p)
 {
- 80013f4:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
+ 80013f8:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
     float32_t *x     = p->processBuffer;
- 80013f8:	f244 0908 	movw	r9, #16392	@ 0x4008
+ 80013fc:	f244 0908 	movw	r9, #16392	@ 0x4008
 
     /* 1) Compute squared signal into scratch */
     arm_mult_f32(x, x, scratch, BUFFER_SIZE);
 
     /* 2) Low‑pass envelope: scratch→env */
     arm_biquad_cascade_df1_f32(&preampLP, scratch, env, BUFFER_SIZE);
- 80013fc:	4e40      	ldr	r6, [pc, #256]	@ (8001500 <supro_preamp_f32+0x10c>)
+ 8001400:	4e40      	ldr	r6, [pc, #256]	@ (8001504 <supro_preamp_f32+0x10c>)
     arm_mult_f32(x, x, scratch, BUFFER_SIZE);
- 80013fe:	f44f 6380 	mov.w	r3, #1024	@ 0x400
- 8001402:	4a40      	ldr	r2, [pc, #256]	@ (8001504 <supro_preamp_f32+0x110>)
+ 8001402:	f44f 6380 	mov.w	r3, #1024	@ 0x400
+ 8001406:	4a40      	ldr	r2, [pc, #256]	@ (8001508 <supro_preamp_f32+0x110>)
     float32_t *x     = p->processBuffer;
- 8001404:	4481      	add	r9, r0
+ 8001408:	4481      	add	r9, r0
     arm_mult_f32(x, x, scratch, BUFFER_SIZE);
- 8001406:	f506 5480 	add.w	r4, r6, #4096	@ 0x1000
- 800140a:	4649      	mov	r1, r9
- 800140c:	4648      	mov	r0, r9
- 800140e:	f006 f8e7 	bl	80075e0 <arm_mult_f32>
+ 800140a:	f506 5480 	add.w	r4, r6, #4096	@ 0x1000
+ 800140e:	4649      	mov	r1, r9
+ 8001410:	4648      	mov	r0, r9
+ 8001412:	f006 f8e5 	bl	80075e0 <arm_mult_f32>
     arm_biquad_cascade_df1_f32(&preampLP, scratch, env, BUFFER_SIZE);
- 8001412:	f44f 6380 	mov.w	r3, #1024	@ 0x400
- 8001416:	493b      	ldr	r1, [pc, #236]	@ (8001504 <supro_preamp_f32+0x110>)
- 8001418:	4632      	mov	r2, r6
- 800141a:	483b      	ldr	r0, [pc, #236]	@ (8001508 <supro_preamp_f32+0x114>)
- 800141c:	f005 ffa8 	bl	8007370 <arm_biquad_cascade_df1_f32>
+ 8001416:	f44f 6380 	mov.w	r3, #1024	@ 0x400
+ 800141a:	493b      	ldr	r1, [pc, #236]	@ (8001508 <supro_preamp_f32+0x110>)
+ 800141c:	4632      	mov	r2, r6
+ 800141e:	483b      	ldr	r0, [pc, #236]	@ (800150c <supro_preamp_f32+0x114>)
+ 8001420:	f005 ffa6 	bl	8007370 <arm_biquad_cascade_df1_f32>
 
     /* 3) envelope = sqrt(2 * env) (in env) */
     arm_scale_f32(env, 2.0f, env, BUFFER_SIZE);
- 8001420:	eeb0 0a00 	vmov.f32	s0, #0	@ 0x40000000  2.0
- 8001424:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8001428:	4631      	mov	r1, r6
- 800142a:	4630      	mov	r0, r6
- 800142c:	f006 f86c 	bl	8007508 <arm_scale_f32>
+ 8001424:	eeb0 0a00 	vmov.f32	s0, #0	@ 0x40000000  2.0
+ 8001428:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 800142c:	4631      	mov	r1, r6
+ 800142e:	4630      	mov	r0, r6
+ 8001430:	f006 f86a 	bl	8007508 <arm_scale_f32>
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
         float32_t v = env[i];
         env[i] = sqrtf(v > 0.0f ? v : 0.0f);
- 8001430:	eddf 6a36 	vldr	s13, [pc, #216]	@ 800150c <supro_preamp_f32+0x118>
+ 8001434:	eddf 6a36 	vldr	s13, [pc, #216]	@ 8001510 <supro_preamp_f32+0x118>
     arm_scale_f32(env, 2.0f, env, BUFFER_SIZE);
- 8001434:	4633      	mov	r3, r6
+ 8001438:	4633      	mov	r3, r6
         float32_t v = env[i];
- 8001436:	edd3 7a00 	vldr	s15, [r3]
+ 800143a:	edd3 7a00 	vldr	s15, [r3]
         env[i] = sqrtf(v > 0.0f ? v : 0.0f);
- 800143a:	fec7 7aa6 	vmaxnm.f32	s15, s15, s13
- 800143e:	eeb1 7ae7 	vsqrt.f32	s14, s15
- 8001442:	eca3 7a01 	vstmia	r3!, {s14}
+ 800143e:	fec7 7aa6 	vmaxnm.f32	s15, s15, s13
+ 8001442:	eeb1 7ae7 	vsqrt.f32	s14, s15
+ 8001446:	eca3 7a01 	vstmia	r3!, {s14}
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
- 8001446:	42a3      	cmp	r3, r4
- 8001448:	d1f5      	bne.n	8001436 <supro_preamp_f32+0x42>
+ 800144a:	42a3      	cmp	r3, r4
+ 800144c:	d1f5      	bne.n	800143a <supro_preamp_f32+0x42>
     }
 
     /* 4) pre‑gain path: xpre = gPre * x  (in scratch) */
     arm_scale_f32(x, gPre, scratch, BUFFER_SIZE);
- 800144a:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 800144e:	492d      	ldr	r1, [pc, #180]	@ (8001504 <supro_preamp_f32+0x110>)
- 8001450:	ed9f 0a2f 	vldr	s0, [pc, #188]	@ 8001510 <supro_preamp_f32+0x11c>
- 8001454:	4648      	mov	r0, r9
- 8001456:	f006 f857 	bl	8007508 <arm_scale_f32>
+ 800144e:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8001452:	492d      	ldr	r1, [pc, #180]	@ (8001508 <supro_preamp_f32+0x110>)
+ 8001454:	ed9f 0a2f 	vldr	s0, [pc, #188]	@ 8001514 <supro_preamp_f32+0x11c>
+ 8001458:	4648      	mov	r0, r9
+ 800145a:	f006 f855 	bl	8007508 <arm_scale_f32>
 
     /* 5) add envelope bias: scratch += bias * env */
     arm_scale_f32(env, bias, env, BUFFER_SIZE);
- 800145a:	4929      	ldr	r1, [pc, #164]	@ (8001500 <supro_preamp_f32+0x10c>)
- 800145c:	ed9f 0a2d 	vldr	s0, [pc, #180]	@ 8001514 <supro_preamp_f32+0x120>
- 8001460:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8001464:	4608      	mov	r0, r1
- 8001466:	4d2c      	ldr	r5, [pc, #176]	@ (8001518 <supro_preamp_f32+0x124>)
- 8001468:	f006 f84e 	bl	8007508 <arm_scale_f32>
+ 800145e:	4929      	ldr	r1, [pc, #164]	@ (8001504 <supro_preamp_f32+0x10c>)
+ 8001460:	ed9f 0a2d 	vldr	s0, [pc, #180]	@ 8001518 <supro_preamp_f32+0x120>
+ 8001464:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8001468:	4608      	mov	r0, r1
+ 800146a:	4d2c      	ldr	r5, [pc, #176]	@ (800151c <supro_preamp_f32+0x124>)
+ 800146c:	f006 f84c 	bl	8007508 <arm_scale_f32>
     arm_add_f32(scratch, env, scratch, BUFFER_SIZE);
- 800146c:	4a25      	ldr	r2, [pc, #148]	@ (8001504 <supro_preamp_f32+0x110>)
- 800146e:	f44f 6380 	mov.w	r3, #1024	@ 0x400
- 8001472:	4923      	ldr	r1, [pc, #140]	@ (8001500 <supro_preamp_f32+0x10c>)
- 8001474:	4610      	mov	r0, r2
- 8001476:	f1a5 0a9c 	sub.w	sl, r5, #156	@ 0x9c
+ 8001470:	4a25      	ldr	r2, [pc, #148]	@ (8001508 <supro_preamp_f32+0x110>)
+ 8001472:	f44f 6380 	mov.w	r3, #1024	@ 0x400
+ 8001476:	4923      	ldr	r1, [pc, #140]	@ (8001504 <supro_preamp_f32+0x10c>)
+ 8001478:	4610      	mov	r0, r2
+ 800147a:	f1a5 0a9c 	sub.w	sl, r5, #156	@ 0x9c
 
     /* 6) Horner polynomial: yMap into env */
     uint32_t K = SUPRO_NUM_A_VALS;
     arm_scale_f32(scratch, a[K-1], env, BUFFER_SIZE);
     for (int k = K-2; k >= 0; --k) {
         arm_mult_f32(scratch, env, env, BUFFER_SIZE);
- 800147a:	f8df 8084 	ldr.w	r8, [pc, #132]	@ 8001500 <supro_preamp_f32+0x10c>
+ 800147e:	f8df 8084 	ldr.w	r8, [pc, #132]	@ 8001504 <supro_preamp_f32+0x10c>
     arm_add_f32(scratch, env, scratch, BUFFER_SIZE);
- 800147e:	f006 f8f5 	bl	800766c <arm_add_f32>
+ 8001482:	f006 f8f3 	bl	800766c <arm_add_f32>
         arm_mult_f32(scratch, env, env, BUFFER_SIZE);
- 8001482:	4f20      	ldr	r7, [pc, #128]	@ (8001504 <supro_preamp_f32+0x110>)
+ 8001486:	4f20      	ldr	r7, [pc, #128]	@ (8001508 <supro_preamp_f32+0x110>)
     arm_scale_f32(scratch, a[K-1], env, BUFFER_SIZE);
- 8001484:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8001488:	491d      	ldr	r1, [pc, #116]	@ (8001500 <supro_preamp_f32+0x10c>)
- 800148a:	ed9f 0a24 	vldr	s0, [pc, #144]	@ 800151c <supro_preamp_f32+0x128>
- 800148e:	481d      	ldr	r0, [pc, #116]	@ (8001504 <supro_preamp_f32+0x110>)
- 8001490:	f006 f83a 	bl	8007508 <arm_scale_f32>
+ 8001488:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 800148c:	491d      	ldr	r1, [pc, #116]	@ (8001504 <supro_preamp_f32+0x10c>)
+ 800148e:	ed9f 0a24 	vldr	s0, [pc, #144]	@ 8001520 <supro_preamp_f32+0x128>
+ 8001492:	481d      	ldr	r0, [pc, #116]	@ (8001508 <supro_preamp_f32+0x110>)
+ 8001494:	f006 f838 	bl	8007508 <arm_scale_f32>
         arm_mult_f32(scratch, env, env, BUFFER_SIZE);
- 8001494:	f44f 6380 	mov.w	r3, #1024	@ 0x400
- 8001498:	4642      	mov	r2, r8
- 800149a:	4919      	ldr	r1, [pc, #100]	@ (8001500 <supro_preamp_f32+0x10c>)
- 800149c:	4638      	mov	r0, r7
- 800149e:	f006 f89f 	bl	80075e0 <arm_mult_f32>
+ 8001498:	f44f 6380 	mov.w	r3, #1024	@ 0x400
+ 800149c:	4642      	mov	r2, r8
+ 800149e:	4919      	ldr	r1, [pc, #100]	@ (8001504 <supro_preamp_f32+0x10c>)
+ 80014a0:	4638      	mov	r0, r7
+ 80014a2:	f006 f89d 	bl	80075e0 <arm_mult_f32>
         for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
             env[i] += a[k];
- 80014a2:	ed35 7a01 	vldmdb	r5!, {s14}
- 80014a6:	4633      	mov	r3, r6
- 80014a8:	edd3 7a00 	vldr	s15, [r3]
- 80014ac:	ee77 7a87 	vadd.f32	s15, s15, s14
- 80014b0:	ece3 7a01 	vstmia	r3!, {s15}
+ 80014a6:	ed35 7a01 	vldmdb	r5!, {s14}
+ 80014aa:	4633      	mov	r3, r6
+ 80014ac:	edd3 7a00 	vldr	s15, [r3]
+ 80014b0:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 80014b4:	ece3 7a01 	vstmia	r3!, {s15}
         for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
- 80014b4:	42a3      	cmp	r3, r4
- 80014b6:	d1f7      	bne.n	80014a8 <supro_preamp_f32+0xb4>
+ 80014b8:	42a3      	cmp	r3, r4
+ 80014ba:	d1f7      	bne.n	80014ac <supro_preamp_f32+0xb4>
     for (int k = K-2; k >= 0; --k) {
- 80014b8:	4555      	cmp	r5, sl
- 80014ba:	d1eb      	bne.n	8001494 <supro_preamp_f32+0xa0>
+ 80014bc:	4555      	cmp	r5, sl
+ 80014be:	d1eb      	bne.n	8001498 <supro_preamp_f32+0xa0>
         }
     }
 
     /* 7) wet/dry mix + post‑gain → final output (reuse scratch) */
     arm_scale_f32(env, gWet,     env,     BUFFER_SIZE);
- 80014bc:	4910      	ldr	r1, [pc, #64]	@ (8001500 <supro_preamp_f32+0x10c>)
- 80014be:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 80014c2:	ed9f 0a17 	vldr	s0, [pc, #92]	@ 8001520 <supro_preamp_f32+0x12c>
- 80014c6:	4608      	mov	r0, r1
- 80014c8:	f006 f81e 	bl	8007508 <arm_scale_f32>
+ 80014c0:	4910      	ldr	r1, [pc, #64]	@ (8001504 <supro_preamp_f32+0x10c>)
+ 80014c2:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 80014c6:	ed9f 0a17 	vldr	s0, [pc, #92]	@ 8001524 <supro_preamp_f32+0x12c>
+ 80014ca:	4608      	mov	r0, r1
+ 80014cc:	f006 f81c 	bl	8007508 <arm_scale_f32>
     arm_scale_f32(scratch, 1-gWet, scratch, BUFFER_SIZE);
- 80014cc:	490d      	ldr	r1, [pc, #52]	@ (8001504 <supro_preamp_f32+0x110>)
- 80014ce:	ed9f 0a15 	vldr	s0, [pc, #84]	@ 8001524 <supro_preamp_f32+0x130>
- 80014d2:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 80014d6:	4608      	mov	r0, r1
- 80014d8:	f006 f816 	bl	8007508 <arm_scale_f32>
+ 80014d0:	490d      	ldr	r1, [pc, #52]	@ (8001508 <supro_preamp_f32+0x110>)
+ 80014d2:	ed9f 0a15 	vldr	s0, [pc, #84]	@ 8001528 <supro_preamp_f32+0x130>
+ 80014d6:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 80014da:	4608      	mov	r0, r1
+ 80014dc:	f006 f814 	bl	8007508 <arm_scale_f32>
     arm_add_f32(env, scratch, scratch, BUFFER_SIZE);
- 80014dc:	4a09      	ldr	r2, [pc, #36]	@ (8001504 <supro_preamp_f32+0x110>)
- 80014de:	4808      	ldr	r0, [pc, #32]	@ (8001500 <supro_preamp_f32+0x10c>)
- 80014e0:	f44f 6380 	mov.w	r3, #1024	@ 0x400
- 80014e4:	4611      	mov	r1, r2
- 80014e6:	f006 f8c1 	bl	800766c <arm_add_f32>
+ 80014e0:	4a09      	ldr	r2, [pc, #36]	@ (8001508 <supro_preamp_f32+0x110>)
+ 80014e2:	4808      	ldr	r0, [pc, #32]	@ (8001504 <supro_preamp_f32+0x10c>)
+ 80014e4:	f44f 6380 	mov.w	r3, #1024	@ 0x400
+ 80014e8:	4611      	mov	r1, r2
+ 80014ea:	f006 f8bf 	bl	800766c <arm_add_f32>
     arm_scale_f32(scratch, gPost, x,       BUFFER_SIZE);
- 80014ea:	4649      	mov	r1, r9
- 80014ec:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 80014f0:	ed9f 0a0d 	vldr	s0, [pc, #52]	@ 8001528 <supro_preamp_f32+0x134>
- 80014f4:	4803      	ldr	r0, [pc, #12]	@ (8001504 <supro_preamp_f32+0x110>)
+ 80014ee:	4649      	mov	r1, r9
+ 80014f0:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 80014f4:	ed9f 0a0d 	vldr	s0, [pc, #52]	@ 800152c <supro_preamp_f32+0x134>
+ 80014f8:	4803      	ldr	r0, [pc, #12]	@ (8001508 <supro_preamp_f32+0x110>)
 }
- 80014f6:	e8bd 47f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
+ 80014fa:	e8bd 47f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
     arm_scale_f32(scratch, gPost, x,       BUFFER_SIZE);
- 80014fa:	f006 b805 	b.w	8007508 <arm_scale_f32>
- 80014fe:	bf00      	nop
- 8001500:	2407a35c 	.word	0x2407a35c
- 8001504:	2407b35c 	.word	0x2407b35c
- 8001508:	2407c368 	.word	0x2407c368
- 800150c:	00000000 	.word	0x00000000
- 8001510:	3f710983 	.word	0x3f710983
- 8001514:	3f186130 	.word	0x3f186130
- 8001518:	0806c170 	.word	0x0806c170
- 800151c:	d267d638 	.word	0xd267d638
- 8001520:	3f0d61b4 	.word	0x3f0d61b4
- 8001524:	3ee53c98 	.word	0x3ee53c98
- 8001528:	3f7db881 	.word	0x3f7db881
+ 80014fe:	f006 b803 	b.w	8007508 <arm_scale_f32>
+ 8001502:	bf00      	nop
+ 8001504:	2407a33c 	.word	0x2407a33c
+ 8001508:	2407b33c 	.word	0x2407b33c
+ 800150c:	2407c348 	.word	0x2407c348
+ 8001510:	00000000 	.word	0x00000000
+ 8001514:	3f710983 	.word	0x3f710983
+ 8001518:	3f186130 	.word	0x3f186130
+ 800151c:	0806c170 	.word	0x0806c170
+ 8001520:	d267d638 	.word	0xd267d638
+ 8001524:	3f0d61b4 	.word	0x3f0d61b4
+ 8001528:	3ee53c98 	.word	0x3ee53c98
+ 800152c:	3f7db881 	.word	0x3f7db881
 
-0800152c <supro_poweramp_f32>:
+08001530 <supro_poweramp_f32>:
 
 
 static float32_t pow_scratch[BUFFER_SIZE];
 
 void supro_poweramp_f32(pipe *p)
 {
- 800152c:	b570      	push	{r4, r5, r6, lr}
+ 8001530:	b570      	push	{r4, r5, r6, lr}
     const float32_t kP     = supro_parameters[SUPRO_P_KP_IDX];
     const float32_t gN     = supro_parameters[SUPRO_P_GN_IDX];
     const float32_t gP     = supro_parameters[SUPRO_P_GP_IDX];
 
     float32_t *scratch = pow_scratch;
     float32_t *x       = p->processBuffer;
- 800152e:	f244 0408 	movw	r4, #16392	@ 0x4008
+ 8001532:	f244 0408 	movw	r4, #16392	@ 0x4008
 
     // 1) scratch = x^2
     arm_mult_f32(x, x, scratch, BUFFER_SIZE);
- 8001532:	f44f 6380 	mov.w	r3, #1024	@ 0x400
- 8001536:	4a3e      	ldr	r2, [pc, #248]	@ (8001630 <supro_poweramp_f32+0x104>)
+ 8001536:	f44f 6380 	mov.w	r3, #1024	@ 0x400
+ 800153a:	4a3e      	ldr	r2, [pc, #248]	@ (8001634 <supro_poweramp_f32+0x104>)
     float32_t *x       = p->processBuffer;
- 8001538:	4404      	add	r4, r0
+ 800153c:	4404      	add	r4, r0
     arm_mult_f32(x, x, scratch, BUFFER_SIZE);
- 800153a:	4d3d      	ldr	r5, [pc, #244]	@ (8001630 <supro_poweramp_f32+0x104>)
+ 800153e:	4d3d      	ldr	r5, [pc, #244]	@ (8001634 <supro_poweramp_f32+0x104>)
 {
- 800153c:	ed2d 8b0a 	vpush	{d8-d12}
+ 8001540:	ed2d 8b0a 	vpush	{d8-d12}
     arm_mult_f32(x, x, scratch, BUFFER_SIZE);
- 8001540:	4621      	mov	r1, r4
- 8001542:	4620      	mov	r0, r4
- 8001544:	f006 f84c 	bl	80075e0 <arm_mult_f32>
+ 8001544:	4621      	mov	r1, r4
+ 8001546:	4620      	mov	r0, r4
+ 8001548:	f006 f84a 	bl	80075e0 <arm_mult_f32>
 
     // 2) scratch = LP(scratch)
     arm_biquad_cascade_df1_f32(&powerampLP, scratch, scratch, BUFFER_SIZE);
- 8001548:	4a39      	ldr	r2, [pc, #228]	@ (8001630 <supro_poweramp_f32+0x104>)
- 800154a:	f44f 6380 	mov.w	r3, #1024	@ 0x400
- 800154e:	4839      	ldr	r0, [pc, #228]	@ (8001634 <supro_poweramp_f32+0x108>)
- 8001550:	4611      	mov	r1, r2
- 8001552:	f505 5680 	add.w	r6, r5, #4096	@ 0x1000
- 8001556:	f005 ff0b 	bl	8007370 <arm_biquad_cascade_df1_f32>
+ 800154c:	4a39      	ldr	r2, [pc, #228]	@ (8001634 <supro_poweramp_f32+0x104>)
+ 800154e:	f44f 6380 	mov.w	r3, #1024	@ 0x400
+ 8001552:	4839      	ldr	r0, [pc, #228]	@ (8001638 <supro_poweramp_f32+0x108>)
+ 8001554:	4611      	mov	r1, r2
+ 8001556:	f505 5680 	add.w	r6, r5, #4096	@ 0x1000
+ 800155a:	f005 ff09 	bl	8007370 <arm_biquad_cascade_df1_f32>
 
     // 3) scratch = sqrt(2 * scratch)
     arm_scale_f32(scratch, 2.0f, scratch, BUFFER_SIZE);
- 800155a:	4935      	ldr	r1, [pc, #212]	@ (8001630 <supro_poweramp_f32+0x104>)
- 800155c:	eeb0 0a00 	vmov.f32	s0, #0	@ 0x40000000  2.0
- 8001560:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 8001564:	4608      	mov	r0, r1
- 8001566:	f005 ffcf 	bl	8007508 <arm_scale_f32>
+ 800155e:	4935      	ldr	r1, [pc, #212]	@ (8001634 <supro_poweramp_f32+0x104>)
+ 8001560:	eeb0 0a00 	vmov.f32	s0, #0	@ 0x40000000  2.0
+ 8001564:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8001568:	4608      	mov	r0, r1
+ 800156a:	f005 ffcd 	bl	8007508 <arm_scale_f32>
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
         float32_t v = scratch[i];
         scratch[i]  = sqrtf(v > 0.0f ? v : 0.0f);
- 800156a:	eddf 6a33 	vldr	s13, [pc, #204]	@ 8001638 <supro_poweramp_f32+0x10c>
+ 800156e:	eddf 6a33 	vldr	s13, [pc, #204]	@ 800163c <supro_poweramp_f32+0x10c>
     arm_scale_f32(scratch, 2.0f, scratch, BUFFER_SIZE);
- 800156e:	462b      	mov	r3, r5
+ 8001572:	462b      	mov	r3, r5
         float32_t v = scratch[i];
- 8001570:	edd3 7a00 	vldr	s15, [r3]
+ 8001574:	edd3 7a00 	vldr	s15, [r3]
         scratch[i]  = sqrtf(v > 0.0f ? v : 0.0f);
- 8001574:	fec7 7aa6 	vmaxnm.f32	s15, s15, s13
- 8001578:	eeb1 7ae7 	vsqrt.f32	s14, s15
- 800157c:	eca3 7a01 	vstmia	r3!, {s14}
+ 8001578:	fec7 7aa6 	vmaxnm.f32	s15, s15, s13
+ 800157c:	eeb1 7ae7 	vsqrt.f32	s14, s15
+ 8001580:	eca3 7a01 	vstmia	r3!, {s14}
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
- 8001580:	42b3      	cmp	r3, r6
- 8001582:	d1f5      	bne.n	8001570 <supro_poweramp_f32+0x44>
+ 8001584:	42b3      	cmp	r3, r6
+ 8001586:	d1f5      	bne.n	8001574 <supro_poweramp_f32+0x44>
     float32_t coeffP  = (tanh_kP*tanh_kP - 1.0f) / gP;
 
     // 5) per‑sample non‑linear mapping + post‑gain
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
         float32_t env   = scratch[i];
         float32_t xBias = x[i] - gBias * env;
- 8001584:	eddf 9a2d 	vldr	s19, [pc, #180]	@ 800163c <supro_poweramp_f32+0x110>
+ 8001588:	eddf 9a2d 	vldr	s19, [pc, #180]	@ 8001640 <supro_poweramp_f32+0x110>
         float32_t xPre  = gPre  * xBias;
- 8001588:	ed9f 9a2d 	vldr	s18, [pc, #180]	@ 8001640 <supro_poweramp_f32+0x114>
+ 800158c:	ed9f 9a2d 	vldr	s18, [pc, #180]	@ 8001644 <supro_poweramp_f32+0x114>
         float32_t m;
 
         if (xPre > kP) {
- 800158c:	eddf 8a2d 	vldr	s17, [pc, #180]	@ 8001644 <supro_poweramp_f32+0x118>
+ 8001590:	eddf 8a2d 	vldr	s17, [pc, #180]	@ 8001648 <supro_poweramp_f32+0x118>
             m = tanh_kP - coeffP * tanhf(gP * xPre - kP);
         } else if (xPre >= -kN) {
- 8001590:	ed9f ba2d 	vldr	s22, [pc, #180]	@ 8001648 <supro_poweramp_f32+0x11c>
+ 8001594:	ed9f ba2d 	vldr	s22, [pc, #180]	@ 800164c <supro_poweramp_f32+0x11c>
             m = tanhf(xPre);
         } else {
             m = -tanh_kN - coeffN * tanhf(gN * xPre + kN);
- 8001594:	eddf aa2d 	vldr	s21, [pc, #180]	@ 800164c <supro_poweramp_f32+0x120>
- 8001598:	ed9f aa2d 	vldr	s20, [pc, #180]	@ 8001650 <supro_poweramp_f32+0x124>
- 800159c:	ed9f ca2d 	vldr	s24, [pc, #180]	@ 8001654 <supro_poweramp_f32+0x128>
- 80015a0:	eddf ba2d 	vldr	s23, [pc, #180]	@ 8001658 <supro_poweramp_f32+0x12c>
+ 8001598:	eddf aa2d 	vldr	s21, [pc, #180]	@ 8001650 <supro_poweramp_f32+0x120>
+ 800159c:	ed9f aa2d 	vldr	s20, [pc, #180]	@ 8001654 <supro_poweramp_f32+0x124>
+ 80015a0:	ed9f ca2d 	vldr	s24, [pc, #180]	@ 8001658 <supro_poweramp_f32+0x128>
+ 80015a4:	eddf ba2d 	vldr	s23, [pc, #180]	@ 800165c <supro_poweramp_f32+0x12c>
             m = tanh_kP - coeffP * tanhf(gP * xPre - kP);
- 80015a4:	ed9f 8a2d 	vldr	s16, [pc, #180]	@ 800165c <supro_poweramp_f32+0x130>
- 80015a8:	e00f      	b.n	80015ca <supro_poweramp_f32+0x9e>
- 80015aa:	f006 fbb7 	bl	8007d1c <tanhf>
- 80015ae:	ed9f 7a2c 	vldr	s14, [pc, #176]	@ 8001660 <supro_poweramp_f32+0x134>
- 80015b2:	eddf 7a2c 	vldr	s15, [pc, #176]	@ 8001664 <supro_poweramp_f32+0x138>
- 80015b6:	eee0 7a07 	vfma.f32	s15, s0, s14
+ 80015a8:	ed9f 8a2d 	vldr	s16, [pc, #180]	@ 8001660 <supro_poweramp_f32+0x130>
+ 80015ac:	e00f      	b.n	80015ce <supro_poweramp_f32+0x9e>
+ 80015ae:	f006 fbb5 	bl	8007d1c <tanhf>
+ 80015b2:	ed9f 7a2c 	vldr	s14, [pc, #176]	@ 8001664 <supro_poweramp_f32+0x134>
+ 80015b6:	eddf 7a2c 	vldr	s15, [pc, #176]	@ 8001668 <supro_poweramp_f32+0x138>
+ 80015ba:	eee0 7a07 	vfma.f32	s15, s0, s14
         }
 
         x[i] = gPost * m;
- 80015ba:	ed9f 7a2b 	vldr	s14, [pc, #172]	@ 8001668 <supro_poweramp_f32+0x13c>
+ 80015be:	ed9f 7a2b 	vldr	s14, [pc, #172]	@ 800166c <supro_poweramp_f32+0x13c>
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
- 80015be:	42ae      	cmp	r6, r5
+ 80015c2:	42ae      	cmp	r6, r5
         x[i] = gPost * m;
- 80015c0:	ee27 0a87 	vmul.f32	s0, s15, s14
- 80015c4:	ed04 0a01 	vstr	s0, [r4, #-4]
+ 80015c4:	ee27 0a87 	vmul.f32	s0, s15, s14
+ 80015c8:	ed04 0a01 	vstr	s0, [r4, #-4]
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
- 80015c8:	d027      	beq.n	800161a <supro_poweramp_f32+0xee>
+ 80015cc:	d027      	beq.n	800161e <supro_poweramp_f32+0xee>
         float32_t env   = scratch[i];
- 80015ca:	ecb5 7a01 	vldmia	r5!, {s14}
+ 80015ce:	ecb5 7a01 	vldmia	r5!, {s14}
         float32_t xBias = x[i] - gBias * env;
- 80015ce:	ecf4 7a01 	vldmia	r4!, {s15}
+ 80015d2:	ecf4 7a01 	vldmia	r4!, {s15}
             m = tanh_kP - coeffP * tanhf(gP * xPre - kP);
- 80015d2:	ed9f 0a26 	vldr	s0, [pc, #152]	@ 800166c <supro_poweramp_f32+0x140>
+ 80015d6:	ed9f 0a26 	vldr	s0, [pc, #152]	@ 8001670 <supro_poweramp_f32+0x140>
         float32_t xBias = x[i] - gBias * env;
- 80015d6:	eee7 7a69 	vfms.f32	s15, s14, s19
+ 80015da:	eee7 7a69 	vfms.f32	s15, s14, s19
         if (xPre > kP) {
- 80015da:	eef4 7ae8 	vcmpe.f32	s15, s17
+ 80015de:	eef4 7ae8 	vcmpe.f32	s15, s17
         float32_t xPre  = gPre  * xBias;
- 80015de:	ee27 7a89 	vmul.f32	s14, s15, s18
+ 80015e2:	ee27 7a89 	vmul.f32	s14, s15, s18
         if (xPre > kP) {
- 80015e2:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 80015e6:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
             m = tanh_kP - coeffP * tanhf(gP * xPre - kP);
- 80015e6:	eea7 0a48 	vfms.f32	s0, s14, s16
+ 80015ea:	eea7 0a48 	vfms.f32	s0, s14, s16
         if (xPre > kP) {
- 80015ea:	dcde      	bgt.n	80015aa <supro_poweramp_f32+0x7e>
+ 80015ee:	dcde      	bgt.n	80015ae <supro_poweramp_f32+0x7e>
         } else if (xPre >= -kN) {
- 80015ec:	eef4 7acb 	vcmpe.f32	s15, s22
+ 80015f0:	eef4 7acb 	vcmpe.f32	s15, s22
             m = -tanh_kN - coeffN * tanhf(gN * xPre + kN);
- 80015f0:	eeb0 0a4a 	vmov.f32	s0, s20
+ 80015f4:	eeb0 0a4a 	vmov.f32	s0, s20
         } else if (xPre >= -kN) {
- 80015f4:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 80015f8:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
             m = -tanh_kN - coeffN * tanhf(gN * xPre + kN);
- 80015f8:	eea7 0a2a 	vfma.f32	s0, s14, s21
+ 80015fc:	eea7 0a2a 	vfma.f32	s0, s14, s21
         } else if (xPre >= -kN) {
- 80015fc:	db10      	blt.n	8001620 <supro_poweramp_f32+0xf4>
+ 8001600:	db10      	blt.n	8001624 <supro_poweramp_f32+0xf4>
             m = tanhf(xPre);
- 80015fe:	eeb0 0a47 	vmov.f32	s0, s14
- 8001602:	f006 fb8b 	bl	8007d1c <tanhf>
- 8001606:	eef0 7a40 	vmov.f32	s15, s0
+ 8001602:	eeb0 0a47 	vmov.f32	s0, s14
+ 8001606:	f006 fb89 	bl	8007d1c <tanhf>
+ 800160a:	eef0 7a40 	vmov.f32	s15, s0
         x[i] = gPost * m;
- 800160a:	ed9f 7a17 	vldr	s14, [pc, #92]	@ 8001668 <supro_poweramp_f32+0x13c>
+ 800160e:	ed9f 7a17 	vldr	s14, [pc, #92]	@ 800166c <supro_poweramp_f32+0x13c>
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
- 800160e:	42ae      	cmp	r6, r5
+ 8001612:	42ae      	cmp	r6, r5
         x[i] = gPost * m;
- 8001610:	ee27 0a87 	vmul.f32	s0, s15, s14
- 8001614:	ed04 0a01 	vstr	s0, [r4, #-4]
+ 8001614:	ee27 0a87 	vmul.f32	s0, s15, s14
+ 8001618:	ed04 0a01 	vstr	s0, [r4, #-4]
     for (uint32_t i = 0; i < BUFFER_SIZE; ++i) {
- 8001618:	d1d7      	bne.n	80015ca <supro_poweramp_f32+0x9e>
+ 800161c:	d1d7      	bne.n	80015ce <supro_poweramp_f32+0x9e>
     }
 }
- 800161a:	ecbd 8b0a 	vpop	{d8-d12}
- 800161e:	bd70      	pop	{r4, r5, r6, pc}
+ 800161e:	ecbd 8b0a 	vpop	{d8-d12}
+ 8001622:	bd70      	pop	{r4, r5, r6, pc}
             m = -tanh_kN - coeffN * tanhf(gN * xPre + kN);
- 8001620:	f006 fb7c 	bl	8007d1c <tanhf>
- 8001624:	eef0 7a6b 	vmov.f32	s15, s23
- 8001628:	eee0 7a4c 	vfms.f32	s15, s0, s24
- 800162c:	e7c5      	b.n	80015ba <supro_poweramp_f32+0x8e>
- 800162e:	bf00      	nop
- 8001630:	2407935c 	.word	0x2407935c
- 8001634:	2407c35c 	.word	0x2407c35c
- 8001638:	00000000 	.word	0x00000000
- 800163c:	3f1ed3f6 	.word	0x3f1ed3f6
- 8001640:	3f8e9370 	.word	0x3f8e9370
- 8001644:	3f64018b 	.word	0x3f64018b
- 8001648:	bf655493 	.word	0xbf655493
- 800164c:	3f7fa057 	.word	0x3f7fa057
- 8001650:	3f7f71fb 	.word	0x3f7f71fb
- 8001654:	bed80d82 	.word	0xbed80d82
- 8001658:	bf42bc17 	.word	0xbf42bc17
- 800165c:	3f806a2a 	.word	0x3f806a2a
- 8001660:	bed8ee5b 	.word	0xbed8ee5b
- 8001664:	3f421c45 	.word	0x3f421c45
- 8001668:	40d6c29a 	.word	0x40d6c29a
- 800166c:	3f7df857 	.word	0x3f7df857
+ 8001624:	f006 fb7a 	bl	8007d1c <tanhf>
+ 8001628:	eef0 7a6b 	vmov.f32	s15, s23
+ 800162c:	eee0 7a4c 	vfms.f32	s15, s0, s24
+ 8001630:	e7c5      	b.n	80015be <supro_poweramp_f32+0x8e>
+ 8001632:	bf00      	nop
+ 8001634:	2407933c 	.word	0x2407933c
+ 8001638:	2407c33c 	.word	0x2407c33c
+ 800163c:	00000000 	.word	0x00000000
+ 8001640:	3f1ed3f6 	.word	0x3f1ed3f6
+ 8001644:	3f8e9370 	.word	0x3f8e9370
+ 8001648:	3f64018b 	.word	0x3f64018b
+ 800164c:	bf655493 	.word	0xbf655493
+ 8001650:	3f7fa057 	.word	0x3f7fa057
+ 8001654:	3f7f71fb 	.word	0x3f7f71fb
+ 8001658:	bed80d82 	.word	0xbed80d82
+ 800165c:	bf42bc17 	.word	0xbf42bc17
+ 8001660:	3f806a2a 	.word	0x3f806a2a
+ 8001664:	bed8ee5b 	.word	0xbed8ee5b
+ 8001668:	3f421c45 	.word	0x3f421c45
+ 800166c:	40d6c29a 	.word	0x40d6c29a
+ 8001670:	3f7df857 	.word	0x3f7df857
 
-08001670 <supro_simulation_f32_process>:
+08001674 <supro_simulation_f32_process>:
 {
- 8001670:	b570      	push	{r4, r5, r6, lr}
+ 8001674:	b570      	push	{r4, r5, r6, lr}
 	arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BUFFER_SIZE);
- 8001672:	f244 0508 	movw	r5, #16392	@ 0x4008
+ 8001676:	f244 0508 	movw	r5, #16392	@ 0x4008
 {
- 8001676:	460c      	mov	r4, r1
-	partitioned_fir_convolution_fft(p, supro_sim.fir1, state);
- 8001678:	4e14      	ldr	r6, [pc, #80]	@ (80016cc <supro_simulation_f32_process+0x5c>)
+ 800167a:	460c      	mov	r4, r1
+ 800167c:	4606      	mov	r6, r0
 	arm_scale_f32(p->processBuffer, 0.1, p->processBuffer, BUFFER_SIZE);
- 800167a:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 800167e:	440d      	add	r5, r1
- 8001680:	ed9f 0a13 	vldr	s0, [pc, #76]	@ 80016d0 <supro_simulation_f32_process+0x60>
- 8001684:	4629      	mov	r1, r5
- 8001686:	4628      	mov	r0, r5
- 8001688:	f005 ff3e 	bl	8007508 <arm_scale_f32>
-	partitioned_fir_convolution_fft(p, supro_sim.fir1, state);
- 800168c:	69f1      	ldr	r1, [r6, #28]
- 800168e:	4a11      	ldr	r2, [pc, #68]	@ (80016d4 <supro_simulation_f32_process+0x64>)
- 8001690:	4620      	mov	r0, r4
- 8001692:	f7ff fa25 	bl	8000ae0 <partitioned_fir_convolution_fft>
+ 800167e:	ed9f 0a14 	vldr	s0, [pc, #80]	@ 80016d0 <supro_simulation_f32_process+0x5c>
+ 8001682:	440d      	add	r5, r1
+ 8001684:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 8001688:	4629      	mov	r1, r5
+ 800168a:	4628      	mov	r0, r5
+ 800168c:	f005 ff3c 	bl	8007508 <arm_scale_f32>
+	partitioned_fir_convolution_fft(p, self->fir1, state);
+ 8001690:	69f1      	ldr	r1, [r6, #28]
+ 8001692:	4a10      	ldr	r2, [pc, #64]	@ (80016d4 <supro_simulation_f32_process+0x60>)
+ 8001694:	4620      	mov	r0, r4
+ 8001696:	f7ff fa25 	bl	8000ae4 <partitioned_fir_convolution_fft>
 	supro_preamp_f32(p);
- 8001696:	4620      	mov	r0, r4
- 8001698:	f7ff feac 	bl	80013f4 <supro_preamp_f32>
-	partitioned_fir_convolution_fft(p, supro_sim.fir2, state2);
- 800169c:	6a31      	ldr	r1, [r6, #32]
- 800169e:	4a0e      	ldr	r2, [pc, #56]	@ (80016d8 <supro_simulation_f32_process+0x68>)
- 80016a0:	4620      	mov	r0, r4
- 80016a2:	f7ff fa1d 	bl	8000ae0 <partitioned_fir_convolution_fft>
+ 800169a:	4620      	mov	r0, r4
+ 800169c:	f7ff feac 	bl	80013f8 <supro_preamp_f32>
+	partitioned_fir_convolution_fft(p, self->fir2, state2);
+ 80016a0:	6a31      	ldr	r1, [r6, #32]
+ 80016a2:	4a0d      	ldr	r2, [pc, #52]	@ (80016d8 <supro_simulation_f32_process+0x64>)
+ 80016a4:	4620      	mov	r0, r4
+ 80016a6:	f7ff fa1d 	bl	8000ae4 <partitioned_fir_convolution_fft>
     supro_poweramp_f32(p);
- 80016a6:	4620      	mov	r0, r4
- 80016a8:	f7ff ff40 	bl	800152c <supro_poweramp_f32>
-	partitioned_fir_convolution_fft(p, supro_sim.fir3, state3);
- 80016ac:	6a71      	ldr	r1, [r6, #36]	@ 0x24
- 80016ae:	4620      	mov	r0, r4
- 80016b0:	4a0a      	ldr	r2, [pc, #40]	@ (80016dc <supro_simulation_f32_process+0x6c>)
- 80016b2:	f7ff fa15 	bl	8000ae0 <partitioned_fir_convolution_fft>
-	arm_scale_f32(p->processBuffer, 0.01, p->processBuffer, BUFFER_SIZE);
- 80016b6:	4629      	mov	r1, r5
- 80016b8:	4628      	mov	r0, r5
- 80016ba:	f44f 6280 	mov.w	r2, #1024	@ 0x400
- 80016be:	ed9f 0a08 	vldr	s0, [pc, #32]	@ 80016e0 <supro_simulation_f32_process+0x70>
+ 80016aa:	4620      	mov	r0, r4
+ 80016ac:	f7ff ff40 	bl	8001530 <supro_poweramp_f32>
+	partitioned_fir_convolution_fft(p, self->fir3, state3);
+ 80016b0:	6a71      	ldr	r1, [r6, #36]	@ 0x24
+ 80016b2:	4620      	mov	r0, r4
+ 80016b4:	4a09      	ldr	r2, [pc, #36]	@ (80016dc <supro_simulation_f32_process+0x68>)
+ 80016b6:	f7ff fa15 	bl	8000ae4 <partitioned_fir_convolution_fft>
+	arm_scale_f32(p->processBuffer, 0.005, p->processBuffer, BUFFER_SIZE);
+ 80016ba:	4629      	mov	r1, r5
+ 80016bc:	4628      	mov	r0, r5
+ 80016be:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 80016c2:	ed9f 0a07 	vldr	s0, [pc, #28]	@ 80016e0 <supro_simulation_f32_process+0x6c>
 }
- 80016c2:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
-	arm_scale_f32(p->processBuffer, 0.01, p->processBuffer, BUFFER_SIZE);
- 80016c6:	f005 bf1f 	b.w	8007508 <arm_scale_f32>
- 80016ca:	bf00      	nop
- 80016cc:	24000054 	.word	0x24000054
+ 80016c6:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+	arm_scale_f32(p->processBuffer, 0.005, p->processBuffer, BUFFER_SIZE);
+ 80016ca:	f005 bf1d 	b.w	8007508 <arm_scale_f32>
+ 80016ce:	bf00      	nop
  80016d0:	3dcccccd 	.word	0x3dcccccd
  80016d4:	20007060 	.word	0x20007060
  80016d8:	20006060 	.word	0x20006060
  80016dc:	20005060 	.word	0x20005060
- 80016e0:	3c23d70a 	.word	0x3c23d70a
+ 80016e0:	3ba3d70a 	.word	0x3ba3d70a
 
 080016e4 <SystemInit>:
  __IO uint32_t tmpreg;
@@ -3450,13 +3449,13 @@ LoopFillZerobss:
   ldr r0, =_sdata
  80017e8:	24000000 	.word	0x24000000
   ldr r1, =_edata
- 80017ec:	240000dc 	.word	0x240000dc
+ 80017ec:	240000b4 	.word	0x240000b4
   ldr r2, =_sidata
  80017f0:	0807f62c 	.word	0x0807f62c
   ldr r2, =_sbss
- 80017f4:	240000e0 	.word	0x240000e0
+ 80017f4:	240000c0 	.word	0x240000c0
   ldr r4, =_ebss
- 80017f8:	2407c4b0 	.word	0x2407c4b0
+ 80017f8:	2407c490 	.word	0x2407c490
 
 080017fc <ADC3_IRQHandler>:
  * @retval None
@@ -3517,9 +3516,9 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
  800183c:	601c      	str	r4, [r3, #0]
 }
  800183e:	bd10      	pop	{r4, pc}
- 8001840:	24000084 	.word	0x24000084
- 8001844:	24000080 	.word	0x24000080
- 8001848:	24000088 	.word	0x24000088
+ 8001840:	2400005c 	.word	0x2400005c
+ 8001844:	24000058 	.word	0x24000058
+ 8001848:	24000060 	.word	0x24000060
 
 0800184c <HAL_Init>:
 {
@@ -3571,15 +3570,15 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
  800188e:	bd10      	pop	{r4, pc}
  8001890:	4604      	mov	r4, r0
   HAL_MspInit();
- 8001892:	f7ff fc5d 	bl	8001150 <HAL_MspInit>
+ 8001892:	f7ff fc5f 	bl	8001154 <HAL_MspInit>
 }
  8001896:	4620      	mov	r0, r4
  8001898:	bd10      	pop	{r4, pc}
  800189a:	bf00      	nop
- 800189c:	2400007c 	.word	0x2400007c
+ 800189c:	24000054 	.word	0x24000054
  80018a0:	58024400 	.word	0x58024400
  80018a4:	0806c1a8 	.word	0x0806c1a8
- 80018a8:	24000080 	.word	0x24000080
+ 80018a8:	24000058 	.word	0x24000058
 
 080018ac <HAL_IncTick>:
   *      implementations in user file.
@@ -3597,8 +3596,8 @@ __weak void HAL_IncTick(void)
 }
  80018b8:	4770      	bx	lr
  80018ba:	bf00      	nop
- 80018bc:	2407c374 	.word	0x2407c374
- 80018c0:	24000084 	.word	0x24000084
+ 80018bc:	2407c354 	.word	0x2407c354
+ 80018c0:	2400005c 	.word	0x2400005c
 
 080018c4 <HAL_GetTick>:
   *       implementations in user file.
@@ -3612,7 +3611,7 @@ __weak uint32_t HAL_GetTick(void)
 }
  80018c8:	4770      	bx	lr
  80018ca:	bf00      	nop
- 80018cc:	2407c374 	.word	0x2407c374
+ 80018cc:	2407c354 	.word	0x2407c354
 
 080018d0 <HAL_GetREVID>:
   * @brief  Returns the device revision identifier.
@@ -4638,7 +4637,7 @@ void ADC_DMAError(DMA_HandleTypeDef *hdma)
  8001fea:	4908      	ldr	r1, [pc, #32]	@ (800200c <HAL_ADC_ConfigChannel+0x41c>)
  8001fec:	e75e      	b.n	8001eac <HAL_ADC_ConfigChannel+0x2bc>
  8001fee:	bf00      	nop
- 8001ff0:	24000080 	.word	0x24000080
+ 8001ff0:	24000058 	.word	0x24000058
  8001ff4:	053e2d63 	.word	0x053e2d63
  8001ff8:	1d500080 	.word	0x1d500080
  8001ffc:	21800100 	.word	0x21800100
@@ -5405,7 +5404,7 @@ void ADC_ConfigureBoostMode(ADC_HandleTypeDef *hadc)
  8002510:	2500      	movs	r5, #0
  8002512:	e783      	b.n	800241c <HAL_ADC_Init+0x74>
     HAL_ADC_MspInit(hadc);
- 8002514:	f7fe fe2e 	bl	8001174 <HAL_ADC_MspInit>
+ 8002514:	f7fe fe30 	bl	8001178 <HAL_ADC_MspInit>
     ADC_CLEAR_ERRORCODE(hadc);
  8002518:	65a5      	str	r5, [r4, #88]	@ 0x58
     hadc->Lock = HAL_UNLOCKED;
@@ -5469,7 +5468,7 @@ void ADC_ConfigureBoostMode(ADC_HandleTypeDef *hadc)
  800258c:	611a      	str	r2, [r3, #16]
  800258e:	e79d      	b.n	80024cc <HAL_ADC_Init+0x124>
  8002590:	5fffffc0 	.word	0x5fffffc0
- 8002594:	24000080 	.word	0x24000080
+ 8002594:	24000058 	.word	0x24000058
  8002598:	053e2d63 	.word	0x053e2d63
  800259c:	6fffffc0 	.word	0x6fffffc0
  80025a0:	40022000 	.word	0x40022000
@@ -6143,7 +6142,7 @@ HAL_StatusTypeDef HAL_DAC_Init(DAC_HandleTypeDef *hdac)
     hdac->Lock = HAL_UNLOCKED;
  80028da:	7142      	strb	r2, [r0, #5]
     HAL_DAC_MspInit(hdac);
- 80028dc:	f7fe fcc4 	bl	8001268 <HAL_DAC_MspInit>
+ 80028dc:	f7fe fcc6 	bl	800126c <HAL_DAC_MspInit>
  80028e0:	e7f3      	b.n	80028ca <HAL_DAC_Init+0xe>
     return HAL_ERROR;
  80028e2:	2001      	movs	r0, #1
@@ -8738,7 +8737,7 @@ static void DMA_CalcDMAMUXChannelBaseAndMask(DMA_HandleTypeDef *hdma)
  8003bca:	e8bd 40f0 	ldmia.w	sp!, {r4, r5, r6, r7, lr}
           hdma->XferCpltCallback(hdma);
  8003bce:	4718      	bx	r3
- 8003bd0:	24000080 	.word	0x24000080
+ 8003bd0:	24000058 	.word	0x24000058
  8003bd4:	40020010 	.word	0x40020010
  8003bd8:	40020028 	.word	0x40020028
  8003bdc:	400204b8 	.word	0x400204b8
@@ -10998,9 +10997,9 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  8004c10:	52002000 	.word	0x52002000
  8004c14:	58024400 	.word	0x58024400
  8004c18:	0806c1a8 	.word	0x0806c1a8
- 8004c1c:	24000080 	.word	0x24000080
- 8004c20:	2400007c 	.word	0x2400007c
- 8004c24:	24000088 	.word	0x24000088
+ 8004c1c:	24000058 	.word	0x24000058
+ 8004c20:	24000054 	.word	0x24000054
+ 8004c24:	24000060 	.word	0x24000060
 
 08004c28 <HAL_RCC_GetHCLKFreq>:
   switch (RCC->CFGR & RCC_CFGR_SWS)
@@ -11091,8 +11090,8 @@ uint32_t HAL_RCC_GetHCLKFreq(void)
  8004c8c:	58024400 	.word	0x58024400
  8004c90:	03d09000 	.word	0x03d09000
  8004c94:	0806c1a8 	.word	0x0806c1a8
- 8004c98:	2400007c 	.word	0x2400007c
- 8004c9c:	24000080 	.word	0x24000080
+ 8004c98:	24000054 	.word	0x24000054
+ 8004c9c:	24000058 	.word	0x24000058
  8004ca0:	017d7840 	.word	0x017d7840
  8004ca4:	003d0900 	.word	0x003d0900
 
@@ -11177,8 +11176,8 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  8004d1c:	58024400 	.word	0x58024400
  8004d20:	03d09000 	.word	0x03d09000
  8004d24:	0806c1a8 	.word	0x0806c1a8
- 8004d28:	24000080 	.word	0x24000080
- 8004d2c:	2400007c 	.word	0x2400007c
+ 8004d28:	24000058 	.word	0x24000058
+ 8004d2c:	24000054 	.word	0x24000054
  8004d30:	017d7840 	.word	0x017d7840
  8004d34:	003d0900 	.word	0x003d0900
 
@@ -14202,7 +14201,7 @@ HAL_StatusTypeDef HAL_TIM_Base_Init(TIM_HandleTypeDef *htim)
     htim->Lock = HAL_UNLOCKED;
  8006582:	f880 203c 	strb.w	r2, [r0, #60]	@ 0x3c
     HAL_TIM_Base_MspInit(htim);
- 8006586:	f7fa fed3 	bl	8001330 <HAL_TIM_Base_MspInit>
+ 8006586:	f7fa fed5 	bl	8001334 <HAL_TIM_Base_MspInit>
  800658a:	e773      	b.n	8006474 <HAL_TIM_Base_Init+0x18>
     return HAL_ERROR;
  800658c:	2001      	movs	r0, #1
@@ -16347,7 +16346,7 @@ HAL_StatusTypeDef HAL_TIM_Base_Init(TIM_HandleTypeDef *htim)
  8007cca:	6818      	ldr	r0, [r3, #0]
  8007ccc:	4770      	bx	lr
  8007cce:	bf00      	nop
- 8007cd0:	2400008c 	.word	0x2400008c
+ 8007cd0:	24000064 	.word	0x24000064
 
 08007cd4 <__libc_init_array>:
  8007cd4:	b570      	push	{r4, r5, r6, lr}

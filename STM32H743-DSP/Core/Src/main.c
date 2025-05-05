@@ -225,7 +225,7 @@ int main(void)
 		 fx_handle_1.process(&fx_handle_1, &apipe); // cabinet
 		 fx_handle_0.process(&fx_handle_0, &apipe); // reverb
 
-	     arm_scale_f32(apipe.processBuffer, 1, apipe.processBuffer, BUFFER_SIZE);
+	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
 
 		 // cycles = DWT->CYCCNT;
 
