@@ -31,6 +31,7 @@ typedef struct dataLink {
     uint8_t  nodeCount;
     char     commandBuffer[128];
     uint8_t  commandIndex;
+    uint8_t  processOrder[MAX_NODES];
 
     /* user‑supplied parser for one ASCII command line */
     readUART_Fn readUART;

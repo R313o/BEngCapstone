@@ -106,6 +106,7 @@ void initDataLink(dataLink* link)
         link->nodes[i].nodeId = 255;
         link->nodes[i].effectId = 255;
         link->nodes[i].numInputs = 0;
+        link->processOrder[i] = 255;
 
         for (int j = 0; j < NUM_PARAMETERS; j++)
         {

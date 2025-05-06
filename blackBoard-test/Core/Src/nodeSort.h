@@ -11,6 +11,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-size_t topoSort(const dataLink *link, uint8_t *result);
+size_t topoSort(dataLink *link, uint8_t *result);
 
 #endif /* NODESORT_H */

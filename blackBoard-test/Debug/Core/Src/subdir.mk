@@ -15,17 +15,6 @@ C_SRCS += \
 ../Core/Src/sysmem.c \
 ../Core/Src/system_stm32h7xx.c 
 
-OBJS += \
-./Core/Src/dataLink.o \
-./Core/Src/main.o \
-./Core/Src/nodeSort.o \
-./Core/Src/process.o \
-./Core/Src/stm32h7xx_hal_msp.o \
-./Core/Src/stm32h7xx_it.o \
-./Core/Src/syscalls.o \
-./Core/Src/sysmem.o \
-./Core/Src/system_stm32h7xx.o 
-
 C_DEPS += \
 ./Core/Src/dataLink.d \
 ./Core/Src/main.d \
@@ -36,6 +25,17 @@ C_DEPS += \
 ./Core/Src/syscalls.d \
 ./Core/Src/sysmem.d \
 ./Core/Src/system_stm32h7xx.d 
+
+OBJS += \
+./Core/Src/dataLink.o \
+./Core/Src/main.o \
+./Core/Src/nodeSort.o \
+./Core/Src/process.o \
+./Core/Src/stm32h7xx_hal_msp.o \
+./Core/Src/stm32h7xx_it.o \
+./Core/Src/syscalls.o \
+./Core/Src/sysmem.o \
+./Core/Src/system_stm32h7xx.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include "dataLink.h"
+#include "nodeSort.h"
 #include "process.h"
 
 /* USER CODE END Includes */
@@ -56,6 +57,8 @@ pipeDef ioPipe;
 
 uint8_t rxRecieve[2];
 uint8_t rxBuffer[UART_BUFFER_SIZE];
+
+uint8_t order[MAX_NODES];
 
 float in0[VECTOR_SIZE] = {2,4,6,8,10,12,14,16};
 float in1[VECTOR_SIZE] = {8,7,6,5,4,3,2,1};
@@ -145,14 +148,10 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
   initDataLink(&link);
-
-  memcpy(ioPipe.in1, in0, sizeof(ioPipe.in1));   /* copies BUFFER_SIZE floats */
-  memcpy(ioPipe.in2, in1, sizeof(ioPipe.in2));
-
   HAL_UART_Receive_IT(&huart2, rxRecieve, 1);
+  /* USER CODE END 2 */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -167,7 +166,7 @@ int main(void)
 		  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 	  }*/
 	  __WFI();
-	  processNetwork(&link, &ioPipe, BUFFER_SIZE);
+	  topoSort(&link, &order);
 
 
 
@@ -308,6 +307,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PA9 PA10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
