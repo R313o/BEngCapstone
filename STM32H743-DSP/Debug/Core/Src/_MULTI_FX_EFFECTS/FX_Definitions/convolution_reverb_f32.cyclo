@@ -1,2 +1,4 @@
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.c:67:13:convolution_reverb_f32_process	1
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.c:96:6:fx_reverb_init	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.c:88:13:convolution_reverb_f32_process	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.c:70:6:convolution_reverb_f32_clean	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.c:117:6:fx_reverb_init	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.c:161:6:fx_reverb_clean	1

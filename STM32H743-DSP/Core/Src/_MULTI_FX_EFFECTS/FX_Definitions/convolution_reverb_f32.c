@@ -12,6 +12,7 @@
  */
 
 #include "_MULTI_FX.h"
+#include "stdio.h"
 
 
 /**
@@ -55,6 +56,26 @@ static void convolution_reverb_f32_init(
     self->state = state;
     self->fir1  = fir;
 }
+
+
+/**
+ * @brief Initialize a convolution reverb instance.
+ *
+ * Sets up the state buffer and FIR filter handler on the convolution_reverb_f32 struct.
+ *
+ * @param self  Pointer to convolution_reverb_f32 to initialize.
+ * @param state Pointer to DTCM-aligned overlap/state buffer (BUFFER_SIZE floats).
+ * @param fir   Pointer to FIR filter handler instance.
+ */
+void convolution_reverb_f32_clean(
+    convolution_reverb_f32 *self
+)
+{
+   self->state = NULL;
+   self->fir1  = NULL;
+}
+
+
 
 /**
  * @brief Convolution reverb processing callback.
@@ -134,4 +155,18 @@ void fx_reverb_init(FX_HANDLER_t *fx)
 
     // Set processing callback for convolution reverb
     fx->process = convolution_reverb_f32_process;
+}
+
+
+void fx_reverb_clean(FX_HANDLER_t *fx)
+{
+
+    fir_emt_140_dark_3_f32_clean((fir_t *)fx->states[2]);
+    convolution_reverb_f32_clean((convolution_reverb_f32*)fx->states[3]);
+
+    for(int i = 0; i < 8; i++)
+    	fx->states[i] = NULL;
+
+    fx->process = NULL;
+
 }

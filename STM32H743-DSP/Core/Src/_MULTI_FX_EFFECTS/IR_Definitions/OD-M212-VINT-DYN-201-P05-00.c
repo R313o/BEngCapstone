@@ -24,6 +24,36 @@
 
 
 #include "impulse_responses.h"
+#include "stdio.h"
+
+
+void fir_OD_M212_VINT_DYN_201_P05_00_f32_init(fir_t *self, float *state){
+
+#define SCRATCH      (state)
+#define IR_TABLE     ((const float **)(state + OD_M212_SCRATCH_FLOATS))
+#define PREV_TABLE   ((float       **)(state + OD_M212_SCRATCH_FLOATS + OD_M212_SEGMENTS))
+
+    self->ir_ffts      = IR_TABLE;
+    self->prev_ffts    = PREV_TABLE;
+    self->numSegments  = OD_M212_SEGMENTS;
+    self->curr_fftidx  = 0;
+    self->prev_fftidx  = 0;
+
+    for (uint32_t i = 0; i < OD_M212_SEGMENTS; ++i) {
+        IR_TABLE [i] = &_CAB_IR_FFT_ALL[i * FFT_SIZE];  /* spectrums  */
+        PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
+    }
+
+}
+
+void fir_OD_M212_VINT_DYN_201_P05_00_f32_clean(fir_t *self){
+
+    for (uint32_t i = 0; i < OD_M212_SEGMENTS; ++i) {
+    	self->ir_ffts [i]   = NULL;
+    	self->prev_ffts [i] = NULL;
+    }
+
+}
 
 __attribute__((aligned(32)))
 const float _CAB_IR_FFT_ALL[2048] = {
@@ -2076,23 +2106,3 @@ const float _CAB_IR_FFT_ALL[2048] = {
   -0.001891f,
   0.000209f,
 };
-
-
-void fir_OD_M212_VINT_DYN_201_P05_00_f32_init(fir_t *self, float *state){
-
-#define SCRATCH      (state)
-#define IR_TABLE     ((const float **)(state + OD_M212_SCRATCH_FLOATS))
-#define PREV_TABLE   ((float       **)(state + OD_M212_SCRATCH_FLOATS + OD_M212_SEGMENTS))
-
-    self->ir_ffts      = IR_TABLE;
-    self->prev_ffts    = PREV_TABLE;
-    self->numSegments  = OD_M212_SEGMENTS;
-    self->curr_fftidx  = 0;
-    self->prev_fftidx  = 0;
-
-    for (uint32_t i = 0; i < OD_M212_SEGMENTS; ++i) {
-        IR_TABLE [i] = &_CAB_IR_FFT_ALL[i * FFT_SIZE];  /* spectrums  */
-        PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
-    }
-
-}

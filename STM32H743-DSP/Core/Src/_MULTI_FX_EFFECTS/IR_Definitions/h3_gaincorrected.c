@@ -1,4 +1,5 @@
 #include "impulse_responses.h"
+#include "stdio.h"
 
 
 void fir_h3_f32_init(fir_t *self, float *state){
@@ -16,6 +17,16 @@ void fir_h3_f32_init(fir_t *self, float *state){
     for (uint32_t i = 0; i < H3_SEGMENTS; ++i) {
         IR_TABLE [i] = &_H3_IR_FFT_ALL[i * FFT_SIZE];  /* spectrums  */
         PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
+    }
+
+}
+
+void fir_h3_f32_init_clean(fir_t *self)
+{
+
+    for (uint32_t i = 0; i < H3_SEGMENTS; ++i) {
+    	self->ir_ffts [i]   = NULL;
+    	self->prev_ffts [i] = NULL;
     }
 
 }

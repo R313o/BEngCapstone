@@ -57,6 +57,8 @@ FX_HANDLER_t fx_handle_0,
 			 fx_handle_1,
 			 fx_handle_2;
 
+FX_HANDLER_t *nodes[3];
+
 arm_rfft_fast_instance_f32 fft;
 
 static 	 uint16_t  adcInput[BUFFER_SIZE  * 2];
@@ -97,6 +99,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     apipe.adcComplete(&apipe, adcInput);
 }
 
+volatile unsigned long now = 0;
+
+
+#include <stdlib.h>    // for rand(), srand()
 
 /* USER CODE END 0 */
 
@@ -157,6 +163,12 @@ int main(void)
 
   HAL_TIM_Base_Start(&htim8);
 
+  nodes[0] = &fx_handle_0;
+  nodes[1] = &fx_handle_1;
+  nodes[2] = &fx_handle_2;
+
+  srand(HAL_GetTick());  // seed the PRNG
+
   pipeInit(&apipe);
 
   fx_reverb_init  ( &fx_handle_0 );
@@ -171,16 +183,18 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
 
 	  if (apipe.bufferReady)
 	  {
 		 apipe.updateDelayBuffer(&apipe);
 		 apipe.loadProcess(&apipe);
 
+		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
+
 		 fx_handle_2.process(&fx_handle_2, &apipe);
 		 fx_handle_1.process(&fx_handle_1, &apipe);
 		 fx_handle_0.process(&fx_handle_0, &apipe);
+
 
 	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
 		 arm_copy_f32(apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
@@ -189,6 +203,31 @@ int main(void)
 		 SCB_CleanDCache_by_Addr((uint32_t*)dacOutput, BUFFER_SIZE*2 * sizeof(dacOutput[0]));
 
 		 apipe.bufferReady = false;
+
+		 volatile GPIO_PinState trig = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3);
+
+		 // on rising edge (HIGH && previously armed), do your clean
+		 if (trig == GPIO_PIN_SET) {
+
+		     fx_supro_clean  (&fx_handle_2);
+		     fx_cabinet_clean(&fx_handle_1);
+		     fx_reverb_clean (&fx_handle_0);
+
+		     dctm_pool_init();
+		     static_pool_init();
+
+		     memset(apipe.processBuffer, 0,  BUFFER_SIZE *sizeof(apipe.processBuffer[0]));
+
+			 volatile uint32_t idx = rand() % 3;
+
+		     fx_reverb_init  (nodes[++idx % 3]);
+		     fx_cabinet_init (nodes[++idx % 3]);
+		     fx_supro_init   (nodes[++idx % 3]);
+
+		 }
+
+
+
 	  }
 	  else
 	  {
@@ -477,7 +516,7 @@ static void MX_GPIO_Init(void)
   /* Configure PB0 as pushpull output, no pullups, low speed */
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   GPIO_InitStruct.Pin   = GPIO_PIN_3;
-  GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Mode  =  GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull  = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);

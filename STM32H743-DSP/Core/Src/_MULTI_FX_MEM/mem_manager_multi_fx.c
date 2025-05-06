@@ -128,6 +128,8 @@ void *_static_mem_alloc(size_t size, size_t align)
     return &static_pool[off];
 }
 
+
+
 /**
  * @brief Default handler for outofmemory conditions.
  *

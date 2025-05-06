@@ -49,12 +49,13 @@ typedef struct FX_HANDLER_t {
  * @param fx Pointer to an FX_HANDLER_t to initialize
  */
 void fx_reverb_init(FX_HANDLER_t *fx);
-
+void fx_reverb_clean(FX_HANDLER_t *fx);
 /**
  * @brief Initialize a cabinet FX handler
  * @param fx Pointer to an FX_HANDLER_t to initialize
  */
 void fx_cabinet_init(FX_HANDLER_t *fx);
+void fx_cabinet_clean(FX_HANDLER_t *fx);
 
 
 /**
@@ -62,6 +63,7 @@ void fx_cabinet_init(FX_HANDLER_t *fx);
  * @param fx Pointer to an FX_HANDLER_t to initialize
  */
 void fx_supro_init(FX_HANDLER_t *fx);
+void fx_supro_clean(FX_HANDLER_t *fx);
 
 
 /**

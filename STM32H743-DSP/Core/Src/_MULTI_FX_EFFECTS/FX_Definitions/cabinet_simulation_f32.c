@@ -122,3 +122,17 @@ void fx_cabinet_init(FX_HANDLER_t *fx)
     // Assign processing callback for cabinet effect
     fx->process = cabinet_simulation_f32_process;
 }
+
+
+void fx_cabinet_clean(FX_HANDLER_t *fx)
+{
+
+	fir_OD_M212_VINT_DYN_201_P05_00_f32_clean((fir_t *)fx->states[2]);
+    convolution_reverb_f32_clean((cabinet_simulation_f32*)fx->states[3]);
+
+    for(int i = 0; i < 8; i++)
+    	fx->states[i] = NULL;
+
+    fx->process = NULL;
+
+}

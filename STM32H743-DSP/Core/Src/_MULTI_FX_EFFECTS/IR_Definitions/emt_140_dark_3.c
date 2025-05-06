@@ -1,4 +1,5 @@
 #include "impulse_responses.h"
+#include "stdio.h"
 
 
 void fir_emt_140_dark_3_f32_init(fir_t *self, float *state){
@@ -18,6 +19,15 @@ void fir_emt_140_dark_3_f32_init(fir_t *self, float *state){
         PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
     }
 
+}
+
+
+void fir_emt_140_dark_3_f32_clean(fir_t *self)
+{
+    for (uint32_t i = 0; i < EMT_SEGMENTS; ++i) {
+    	self->ir_ffts [i]   = NULL;
+    	self->prev_ffts [i] = NULL;
+    }
 }
 
 /* FIR Coefficients */

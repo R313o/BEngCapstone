@@ -1,6 +1,6 @@
-../Core/Src/main.c:84:6:HAL_ADC_ConvHalfCpltCallback	2
-../Core/Src/main.c:92:6:HAL_ADC_ConvCpltCallback	2
-../Core/Src/main.c:209:6:SystemClock_Config	4
-../Core/Src/main.c:268:6:PeriphCommonClock_Config	2
-../Core/Src/main.c:107:5:main	15
-../Core/Src/main.c:540:6:Error_Handler	1
+../Core/Src/main.c:86:6:HAL_ADC_ConvHalfCpltCallback	2
+../Core/Src/main.c:94:6:HAL_ADC_ConvCpltCallback	2
+../Core/Src/main.c:254:6:SystemClock_Config	4
+../Core/Src/main.c:313:6:PeriphCommonClock_Config	2
+../Core/Src/main.c:113:5:main	16
+../Core/Src/main.c:585:6:Error_Handler	1

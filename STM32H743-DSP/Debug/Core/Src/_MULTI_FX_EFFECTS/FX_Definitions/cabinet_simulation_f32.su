@@ -1,2 +1,3 @@
 ../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:42:13:cabinet_simulation_f32_process	0	static
 ../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:81:6:fx_cabinet_init	8	static
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:127:6:fx_cabinet_clean	8	static

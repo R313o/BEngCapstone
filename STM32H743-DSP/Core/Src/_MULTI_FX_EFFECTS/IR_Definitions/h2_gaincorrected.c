@@ -1,4 +1,5 @@
 #include "impulse_responses.h"
+#include "stdio.h"
 
 void fir_h2_f32_init(fir_t *self, float *state){
 
@@ -18,6 +19,17 @@ void fir_h2_f32_init(fir_t *self, float *state){
     }
 
 }
+
+void fir_h2_f32_init_clean(fir_t *self)
+{
+
+    for (uint32_t i = 0; i < H2_SEGMENTS; ++i) {
+    	self->ir_ffts [i]   = NULL;
+    	self->prev_ffts [i] = NULL;
+    }
+
+}
+
 
 __attribute__((aligned(32))) const float _H2_IR_FFT_ALL[2048] = {
   0.997847f,

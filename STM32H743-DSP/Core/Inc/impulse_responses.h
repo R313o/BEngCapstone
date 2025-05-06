@@ -44,6 +44,7 @@ extern __attribute__((aligned(32))) const float _H1_IR_FFT_ALL[2048];
 #define H1_SCRATCH_FLOATS (H1_SEGMENTS * FFT_SIZE)      /* 2048 */
 
 void fir_h1_f32_init(fir_t *self, float *state);
+void fir_h1_f32_init_clean(fir_t *self);
 
 
 /******************************************************************/
@@ -55,6 +56,7 @@ extern __attribute__((aligned(32))) const float _H2_IR_FFT_ALL[2048];
 #define H2_SCRATCH_FLOATS (H2_SEGMENTS * FFT_SIZE)      /* 2048 */
 
 void fir_h2_f32_init(fir_t *self, float *state);
+void fir_h2_f32_init_clean(fir_t *self);
 
 
 /******************************************************************/
@@ -66,6 +68,7 @@ extern __attribute__((aligned(32))) const float _H3_IR_FFT_ALL[2048];
 #define H3_SCRATCH_FLOATS (H3_SEGMENTS * FFT_SIZE)      /* 2048 */
 
 void fir_h3_f32_init(fir_t *self, float *state);
+void fir_h3_f32_init_clean(fir_t *self);
 
 
 /******************************************************************/
@@ -78,6 +81,7 @@ extern __attribute__((aligned(32))) const float _EMT_IR_FFT_ALL[94208];
 #define EMT_SCRATCH_FLOATS (EMT_SEGMENTS * FFT_SIZE)      /* 94 208 */
 
 void fir_emt_140_dark_3_f32_init(fir_t *self, float *state);
+void fir_emt_140_dark_3_f32_clean(fir_t *self);
 
 /******************************************************************/
 /* OD-M212-VINT-DYN-201-P05-00 impulse response                   */
@@ -88,6 +92,7 @@ extern __attribute__((aligned(32))) const float _CAB_IR_FFT_ALL[2048];
 #define OD_M212_SCRATCH_FLOATS (OD_M212_SEGMENTS * FFT_SIZE)      /* 2048 */
 
 void fir_OD_M212_VINT_DYN_201_P05_00_f32_init(fir_t *self, float *state);
+void fir_OD_M212_VINT_DYN_201_P05_00_f32_clean(fir_t *self);
 
 
 #endif /* INC_IMPULSE_RESPONSES_H_ */

@@ -48,6 +48,7 @@ void dctm_pool_init(void);
  */
 void static_pool_init(void);
 
+
 /**
  * @brief Allocate a block from the DTCM pool.
  *
@@ -67,6 +68,7 @@ void *_dctm_static_mem_alloc(size_t size, size_t align);
  *         On overflow, calls _memory_alloc_error_handler().
  */
 void *_static_mem_alloc(size_t size, size_t align);
+
 
 
 #endif /* MEM_MANAGER_H */

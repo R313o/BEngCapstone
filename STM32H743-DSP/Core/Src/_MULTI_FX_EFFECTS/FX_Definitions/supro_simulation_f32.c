@@ -23,6 +23,9 @@ static void supro_simulation_init_f32(supro_simulation_f32 *self, float32_t *sta
 							  fir_t *fir1,
 							  fir_t *fir2,
 							  fir_t *fir3);
+
+static void supro_simulation_clean_f32(supro_simulation_f32 *self);
+
 /**
  * @brief Internal Supro processing step
  * @param p Pointer to the audio pipe context
@@ -148,6 +151,25 @@ void fx_supro_init(FX_HANDLER_t *fx)
     fx->process = supro_simulation_f32_process;
 }
 
+
+void fx_supro_clean(FX_HANDLER_t *fx)
+{
+
+	fir_t     *firs   = (fir_t *)fx->states[2];
+
+	fir_h1_f32_init_clean((fir_t *)&firs[0]);
+	fir_h2_f32_init_clean((fir_t *)&firs[1]);
+	fir_h3_f32_init_clean((fir_t *)&firs[2]);
+
+	supro_simulation_clean_f32((supro_simulation_f32*)fx->states[7]);
+
+    for(int i = 0; i < 8; i++)
+    	fx->states[i] = NULL;
+
+    fx->process = NULL;
+
+}
+
 //==============================================================================
 // Implementation Details
 //==============================================================================
@@ -165,6 +187,17 @@ static void supro_simulation_init_f32(supro_simulation_f32 *self,
     self->fir3  = fir3;
     self->state = state;
 }
+
+
+static void supro_simulation_clean_f32(supro_simulation_f32 *self)
+{
+    self->fir1  = NULL;
+    self->fir2  = NULL;
+    self->fir3  = NULL;
+    self->state = NULL;
+}
+
+
 
 /**
  * @brief Main FX chain processing: reverb → preamp → reverb → poweramp → reverb.
