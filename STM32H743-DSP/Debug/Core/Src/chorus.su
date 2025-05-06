@@ -1,2 +1,0 @@
-../Core/Src/chorus.c:10:6:chorusInit	24	static
-../Core/Src/chorus.c:39:6:chorusApply	56	static

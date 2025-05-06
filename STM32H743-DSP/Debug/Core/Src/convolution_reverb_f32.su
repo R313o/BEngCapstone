@@ -1,2 +1,0 @@
-../Core/Src/convolution_reverb_f32.c:47:6:convolution_reverb_f32_process	0	static
-../Core/Src/convolution_reverb_f32.c:76:6:fx_reverb_init	8	static

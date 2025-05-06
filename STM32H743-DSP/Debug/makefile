@@ -11,6 +11,9 @@ RM := rm -rf
 -include sources.mk
 -include Drivers/STM32H7xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
+-include Core/Src/_MULTI_FX_MEM/subdir.mk
+-include Core/Src/_MULTI_FX_EFFECTS/IR_Definitions/subdir.mk
+-include Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
 

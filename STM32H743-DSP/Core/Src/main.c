@@ -22,10 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-//#include "pipe.h"
 #include "_MULTI_FX.h"
-//#include "mem_manager_MULTI_FX.h"
-//#include "supro_simulation.h"
 
 /* USER CODE END Includes */
 
@@ -56,9 +53,14 @@ TIM_HandleTypeDef htim8;
 
 pipe apipe;
 
+FX_HANDLER_t fx_handle_0,
+			 fx_handle_1,
+			 fx_handle_2;
+
 arm_rfft_fast_instance_f32 fft;
-static 	 uint16_t  adcInput[BUFFER_SIZE*2];
-static	 uint16_t  dacOutput[BUFFER_SIZE*2];
+
+static 	 uint16_t  adcInput[BUFFER_SIZE  * 2];
+static	 uint16_t  dacOutput[BUFFER_SIZE * 2];
 
 /* USER CODE END PV */
 
@@ -95,43 +97,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     apipe.adcComplete(&apipe, adcInput);
 }
 
-
-uint32_t cycles;
-//__attribute__((section(".dtcm"), aligned(32))) float state5[BUFFER_SIZE];
-//__attribute__((section(".dtcm"), aligned(32))) float statecab[BUFFER_SIZE];
-
-//float prev_ffts_EMT[94208 + 46 * 2];
-//float prev_ffts_OD_M212[2048 + 1 * 2];
-
-//fir_t fir_emt_140_dark_3; /* fir handler */
-fir_t fir_OD_M212_VINT_DYN_201_P05_00; /* fir handler */
-
-fir_t *fir_emt_140_dark_3_ptr; /* fir handler */
-
-
-FX_HANDLER_t fx_handle_0, fx_handle_1;
-
-
-cabinet_simulation_f32 cabinet_sim;
-
-supro_simulation_f32 supro;
-
-//convolution_reverb_f32 *convolution_reverb_ptr;
-
-float *cab_ptr_alloc, *conv_ptr_alloc, *conv_fft_ptr_alloc, *cab_fft_ptr_alloc;
-
-fir_t fir_h1_gaincorrected;
-fir_t fir_h2_gaincorrected;
-fir_t fir_h3_gaincorrected;
-
-#define BUFFER_OFFSET (2048 + 2*1)
-
-__attribute__((aligned(32))) 	  float _supro_prev_ffts[3*BUFFER_OFFSET];
-__attribute__((aligned(32))) 	  float supro_pad[3*BUFFER_SIZE];
-//__attribute__((aligned(32))) 	  float _H3_prev_ffts[2048 + 2*1]; // + 2*Num of segments
-
-
-float32_t *s;
 
 /* USER CODE END 0 */
 
@@ -180,12 +145,6 @@ int main(void)
 
   dctm_pool_init();
   static_pool_init();
-  //pool_f32_init();
-
-  // enable DWT cycle counter
-  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;  // turn on trace
-  DWT->CYCCNT  = 0;                                // clear counter
-  DWT->CTRL   |= DWT_CTRL_CYCCNTENA_Msk;           // start counter
 
   /* USER CODE BEGIN 2 */
   arm_rfft_fast_init_f32(&fft, FFT_SIZE);
@@ -200,14 +159,9 @@ int main(void)
 
   pipeInit(&apipe);
 
-  fir_h1_f32_init(&fir_h1_gaincorrected, &_supro_prev_ffts[0]);
-  fir_h2_f32_init(&fir_h2_gaincorrected, &_supro_prev_ffts[BUFFER_OFFSET]);
-  fir_h3_f32_init(&fir_h3_gaincorrected, &_supro_prev_ffts[2*BUFFER_OFFSET]);
-
-  supro_simulation_init_f32(&supro, supro_pad, &fir_h1_gaincorrected, &fir_h2_gaincorrected, &fir_h3_gaincorrected);
-
-  fx_reverb_init(&fx_handle_0);
-  fx_cabinet_init(&fx_handle_1);
+  fx_reverb_init  ( &fx_handle_0 );
+  fx_cabinet_init ( &fx_handle_1 );
+  fx_supro_init   ( &fx_handle_2 );
 
   /* USER CODE END 2 */
 
@@ -219,34 +173,19 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-
 	  if (apipe.bufferReady)
 	  {
 		 apipe.updateDelayBuffer(&apipe);
 		 apipe.loadProcess(&apipe);
 
-		 // GPIO high for profiling
-		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 1);
-
-		 //DWT->CYCCNT = 0;
-
-		 //supro_sim.process(&apipe);
-		 supro_simulation_f32_process(&supro, &apipe);
-
-		 fx_handle_1.process(&fx_handle_1, &apipe); // cabinet
-		 fx_handle_0.process(&fx_handle_0, &apipe); // reverb
+		 fx_handle_2.process(&fx_handle_2, &apipe);
+		 fx_handle_1.process(&fx_handle_1, &apipe);
+		 fx_handle_0.process(&fx_handle_0, &apipe);
 
 	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
-
-		 // cycles = DWT->CYCCNT;
-
-		 // GPIO low
-		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, 0);
-
 		 arm_copy_f32(apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
 
 		 apipe.updateDACOutput(&apipe, dacOutput);
-
 		 SCB_CleanDCache_by_Addr((uint32_t*)dacOutput, BUFFER_SIZE*2 * sizeof(dacOutput[0]));
 
 		 apipe.bufferReady = false;
