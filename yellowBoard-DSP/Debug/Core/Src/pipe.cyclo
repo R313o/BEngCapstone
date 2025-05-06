@@ -1,0 +1,7 @@
+../Core/Src/pipe.c:10:13:pipe_ADC_HalfComplete	2
+../Core/Src/pipe.c:28:13:pipe_ADC_Complete	2
+../Core/Src/pipe.c:46:13:pipe_updateDelayBuffer	2
+../Core/Src/pipe.c:57:12:pipe_getDelayBuffer	1
+../Core/Src/pipe.c:66:13:pipe_updateDACOutput	2
+../Core/Src/pipe.c:82:13:pipe_loadProcess	1
+../Core/Src/pipe.c:87:6:pipeInit	2
