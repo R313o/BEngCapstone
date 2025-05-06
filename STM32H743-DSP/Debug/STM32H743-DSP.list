@@ -27,11 +27,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 0000002e  00000000  00000000  0008206c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00025ce1  00000000  00000000  0008209a  2**0
+ 12 .debug_info   00025cdf  00000000  00000000  0008209a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00005556  00000000  00000000  000a7d7b  2**0
+ 13 .debug_abbrev 00005556  00000000  00000000  000a7d79  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_loclists 0001068e  00000000  00000000  000ad2d1  2**0
+ 14 .debug_loclists 0001068e  00000000  00000000  000ad2cf  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_aranges 000014a8  00000000  00000000  000bd960  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -39,19 +39,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  0003bf50  00000000  00000000  000c0d2e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0002a031  00000000  00000000  000fcc7e  2**0
+ 18 .debug_line   0002a02d  00000000  00000000  000fcc7e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    00177ae3  00000000  00000000  00126caf  2**0
+ 19 .debug_str    00177ae3  00000000  00000000  00126cab  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      000000b3  00000000  00000000  0029e792  2**0
+ 20 .comment      000000b3  00000000  00000000  0029e78e  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  0000425c  00000000  00000000  0029e848  2**2
+ 21 .debug_frame  0000425c  00000000  00000000  0029e844  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 0000006e  00000000  00000000  002a2aa4  2**0
+ 22 .debug_line_str 0000006e  00000000  00000000  002a2aa0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 23 .debug_loc    000041c4  00000000  00000000  002a2b12  2**0
+ 23 .debug_loc    000041c4  00000000  00000000  002a2b0e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 24 .debug_ranges 000000e0  00000000  00000000  002a6cd6  2**0
+ 24 .debug_ranges 000000e0  00000000  00000000  002a6cd2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -2100,7 +2100,7 @@ void Error_Handler(void)
  8000f10:	f3bf 8f6f 	isb	sy
   dctm_pool_init();
  8000f14:	f7ff fdb0 	bl	8000a78 <dctm_pool_init>
- nodes[0] = &fx_handle_0;
+  nodes[0] = &fx_handle_0;
  8000f18:	4f6b      	ldr	r7, [pc, #428]	@ (80010c8 <main+0x45c>)
   static_pool_init();
  8000f1a:	f7ff fdb9 	bl	8000a90 <static_pool_init>
@@ -2123,11 +2123,11 @@ void Error_Handler(void)
  8000f42:	f44f 6300 	mov.w	r3, #2048	@ 0x800
  8000f46:	4a64      	ldr	r2, [pc, #400]	@ (80010d8 <main+0x46c>)
  8000f48:	9100      	str	r1, [sp, #0]
- nodes[0] = &fx_handle_0;
+  nodes[0] = &fx_handle_0;
  8000f4a:	f8df a1a4 	ldr.w	sl, [pc, #420]	@ 80010f0 <main+0x484>
- nodes[1] = &fx_handle_1;
+  nodes[1] = &fx_handle_1;
  8000f4e:	f8df 919c 	ldr.w	r9, [pc, #412]	@ 80010ec <main+0x480>
- nodes[2] = &fx_handle_2;
+  nodes[2] = &fx_handle_2;
  8000f52:	f8df 81ac 	ldr.w	r8, [pc, #428]	@ 8001100 <main+0x494>
   HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t*)dacOutput, BUFFER_SIZE*2, DAC_ALIGN_12B_R);
  8000f56:	4861      	ldr	r0, [pc, #388]	@ (80010dc <main+0x470>)
@@ -2135,16 +2135,16 @@ void Error_Handler(void)
   HAL_TIM_Base_Start(&htim8);
  8000f5c:	4860      	ldr	r0, [pc, #384]	@ (80010e0 <main+0x474>)
  8000f5e:	f005 fd09 	bl	8006974 <HAL_TIM_Base_Start>
- nodes[2] = &fx_handle_2;
+  nodes[2] = &fx_handle_2;
  8000f62:	f8c7 8008 	str.w	r8, [r7, #8]
  8000f66:	f8df b19c 	ldr.w	fp, [pc, #412]	@ 8001104 <main+0x498>
- nodes[1] = &fx_handle_1;
+  nodes[1] = &fx_handle_1;
  8000f6a:	e9c7 a900 	strd	sl, r9, [r7]
- srand(HAL_GetTick());  // seed the PRNG
+  srand(HAL_GetTick());  // seed the PRNG
  8000f6e:	f000 fe89 	bl	8001c84 <HAL_GetTick>
 		 apipe.updateDelayBuffer(&apipe);
  8000f72:	f5ab 4670 	sub.w	r6, fp, #61440	@ 0xf000
- srand(HAL_GetTick());  // seed the PRNG
+  srand(HAL_GetTick());  // seed the PRNG
  8000f76:	f007 f885 	bl	8008084 <srand>
   pipeInit(&apipe);
  8000f7a:	485a      	ldr	r0, [pc, #360]	@ (80010e4 <main+0x478>)

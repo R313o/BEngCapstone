@@ -1,4 +1,3 @@
-#include "fir_struct.h"
 #include "impulse_responses.h"
 #include "stdio.h"
 
