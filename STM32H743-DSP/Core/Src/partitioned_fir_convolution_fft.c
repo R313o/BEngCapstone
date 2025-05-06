@@ -1,4 +1,4 @@
-#pragma GCC optimize ("Ofast,unroll-loops,fast-math")
+#include "partitioned_fir_convolution_fft.h"
 
 #include "pipe.h"
 #include "fir_struct.h"

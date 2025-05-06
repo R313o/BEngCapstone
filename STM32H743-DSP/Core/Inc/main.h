@@ -40,6 +40,8 @@ extern "C" {
 #define ARM_MATH_CM7
 
 #include "arm_math.h"
+#include "pipe.h"
+
 
 /* USER CODE END Includes */
 

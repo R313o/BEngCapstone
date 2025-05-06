@@ -1,7 +1,40 @@
 #include "fir_struct.h"
+#include "impulse_responses.h"
+#include "stdio.h"
 
-__attribute__((aligned(32)))
-const float IR_FFT_ALL[94208] = {
+
+void fir_emt_140_dark_3_f32_init(fir_t *self, float *state){
+
+#define SCRATCH      (state)
+#define IR_TABLE     ((const float **)(state + EMT_SCRATCH_FLOATS))
+#define PREV_TABLE   ((float       **)(state + EMT_SCRATCH_FLOATS + EMT_SEGMENTS))
+
+    self->ir_ffts      = IR_TABLE;
+    self->prev_ffts    = PREV_TABLE;
+    self->numSegments  = EMT_SEGMENTS;
+    self->curr_fftidx  = 0;
+    self->prev_fftidx  = 0;
+
+    for (uint32_t i = 0; i < EMT_SEGMENTS; ++i) {
+        IR_TABLE [i] = &_EMT_IR_FFT_ALL[i * FFT_SIZE];  /* spectrums  */
+        PREV_TABLE[i] = &SCRATCH      [i * FFT_SIZE];   /* overlap buf*/
+    }
+
+}
+
+
+void fir_emt_140_dark_3_f32_clean(fir_t *self)
+{
+    for (uint32_t i = 0; i < EMT_SEGMENTS; ++i) {
+    	self->ir_ffts [i]   = NULL;
+    	self->prev_ffts [i] = NULL;
+    }
+}
+
+/* FIR Coefficients */
+
+__attribute__((aligned(32))) const float _EMT_IR_FFT_ALL[94208] = {
+
   -8.031685f,
   -1.540160f,
   8.159322f,
@@ -94212,197 +94245,5 @@ const float IR_FFT_ALL[94208] = {
   -0.573739f,
 };
 
-__attribute__((aligned(32))) float prev_ffts_1[2048] = {0};
 
-__attribute__((aligned(32))) float prev_ffts_2[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_3[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_4[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_5[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_6[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_7[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_8[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_9[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_10[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_11[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_12[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_13[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_14[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_15[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_16[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_17[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_18[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_19[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_20[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_21[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_22[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_23[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_24[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_25[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_26[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_27[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_28[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_29[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_30[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_31[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_32[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_33[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_34[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_35[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_36[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_37[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_38[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_39[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_40[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_41[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_42[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_43[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_44[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_45[2048] = {0};
-
-__attribute__((aligned(32))) float prev_ffts_46[2048] = {0};
-
-fir_t fir_emt_140_dark_3 = {
-    .ir_ffts = {
-        &IR_FFT_ALL[0],
-        &IR_FFT_ALL[2048],
-        &IR_FFT_ALL[4096],
-        &IR_FFT_ALL[6144],
-        &IR_FFT_ALL[8192],
-        &IR_FFT_ALL[10240],
-        &IR_FFT_ALL[12288],
-        &IR_FFT_ALL[14336],
-        &IR_FFT_ALL[16384],
-        &IR_FFT_ALL[18432],
-        &IR_FFT_ALL[20480],
-        &IR_FFT_ALL[22528],
-        &IR_FFT_ALL[24576],
-        &IR_FFT_ALL[26624],
-        &IR_FFT_ALL[28672],
-        &IR_FFT_ALL[30720],
-        &IR_FFT_ALL[32768],
-        &IR_FFT_ALL[34816],
-        &IR_FFT_ALL[36864],
-        &IR_FFT_ALL[38912],
-        &IR_FFT_ALL[40960],
-        &IR_FFT_ALL[43008],
-        &IR_FFT_ALL[45056],
-        &IR_FFT_ALL[47104],
-        &IR_FFT_ALL[49152],
-        &IR_FFT_ALL[51200],
-        &IR_FFT_ALL[53248],
-        &IR_FFT_ALL[55296],
-        &IR_FFT_ALL[57344],
-        &IR_FFT_ALL[59392],
-        &IR_FFT_ALL[61440],
-        &IR_FFT_ALL[63488],
-        &IR_FFT_ALL[65536],
-        &IR_FFT_ALL[67584],
-        &IR_FFT_ALL[69632],
-        &IR_FFT_ALL[71680],
-        &IR_FFT_ALL[73728],
-        &IR_FFT_ALL[75776],
-        &IR_FFT_ALL[77824],
-        &IR_FFT_ALL[79872],
-        &IR_FFT_ALL[81920],
-        &IR_FFT_ALL[83968],
-        &IR_FFT_ALL[86016],
-        &IR_FFT_ALL[88064],
-        &IR_FFT_ALL[90112],
-        &IR_FFT_ALL[92160]
-    },
-    .prev_ffts = {
-        &prev_ffts_1[0],
-        &prev_ffts_2[0],
-        &prev_ffts_3[0],
-        &prev_ffts_4[0],
-        &prev_ffts_5[0],
-        &prev_ffts_6[0],
-        &prev_ffts_7[0],
-        &prev_ffts_8[0],
-        &prev_ffts_9[0],
-        &prev_ffts_10[0],
-        &prev_ffts_11[0],
-        &prev_ffts_12[0],
-        &prev_ffts_13[0],
-        &prev_ffts_14[0],
-        &prev_ffts_15[0],
-        &prev_ffts_16[0],
-        &prev_ffts_17[0],
-        &prev_ffts_18[0],
-        &prev_ffts_19[0],
-        &prev_ffts_20[0],
-        &prev_ffts_21[0],
-        &prev_ffts_22[0],
-        &prev_ffts_23[0],
-        &prev_ffts_24[0],
-        &prev_ffts_25[0],
-        &prev_ffts_26[0],
-        &prev_ffts_27[0],
-        &prev_ffts_28[0],
-        &prev_ffts_29[0],
-        &prev_ffts_30[0],
-        &prev_ffts_31[0],
-        &prev_ffts_32[0],
-        &prev_ffts_33[0],
-        &prev_ffts_34[0],
-        &prev_ffts_35[0],
-        &prev_ffts_36[0],
-        &prev_ffts_37[0],
-        &prev_ffts_38[0],
-        &prev_ffts_39[0],
-        &prev_ffts_40[0],
-        &prev_ffts_41[0],
-        &prev_ffts_42[0],
-        &prev_ffts_43[0],
-        &prev_ffts_44[0],
-        &prev_ffts_45[0],
-        &prev_ffts_46[0]
-    },
-    .curr_fftidx = 0,
-    .prev_fftidx = 0,
-    .numSegments = 46
-};
 
