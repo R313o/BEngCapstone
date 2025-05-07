@@ -27,9 +27,11 @@
 /**
  * @brief Supported multi-FX types
  */
+
+
 typedef enum {
     FX_REVERB,    /**< Reverb effect */
-    FX_CHORUS,    /**< Chorus effect */
+    //FX_CHORUS,    /**< Chorus effect */
     FX_CABINET,   /**< Cabinet simulation */
     FX_SUPRO,      /**< Supro simulation */
 	FX_NULL        /**< no effect*/
@@ -41,8 +43,10 @@ typedef enum {
 typedef struct FX_HANDLER_t {
     MULTI_FX_type_t      type;      /**< FX type identifier */
     void (*process)(struct FX_HANDLER_t *self, pipe *p); /**< Processing callback */
+    void (*clean)(struct FX_HANDLER_t *self);
     void *states[8];                 /**< Pointers to effect-specific state buffers */
 } FX_HANDLER_t;
+
 
 /**
  * @brief Initialize a reverb FX handler
@@ -65,6 +69,13 @@ void fx_cabinet_clean(FX_HANDLER_t *fx);
 void fx_supro_init(FX_HANDLER_t *fx);
 void fx_supro_clean(FX_HANDLER_t *fx);
 
+
+void fx_null_init(FX_HANDLER_t *fx);
+
+/*
+ * @brief Effects Look up table
+ */
+extern void (*fx_init[])(FX_HANDLER_t *fx );
 
 /**
  * @brief Global FX handler instances (user-defined)

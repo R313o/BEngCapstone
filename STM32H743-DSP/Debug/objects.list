@@ -1,5 +1,7 @@
 "./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.o"
 "./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.o"
+"./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.o"
+"./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser.o"
 "./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.o"
 "./Core/Src/_MULTI_FX_EFFECTS/IR_Definitions/OD-M212-VINT-DYN-201-P05-00.o"
 "./Core/Src/_MULTI_FX_EFFECTS/IR_Definitions/emt_140_dark_3.o"
