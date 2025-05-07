@@ -64,7 +64,8 @@ void (*fx_init[])(FX_HANDLER_t *fx ) =
      fx_reverb_init,
      fx_cabinet_init,
      fx_supro_init,
-	 fx_null_init,
+	 fx_phaser_init,
+	 fx_null_init
 };
 
 
@@ -189,7 +190,7 @@ int main(void)
 
   nodes[0]->type = FX_SUPRO;
   nodes[1]->type = FX_CABINET;
-  nodes[2]->type = FX_REVERB;
+  nodes[2]->type = FX_PHASOR;
 
   // function init for loop
   for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES

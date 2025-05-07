@@ -34,6 +34,7 @@ typedef enum {
     //FX_CHORUS,    /**< Chorus effect */
     FX_CABINET,   /**< Cabinet simulation */
     FX_SUPRO,      /**< Supro simulation */
+	FX_PHASOR,
 	FX_NULL        /**< no effect*/
 } MULTI_FX_type_t;
 
@@ -68,6 +69,15 @@ void fx_cabinet_clean(FX_HANDLER_t *fx);
  */
 void fx_supro_init(FX_HANDLER_t *fx);
 void fx_supro_clean(FX_HANDLER_t *fx);
+
+
+/**
+ * @brief Initialize a Phaser FX handler
+ * @param fx Pointer to an FX_HANDLER_t to initialize
+ */
+void fx_phaser_init(FX_HANDLER_t *fx);
+void fx_phaser_clean(FX_HANDLER_t *fx);
+
 
 
 void fx_null_init(FX_HANDLER_t *fx);
@@ -129,6 +139,57 @@ typedef struct {
     fir_t        *fir1;    /**< Reverb FIR filter */
     float32_t    *state;   /**< Overlap/state buffer */
 } convolution_reverb_f32;
+
+
+//=============================================================================
+// Phaser
+//=============================================================================
+
+/**
+ * @brief Convolution reverb effect structure
+ */
+
+typedef struct {
+	 float32_t wetness;    /**< Wetness ratio (W) */
+	 float32_t depth;      /**< Modulation depth */
+	 float32_t rate;       /** LFO rate in Hz  */
+     uint8_t stages; 	   /** Number of stages */
+} phaser_params_t;
+
+typedef struct {
+    FX_HANDLER_t  base;    /**< Base FX handler */
+    float32_t    *state;   /**< Overlap/state buffer */
+    /* state -> pointers to input delay buffer and output delay buffer */
+    phaser_params_t *params;
+    float32_t t;           /** <Current time (in seconds) */
+    float32_t dt;   	   /**< Time increment = 1/sampleRate */
+
+} phaser_f32;
+
+/*
+typedef struct phaser {
+    uint32_t baseDelay;   // Base delay (N), for phaser it is always set to 1
+    float32_t wetness;    // Wetness ratio (W)
+    float32_t depth;      // Modulation depth
+    float32_t rate;       // LFO rate in Hz
+	uint8_t stages; 	  // Number of stages
+
+    // Internal delay buffers (mono processing)
+    // Buffer size is computed as: max(frameLength * 5, ceil(baseDelay*(1+depth)) * 2)
+    uint32_t bufferSize;
+    float32_t *inDelayed;   // Input delay buffer
+    float32_t *outDelayed;  // Output delay buffer
+
+    // Circular buffer pointer
+    uint32_t writePtr;
+
+    // LFO time management
+    float32_t t;    // Current time (in seconds)
+    float32_t dt;   // Time increment = 1/sampleRate
+} phaser;
+*/
+
+
 
 
 
