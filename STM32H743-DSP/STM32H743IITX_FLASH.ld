@@ -196,6 +196,17 @@ SECTIONS
     libm.a ( * )
     libgcc.a ( * )
   }
+  
+   /* all objects explicitly put in .ram_d2_data */
+  .ramd2(NOLOAD) :
+  {
+    . = ALIGN (1);  
+    *(.ramd2)       /* all objects explicitly put in .ram_d2_data */
+    . = ALIGN(1); 
+
+  } > RAM_D2
+  
+  
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }

@@ -149,6 +149,7 @@ void fx_supro_init(FX_HANDLER_t *fx)
     }
 
     fx->process = supro_simulation_f32_process;
+    fx->clean = fx_reverb_clean;
 }
 
 

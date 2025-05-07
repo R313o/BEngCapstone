@@ -1,0 +1,3 @@
+../Core/Src/null_f32.c:5:13:fx_null_process	1
+../Core/Src/null_f32.c:11:13:fx_null_clean	1
+../Core/Src/null_f32.c:21:6:fx_null_init	1

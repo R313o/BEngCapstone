@@ -36,7 +36,6 @@
 
 /* USER CODE END PD */
 
-
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
@@ -45,25 +44,52 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
+
 DAC_HandleTypeDef hdac1;
 DMA_HandleTypeDef hdma_dac1_ch1;
+
 TIM_HandleTypeDef htim8;
+
+UART_HandleTypeDef huart2;
+
+SDRAM_HandleTypeDef hsdram1;
 
 /* USER CODE BEGIN PV */
 
 pipe apipe;
 
+dataLink link;
+
 FX_HANDLER_t fx_handle_0,
 			 fx_handle_1,
 			 fx_handle_2;
 
-FX_HANDLER_t *nodes[3];
+FX_HANDLER_t *nodes[2];
+
+uint16_t testCounter = 0;
+
+
+
+
+uint8_t order[MAX_NODES];
+
+uint8_t uartRxIndex = 0;
+
+void (*fx_init[])(FX_HANDLER_t *fx ) =
+{
+     fx_reverb_init,
+     fx_cabinet_init,
+     fx_supro_init
+};
+
 
 arm_rfft_fast_instance_f32 fft;
 
 static 	 uint16_t  adcInput[BUFFER_SIZE  * 2];
 static	 uint16_t  dacOutput[BUFFER_SIZE * 2];
 
+SET_RAM_D2 uint8_t rxRecieve[2];
+SET_RAM_D2 uint8_t UARTrxBuffer[UART_BUFFER_SIZE];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -75,7 +101,8 @@ static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_DAC1_Init(void);
-
+static void MX_FMC_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -101,6 +128,28 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 volatile unsigned long now = 0;
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+
+	if (huart == &huart2)
+	{
+		char received = rxRecieve[0];
+
+		link.readUART(&link, received);
+
+		UARTrxBuffer[uartRxIndex++] = received;
+
+		if (uartRxIndex >= UART_BUFFER_SIZE)
+		{
+			uartRxIndex = 0;
+		}
+
+		testCounter++;
+
+		HAL_UART_Receive_IT(&huart2, rxRecieve, 1);
+	}
+}
+
 
 #include <stdlib.h>    // for rand(), srand()
 
@@ -119,6 +168,14 @@ int main(void)
 
   /* MPU Configuration--------------------------------------------------------*/
   MPU_Config();
+
+  /* Enable the CPU Cache */
+
+  /* Enable I-Cache---------------------------------------------------------*/
+  SCB_EnableICache();
+
+  /* Enable D-Cache---------------------------------------------------------*/
+  SCB_EnableDCache();
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -145,14 +202,19 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM8_Init();
   MX_DAC1_Init();
-
+  MX_FMC_Init();
+  MX_USART2_UART_Init();
+  /* USER CODE BEGIN 2 */
   SCB_EnableDCache();
   SCB_EnableICache();
 
   dctm_pool_init();
   static_pool_init();
 
-  /* USER CODE BEGIN 2 */
+  initDataLink(&link);
+
+  HAL_UART_Receive_IT(&huart2, rxRecieve, 1);
+
   arm_rfft_fast_init_f32(&fft, FFT_SIZE);
 
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
@@ -165,15 +227,21 @@ int main(void)
 
   nodes[0] = &fx_handle_0;
   nodes[1] = &fx_handle_1;
-  nodes[2] = &fx_handle_2;
+  //nodes[2] = &fx_handle_2;
 
   srand(HAL_GetTick());  // seed the PRNG
 
   pipeInit(&apipe);
 
-  fx_reverb_init  ( &fx_handle_0 );
-  fx_cabinet_init ( &fx_handle_1 );
-  fx_supro_init   ( &fx_handle_2 );
+
+  nodes[0]->type = FX_SUPRO;
+  nodes[1]->type = FX_CABINET;
+  //nodes[2]->type = FX_NULL;
+
+  // function init for loop
+  for (int i = 0 ; i< 2 ; ++i) { // i < MAX_NODES
+		 fx_init[nodes[i]->type](nodes[i]);
+  }
 
   /* USER CODE END 2 */
 
@@ -183,7 +251,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-
+    /* USER CODE BEGIN 3 */
 	  if (apipe.bufferReady)
 	  {
 		 apipe.updateDelayBuffer(&apipe);
@@ -191,13 +259,15 @@ int main(void)
 
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
 
-		 fx_handle_2.process(&fx_handle_2, &apipe);
-		 fx_handle_1.process(&fx_handle_1, &apipe);
-		 fx_handle_0.process(&fx_handle_0, &apipe);
+		 for (int i = 0 ; i< 2 ; ++i) { // i < MAX_NODES
+				nodes[i]->process(nodes[i], &apipe);
+		 }
+
 
 
 	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
 		 arm_copy_f32(apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
+
 
 		 apipe.updateDACOutput(&apipe, dacOutput);
 		 SCB_CleanDCache_by_Addr((uint32_t*)dacOutput, BUFFER_SIZE*2 * sizeof(dacOutput[0]));
@@ -209,20 +279,31 @@ int main(void)
 		 // on rising edge (HIGH && previously armed), do your clean
 		 if (trig == GPIO_PIN_SET) {
 
-		     fx_supro_clean  (&fx_handle_2);
-		     fx_cabinet_clean(&fx_handle_1);
-		     fx_reverb_clean (&fx_handle_0);
+		     //nodes[i]->clean(nodes[0])
+
+    	    for (int i = 0 ; i< 2 ; ++i) { // i < MAX_NODES
+    	    	  nodes[i]->clean(nodes[i]);
+    	    }
+
 
 		     dctm_pool_init();
 		     static_pool_init();
 
 		     memset(apipe.processBuffer, 0,  BUFFER_SIZE *sizeof(apipe.processBuffer[0]));
 
-			 volatile uint32_t idx = rand() % 3;
+			 volatile uint32_t idx1 = rand() % 3;
+			 volatile uint32_t idx2 = rand() % 3;
+			 volatile uint32_t idx3 = rand() % 3;
 
-		     fx_reverb_init  (nodes[++idx % 3]);
-		     fx_cabinet_init (nodes[++idx % 3]);
-		     fx_supro_init   (nodes[++idx % 3]);
+		     nodes[idx1]->type = FX_SUPRO;
+		     nodes[idx2]->type = FX_CABINET;
+		     //nodes[idx3]->type = FX_SUPRO;
+
+		     // function init for loop
+		    for (int i = 0 ; i< 2 ; ++i) { // i < MAX_NODES
+		   		 fx_init[nodes[i]->type](nodes[i]);
+		    }
+
 
 		 }
 
@@ -236,9 +317,9 @@ int main(void)
 
 
 	  }
-  }
-  /* USER CODE END 3 */
 
+  /* USER CODE END 3 */
+}
 
 /**
   * @brief System Clock Configuration
@@ -476,6 +557,53 @@ static void MX_TIM8_Init(void)
 
 }
 
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart2.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart2, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart2, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
 
 /**
   * Enable DMA controller clock
@@ -494,7 +622,53 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
 
+}
 
+/* FMC initialization function */
+static void MX_FMC_Init(void)
+{
+
+  /* USER CODE BEGIN FMC_Init 0 */
+
+  /* USER CODE END FMC_Init 0 */
+
+  FMC_SDRAM_TimingTypeDef SdramTiming = {0};
+
+  /* USER CODE BEGIN FMC_Init 1 */
+
+  /* USER CODE END FMC_Init 1 */
+
+  /** Perform the SDRAM1 memory initialization sequence
+  */
+  hsdram1.Instance = FMC_SDRAM_DEVICE;
+  /* hsdram1.Init */
+  hsdram1.Init.SDBank = FMC_SDRAM_BANK1;
+  hsdram1.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_9;
+  hsdram1.Init.RowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_13;
+  hsdram1.Init.MemoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
+  hsdram1.Init.InternalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
+  hsdram1.Init.CASLatency = FMC_SDRAM_CAS_LATENCY_3;
+  hsdram1.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
+  hsdram1.Init.SDClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
+  hsdram1.Init.ReadBurst = FMC_SDRAM_RBURST_ENABLE;
+  hsdram1.Init.ReadPipeDelay = FMC_SDRAM_RPIPE_DELAY_2;
+  /* SdramTiming */
+  SdramTiming.LoadToActiveDelay = 2;
+  SdramTiming.ExitSelfRefreshDelay = 7;
+  SdramTiming.SelfRefreshTime = 4;
+  SdramTiming.RowCycleDelay = 7;
+  SdramTiming.WriteRecoveryTime = 3;
+  SdramTiming.RPDelay = 2;
+  SdramTiming.RCDDelay = 2;
+
+  if (HAL_SDRAM_Init(&hsdram1, &SdramTiming) != HAL_OK)
+  {
+    Error_Handler( );
+  }
+
+  /* USER CODE BEGIN FMC_Init 2 */
+
+  /* USER CODE END FMC_Init 2 */
 }
 
 /**
@@ -504,38 +678,39 @@ static void MX_DMA_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+  /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-
-  /* Enable the clock for the GPIO port */
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
-  /* Configure PB0 as pushpull output, no pullups, low speed */
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_InitStruct.Pin   = GPIO_PIN_3;
-  GPIO_InitStruct.Mode  =  GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull  = GPIO_NOPULL;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : LED_Pin */
+  GPIO_InitStruct.Pin = LED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);   // set high
-
-
-  GPIO_InitStruct.Pin   = GPIO_PIN_13;
-  GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull  = GPIO_NOPULL;
+  /*Configure GPIO pins : PA9 PA10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   // set high
-
-  /* Now you can drive the pin */
-
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */

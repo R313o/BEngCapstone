@@ -63,8 +63,8 @@ all: main-build
 main-build: STM32H743-DSP.elf secondary-outputs
 
 # Tool invocations
-STM32H743-DSP.elf STM32H743-DSP.map: $(OBJS) $(USER_OBJS) C:\Users\Hassa\Documents\GitHub\BCIT\BEngCapstone\STM32H743-DSP\STM32H743IITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32H743-DSP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\Hassa\Documents\GitHub\BCIT\BEngCapstone\STM32H743-DSP\STM32H743IITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32H743-DSP.map" -Wl,--gc-sections -static -L"C:\Users\Hassa\Documents\GitHub\BCIT\BEngCapstone\STM32H743-DSP\Lib" -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32H743-DSP.elf STM32H743-DSP.map: $(OBJS) $(USER_OBJS) /Users/spencer/Library/CloudStorage/OneDrive-BCIT/capstone/github/BEngCapstone/Untitled/STM32H743-DSP/STM32H743IITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32H743-DSP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/Users/spencer/Library/CloudStorage/OneDrive-BCIT/capstone/github/BEngCapstone/Untitled/STM32H743-DSP/STM32H743IITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32H743-DSP.map" -Wl,--gc-sections -static -L"/Users/spencer/Library/CloudStorage/OneDrive-BCIT/capstone/github/BEngCapstone/Untitled/STM32H743-DSP/Lib" -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

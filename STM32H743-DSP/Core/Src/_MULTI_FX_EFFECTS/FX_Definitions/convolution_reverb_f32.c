@@ -155,6 +155,7 @@ void fx_reverb_init(FX_HANDLER_t *fx)
 
     // Set processing callback for convolution reverb
     fx->process = convolution_reverb_f32_process;
+    fx->clean =   fx_cabinet_clean;
 }
 
 

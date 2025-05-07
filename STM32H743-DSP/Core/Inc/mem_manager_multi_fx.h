@@ -21,7 +21,7 @@
 #include "main.h"   /* for BUFFER_SIZE, FFT_SIZE */
 
 /** @brief Number of float sized buffers in the DTCM pool. */
-#define DTCM_NUM_BUFFERS      10
+#define DTCM_NUM_BUFFERS      15
 
 /** @brief Total DTCM pool size in bytes: DTCM_NUM_BUFFERS × BUFFER_SIZE floats. */
 #define DTCM_STATIC_POOL_SIZE (DTCM_NUM_BUFFERS * BUFFER_SIZE * sizeof(float))

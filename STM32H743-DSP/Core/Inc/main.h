@@ -40,7 +40,11 @@ extern "C" {
 #define ARM_MATH_CM7
 
 #include "arm_math.h"
+#include "config.h"
 #include "pipe.h"
+#include <string.h>
+#include "dataLink.h"
+#include "nodeSort.h"
 
 
 /* USER CODE END Includes */
@@ -57,7 +61,8 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+/* place this variable into the RAM_D2 region */
+#define SET_RAM_D2   __attribute__((section(".ramd2"), used))
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -68,6 +73,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED_Pin GPIO_PIN_13
+#define LED_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 
