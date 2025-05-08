@@ -62,26 +62,46 @@ SET_RAM_D3 pipe apipe;
 SET_RAM_D3 dataLink link;
 
 FX_HANDLER_t fx_handle_0,
-			 fx_handle_1,
-			 fx_handle_2;
-
-FX_HANDLER_t *nodes[3];
-
-SET_RAM_D3 uint32_t testCounter = 0;
-
+             fx_handle_1,
+             fx_handle_2,
+             fx_handle_3,
+             fx_handle_4,
+			 fx_handle_5;
 
 
+FX_HANDLER_t *nodes[6];
 
-SET_RAM_D3 uint8_t order[MAX_NODES];
+float32_t* (*fx_param[])(FX_HANDLER_t *fx ) =
+{
+     fx_reverb_parameters,
+     fx_cabinet_parameters,
+     fx_supro_parameters,
+     fx_phaser_parameters,
+     fx_chorus_parameters,
+     fx_null_parameters
+};
 
-uint8_t uartRxIndex = 0;
 
 void (*fx_init[])(FX_HANDLER_t *fx ) =
 {
      fx_reverb_init,
      fx_cabinet_init,
-     fx_supro_init
+     fx_supro_init,
+     fx_phaser_init,
+     fx_chorus_init,
+     fx_null_init
 };
+
+uint8_t effectOrder[3] = {0,   1, 2};
+uint8_t sourceOrder[3] = {255, 0, 1};
+
+
+uint32_t testCounter = 0;
+
+SET_RAM_D3 uint8_t order[MAX_NODES];
+
+uint8_t uartRxIndex = 0;
+
 
 
 arm_rfft_fast_instance_f32 fft;
@@ -233,6 +253,10 @@ int main(void)
   nodes[0] = &fx_handle_0;
   nodes[1] = &fx_handle_1;
   nodes[2] = &fx_handle_2;
+  nodes[3] = &fx_handle_3;
+  nodes[4] = &fx_handle_4;
+  nodes[5] = &fx_handle_5;
+
 
   srand(HAL_GetTick());  // seed the PRNG
 
@@ -259,14 +283,32 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if (apipe.bufferReady)
 	  {
-		 apipe.updateDelayBuffer(&apipe);
+		 //apipe.updateDelayBuffer(&apipe);
 		 apipe.loadProcess(&apipe);
 
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
 
-		 for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
-				nodes[i]->process(nodes[i], &apipe);
+		 /*for(int j = 0; j < 5 ; ++j ) {
+			  for( int i = 0; i < nodes[j]->num_params ; ++i) {
+				  if( FX_NULL(nodes[j]) != NULL )
+					   FX_PARAM(nodes[j], i) = link.nodes[j].params[i];
+			  }
+		  }*/
+		 if(!link.needsRefresh)
+		 {
+			 for (int i = 0 ; i < link.nodeCount ; ++i) // i < MAX_NODES
+			 {
+				apipe.primeProcess(&apipe, link.nodes[link.processOrder[i]].inputs[0], link.processOrder[i]);
+
+				nodes[link.processOrder[i]]->process(nodes[link.processOrder[i]], &apipe);
+			 }
 		 }
+			 /*for (int i = 0 ; i < link.nodeCount ; ++i) // i < MAX_NODES
+			 {
+				apipe.primeProcess(&apipe, sourceOrder[i], effectOrder[i]);
+
+				nodes[effectOrder[i]]->process(nodes[effectOrder[i]], &apipe);
+			 }*/
 
 
 
@@ -287,7 +329,7 @@ int main(void)
 
 		     //nodes[i]->clean(nodes[0])
 
-    	    for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
+    	    for (int i = 0 ; i< link.nodeCount  ; ++i) { // i < MAX_NODES
     	    	  nodes[i]->clean(nodes[i]);
     	    }
 
@@ -303,12 +345,66 @@ int main(void)
 
 		     nodes[idx1]->type = FX_SUPRO;
 		     nodes[idx2]->type = FX_CABINET;
-		     //nodes[idx3]->type = FX_SUPRO;
+		     nodes[idx3]->type = FX_SUPRO;
 
 		     // function init for loop
-		    for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
+		    for (int i = 0 ; i< link.nodeCount  ; ++i) { // i < MAX_NODES
 		   		 fx_init[nodes[i]->type](nodes[i]);
 		    }
+
+
+		 }
+
+		 if (link.needsRefresh)
+		 {
+
+			 link.needsRefresh = 0;
+
+			 topoSort(&link, order);
+
+			 for (int i = 0 ; i< link.nodeCount  ; i++)
+			 { // i < MAX_NODES
+				 nodes[i]->clean(nodes[i]);
+			 }
+			 dctm_pool_init();
+			 static_pool_init();
+
+			 for (int i = 0 ; i< link.nodeCount  ; i++)
+			 {
+
+
+				 /*if (link.nodes[i].effectId == 0)
+				 {
+					 nodes[i]->type = FX_REVERB;
+				 }
+				 else if (link.nodes[i].effectId == 1)
+				 {
+					 nodes[i]->type = FX_CABINET;
+				 }
+				 else if (link.nodes[i].effectId == 2)
+				 {
+					 nodes[i]->type = FX_SUPRO;
+				 }
+				 else if (link.nodes[i].effectId == 3)
+				 {
+					 nodes[i]->type = FX_PHASOR;
+				 }
+				 else if (link.nodes[i].effectId == 4)
+				 {
+					 nodes[i]->type = FX_CHORUS;
+				 }
+				 else if (link.nodes[i].effectId == 5)
+				 {
+					 nodes[i]->type = FX_NULL;
+				 }*/
+				 nodes[i]->type = link.nodes[i].effectId;
+
+				 fx_init[nodes[i]->type](nodes[i]);
+
+			 }
+
+
+
 
 
 		 }

@@ -43,7 +43,7 @@ static void pipe_ADC_Complete(pipe *self, const volatile uint16_t *adcInput)
     self->bufferReady = true;
 }
 
-static void pipe_updateDelayBuffer(pipe *self)
+/*static void pipe_updateDelayBuffer(pipe *self)
 {
 
     arm_copy_f32(self->inBuffer, &self->delayBuffer[self->delayIndex], BUFFER_SIZE);
@@ -61,6 +61,11 @@ float32_t *pipe_getDelayBuffer(pipe *self, uint16_t n)
     uint32_t index = (self->delayIndex + DELAY_BUFFER_SIZE - offset) % DELAY_BUFFER_SIZE;
 
     return &self->delayBuffer[index];
+}*/
+
+float32_t *pipe_getNodeBuffer(pipe *self, uint16_t n)
+{
+    return self->nodeBuffer[n];
 }
 
 static void pipe_updateDACOutput(pipe *self, volatile uint16_t *dacBuffer)
@@ -84,20 +89,43 @@ static void pipe_loadProcess(pipe *self)
 	arm_copy_f32(self->inBuffer, self->processBuffer, BUFFER_SIZE);
 }
 
+static void pipe_setIO(pipe *self, uint16_t sourceBuffer, uint16_t destinationBuffer)
+{
+	self->fxSrcBuff = self->nodeBuffer[sourceBuffer];
+	self->fxDstBuff = self->nodeBuffer[destinationBuffer];
+}
+
+static void pipe_primeProcess(pipe *self, uint16_t sourceBuffer, uint16_t workingBuffer)
+{
+	self->processBuffer = self->nodeBuffer[workingBuffer];
+	if (sourceBuffer < 3)
+	{
+		arm_copy_f32(self->nodeBuffer[sourceBuffer], self->processBuffer, BUFFER_SIZE);
+	}
+	else
+	{
+		arm_copy_f32(self->inBuffer, self->processBuffer, BUFFER_SIZE);
+	}
+}
+
 void pipeInit(pipe *self)
 {
     self->inBuffer  = self->inBuffer2;
     self->outBuffer = self->outBuffer2;
+    self->processBuffer = self->nodeBuffer[0];
     self->ppState   = 0;
-    self->delayIndex = 0;
+    //self->delayIndex = 0;
     self->bufferReady = false;
 
     self->adcHalfComplete = pipe_ADC_HalfComplete;
     self->adcComplete     = pipe_ADC_Complete;
-    self->updateDelayBuffer = pipe_updateDelayBuffer;
+    //self->updateDelayBuffer = pipe_updateDelayBuffer;
     self->updateDACOutput = pipe_updateDACOutput;
-    self->getDelayBuffer = pipe_getDelayBuffer;
+    //self->getDelayBuffer = pipe_getDelayBuffer;
     self->loadProcess = pipe_loadProcess;
+    self->getNodeBuffer = pipe_getNodeBuffer;
+    self->setIO = pipe_setIO;
+    self->primeProcess = pipe_primeProcess;
 
     for(int i = 0; i < BUFFER_SIZE ; i++) {
 

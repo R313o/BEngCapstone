@@ -78,12 +78,6 @@ void *_dctm_static_mem_alloc(size_t size, size_t align);
 void *_static_mem_alloc(size_t size, size_t align);
 void *_static_mem_alloc_ram_d2(size_t size, size_t align);
 
-/**
- * @brief Default out of memory handler.
- *
- * Enters an infinite loop to halt execution; typically caught in the debugger
- * or reset by a watchdog. This function never returns.
- */
-__weak void _memory_alloc_error_handler();
+
 
 #endif /* MEM_MANAGER_H */

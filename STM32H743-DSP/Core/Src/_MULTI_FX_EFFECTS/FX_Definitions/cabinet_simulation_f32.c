@@ -13,6 +13,8 @@
 
 #include "_MULTI_FX.h"
 
+#define _static_mem_alloc _static_mem_alloc_ram_d2
+
 /**
  * @brief Private Initializer for a cabinet simulation instance
  * @param self  Pointer to cabinet_simulation_f32 to initialize
@@ -76,6 +78,11 @@ static void cabinet_simulation_clean_f32(cabinet_simulation_f32 *self)
 }
 
 
+float32_t* fx_cabinet_parameters(FX_HANDLER_t *fx){
+
+	return NULL;
+}
+
 
 /**
  * @brief Configure a generic FX handler for cabinet simulation.
@@ -89,6 +96,8 @@ static void cabinet_simulation_clean_f32(cabinet_simulation_f32 *self)
 void fx_cabinet_init(FX_HANDLER_t *fx)
 {
     const uint32_t numSegments = 1U;
+
+    fx->num_params = 0;
 
     // Allocate FFT-domain memory for FIR (numSegments * FFT_SIZE floats + overlap paddings)
     fx->states[0] = _static_mem_alloc(

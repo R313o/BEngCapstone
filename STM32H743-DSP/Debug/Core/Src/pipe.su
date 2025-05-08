@@ -1,7 +1,8 @@
-../Core/Src/pipe.c:57:12:pipe_getDelayBuffer	0	static
-../Core/Src/pipe.c:82:13:pipe_loadProcess	0	static
-../Core/Src/pipe.c:46:13:pipe_updateDelayBuffer	8	static
-../Core/Src/pipe.c:66:13:pipe_updateDACOutput	16	static
+../Core/Src/pipe.c:66:12:pipe_getNodeBuffer	0	static
+../Core/Src/pipe.c:92:13:pipe_setIO	0	static
+../Core/Src/pipe.c:98:13:pipe_primeProcess	4	static
+../Core/Src/pipe.c:87:13:pipe_loadProcess	0	static
+../Core/Src/pipe.c:71:13:pipe_updateDACOutput	16	static
 ../Core/Src/pipe.c:28:13:pipe_ADC_Complete	16	static
 ../Core/Src/pipe.c:10:13:pipe_ADC_HalfComplete	8	static
-../Core/Src/pipe.c:87:6:pipeInit	12	static
+../Core/Src/pipe.c:111:6:pipeInit	12	static

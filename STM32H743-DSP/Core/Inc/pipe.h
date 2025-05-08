@@ -29,10 +29,16 @@ typedef struct pipe pipe;
 
 // Function pointer types for the "methods"
 typedef void (*ADCCallback_Fn)(pipe *self, const volatile uint16_t *adcInput);
-typedef void (*updateDelay_Fn)(pipe *self);
+//typedef void (*updateDelay_Fn)(pipe *self);
 typedef void (*updateDAC_Fn)(pipe *self, volatile uint16_t *dacBuffer);
 typedef void (*loadProcess_Fn)(pipe *self);
-typedef float32_t *(*getDelayBuffer_Fn)(pipe *self, uint16_t n);
+
+typedef void (*setIO_Fn)(pipe *self, uint16_t sourceBuffer, uint16_t destinationBuffer);
+
+typedef void (*primeProcess_Fn)(pipe *self, uint16_t sourceBuffer, uint16_t workingBuffer);
+//typedef float32_t *(*getDelayBuffer_Fn)(pipe *self, uint16_t n);
+typedef float32_t *(*getNodeBuffer_Fn) (pipe *self, uint16_t n);
+
 
 struct pipe
 {
@@ -46,20 +52,30 @@ struct pipe
     float32_t *inBuffer;
     float32_t *outBuffer;
 
-    float32_t processBuffer[BUFFER_SIZE]; // HI - changed processBuffer size from BUFFER_SIZE to BUFFER_SIZE*2 to be inherently zero-padded.
+    float32_t *processBuffer; // HI - changed processBuffer size from BUFFER_SIZE to BUFFER_SIZE*2 to be inherently zero-padded.
+    float32_t nodeBuffer[MAX_NODES][BUFFER_SIZE];
 
-    float32_t delayBuffer[DELAY_BUFFER_SIZE];
+    float32_t *fxSrcBuff; //where effect nodes pull their data from
+    float32_t *fxDstBuff; //where effect nodes store their data
+
+    //float32_t delayBuffer[DELAY_BUFFER_SIZE];
 
     uint8_t ppState;
-    uint32_t delayIndex;
+    //uint32_t delayIndex;
     bool bufferReady;
 
     ADCCallback_Fn adcHalfComplete;
     ADCCallback_Fn adcComplete;
-    updateDelay_Fn updateDelayBuffer;
+    //updateDelay_Fn updateDelayBuffer;
     updateDAC_Fn updateDACOutput;
-    getDelayBuffer_Fn getDelayBuffer;
+    //getDelayBuffer_Fn getDelayBuffer;
     loadProcess_Fn loadProcess;
+
+    getNodeBuffer_Fn getNodeBuffer;
+
+    primeProcess_Fn primeProcess;
+
+    setIO_Fn setIO;
 
 
 };

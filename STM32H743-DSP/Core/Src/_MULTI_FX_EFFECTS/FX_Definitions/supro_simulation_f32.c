@@ -15,6 +15,7 @@
 #include "partitioned_fir_convolution_fft.h"
 #include "arm_math.h"
 
+#define _static_mem_alloc _static_mem_alloc_ram_d2
 
 /**
  * @brief internal initialization
@@ -87,6 +88,12 @@ static const float32_t LP5Hz_Biquad[5] = {
    -0.99907482762f
 };
 
+
+float32_t* fx_supro_parameters(FX_HANDLER_t *fx){
+
+	return NULL;
+}
+
 //==============================================================================
 // Public FX Initialization
 //==============================================================================
@@ -95,6 +102,9 @@ static const float32_t LP5Hz_Biquad[5] = {
  */
 void fx_supro_init(FX_HANDLER_t *fx)
 {
+
+	fx->num_params = 0;
+
     // Allocate overlap state buffers in DTCM: 3 × BUFFER_SIZE
     fx->states[0] = _dctm_static_mem_alloc(
         3 * BUFFER_SIZE * sizeof(float32_t), _Alignof(float32_t)

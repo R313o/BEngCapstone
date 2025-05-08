@@ -33,12 +33,15 @@ typedef struct dataLink {
     char     commandBuffer[128];
     uint8_t  commandIndex;
     uint8_t  processOrder[MAX_NODES];
+    uint8_t  needsRefresh;
 
-    /* user‑supplied parser for one ASCII command line */
+
     readUART_Fn readUART;
 } dataLink;
 
 void initDataLink(dataLink *link);
+
+size_t topoSort(dataLink *link, uint8_t *result);
 
 
 #endif /* DATALINK_H */
