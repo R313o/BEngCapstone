@@ -61,8 +61,10 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-/* place this variable into the RAM_D2 region */
+
 #define SET_RAM_D2   __attribute__((section(".ramd2"), used))
+
+#define SET_RAM_D3   __attribute__((section(".ramd3"), used))
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

@@ -50,28 +50,29 @@ DMA_HandleTypeDef hdma_dac1_ch1;
 
 TIM_HandleTypeDef htim8;
 
+UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 SDRAM_HandleTypeDef hsdram1;
 
 /* USER CODE BEGIN PV */
 
-pipe apipe;
+SET_RAM_D3 pipe apipe;
 
-dataLink link;
+SET_RAM_D3 dataLink link;
 
 FX_HANDLER_t fx_handle_0,
 			 fx_handle_1,
 			 fx_handle_2;
 
-FX_HANDLER_t *nodes[2];
+FX_HANDLER_t *nodes[3];
 
-uint16_t testCounter = 0;
-
-
+SET_RAM_D3 uint32_t testCounter = 0;
 
 
-uint8_t order[MAX_NODES];
+
+
+SET_RAM_D3 uint8_t order[MAX_NODES];
 
 uint8_t uartRxIndex = 0;
 
@@ -88,8 +89,8 @@ arm_rfft_fast_instance_f32 fft;
 static 	 uint16_t  adcInput[BUFFER_SIZE  * 2];
 static	 uint16_t  dacOutput[BUFFER_SIZE * 2];
 
-SET_RAM_D2 uint8_t rxRecieve[2];
-SET_RAM_D2 uint8_t UARTrxBuffer[UART_BUFFER_SIZE];
+SET_RAM_D3 static	uint8_t rxRecieve[2];
+SET_RAM_D3 static	uint8_t UARTrxBuffer[UART_BUFFER_SIZE];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -102,6 +103,7 @@ static void MX_ADC1_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_DAC1_Init(void);
 static void MX_FMC_Init(void);
+static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -203,6 +205,7 @@ int main(void)
   MX_TIM8_Init();
   MX_DAC1_Init();
   MX_FMC_Init();
+  MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   SCB_EnableDCache();
@@ -213,7 +216,7 @@ int main(void)
 
   initDataLink(&link);
 
-  HAL_UART_Receive_IT(&huart2, rxRecieve, 1);
+
 
   arm_rfft_fast_init_f32(&fft, FFT_SIZE);
 
@@ -225,9 +228,11 @@ int main(void)
 
   HAL_TIM_Base_Start(&htim8);
 
+  HAL_UART_Receive_IT(&huart2, rxRecieve, 1);
+
   nodes[0] = &fx_handle_0;
   nodes[1] = &fx_handle_1;
-  //nodes[2] = &fx_handle_2;
+  nodes[2] = &fx_handle_2;
 
   srand(HAL_GetTick());  // seed the PRNG
 
@@ -236,10 +241,10 @@ int main(void)
 
   nodes[0]->type = FX_SUPRO;
   nodes[1]->type = FX_CABINET;
-  //nodes[2]->type = FX_NULL;
+  nodes[2]->type = FX_REVERB;
 
   // function init for loop
-  for (int i = 0 ; i< 2 ; ++i) { // i < MAX_NODES
+  for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
 		 fx_init[nodes[i]->type](nodes[i]);
   }
 
@@ -259,9 +264,10 @@ int main(void)
 
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
 
-		 for (int i = 0 ; i< 2 ; ++i) { // i < MAX_NODES
+		 for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
 				nodes[i]->process(nodes[i], &apipe);
 		 }
+
 
 
 
@@ -281,7 +287,7 @@ int main(void)
 
 		     //nodes[i]->clean(nodes[0])
 
-    	    for (int i = 0 ; i< 2 ; ++i) { // i < MAX_NODES
+    	    for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
     	    	  nodes[i]->clean(nodes[i]);
     	    }
 
@@ -300,7 +306,7 @@ int main(void)
 		     //nodes[idx3]->type = FX_SUPRO;
 
 		     // function init for loop
-		    for (int i = 0 ; i< 2 ; ++i) { // i < MAX_NODES
+		    for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
 		   		 fx_init[nodes[i]->type](nodes[i]);
 		    }
 
@@ -343,17 +349,18 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSIState = RCC_HSI_DIV1;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 60;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 5;
+  RCC_OscInitStruct.PLL.PLLN = 192;
   RCC_OscInitStruct.PLL.PLLP = 2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
-  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -558,6 +565,54 @@ static void MX_TIM8_Init(void)
 }
 
 /**
+  * @brief USART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -700,14 +755,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PA9 PA10 */
-  GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
   /* USER CODE END MX_GPIO_Init_2 */
