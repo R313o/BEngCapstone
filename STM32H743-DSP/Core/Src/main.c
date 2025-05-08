@@ -250,30 +250,15 @@ int main(void)
 
 	    // noise gate
 
-		for (int i = 0; i < BUFFER_SIZE; i++) {
+		 for (int i = 0; i < BUFFER_SIZE; i++) {
 			sum_of_squares += apipe.processBuffer[i] * apipe.processBuffer[i];
-		}
+		 }
 
-		if (( sum_of_squares / BUFFER_SIZE) < noise_thresh){
+		 if (( sum_of_squares / BUFFER_SIZE) < noise_thresh){
 			 arm_fill_f32(0.0f, apipe.processBuffer, BUFFER_SIZE);
-		}
+		 }
 
-		sum_of_squares = 0;
-
-
-		  // TESTING IF ASSIGNMENT PARAMETERS TO PARAMETERLESS FX CAUSES AN ERROR
-		  for( int i = 0; i < nodes[1]->num_params ; ++i) {
-			  if( FX_NULL(nodes[1]) != NULL )
-			  FX_PARAM(nodes[1], i) = phaser_params[i];
-		  }
-
-		  // TESTING IS ASSIGNMENT PARAMETERS TO A NULL EFFECT CAUSES AN ERROR
-		  for( int i = 0; i < nodes[4]->num_params ; ++i) {
-			  if( FX_NULL(nodes[4]) != NULL )
-			  FX_PARAM(nodes[4], i) = phaser_params[i];
-		  }
-
-
+		 sum_of_squares = 0;
 
 
 		 for (int i = 0 ; i< 5 ; ++i) { // i < MAX_NODES
@@ -296,22 +281,9 @@ int main(void)
 
 
 
-			  for( int i = 0; i < nodes[0]->num_params ; ++i) {
-				  FX_PARAM(nodes[0], i) = (float)rand()/(float)(RAND_MAX/ 1.0f);
-			  }
-
-			  for( int i = 0; i < nodes[0]->num_params ; ++i) {
-				  FX_PARAM(nodes[3], i) = (float)rand()/(float)(RAND_MAX/ 1.0f) ;
-			  }
-
-
-
-
-            /*
     	    for (int i = 0 ; i< 5 ; ++i) { // i < MAX_NODES
     	    	  nodes[i]->clean(nodes[i]);
     	    }
-
 
 		     dctm_pool_init();
 		     static_pool_init();
@@ -320,12 +292,22 @@ int main(void)
 
 			 volatile uint32_t idx1 = rand() % 6;
 
-					 // function init for loop
-					for (int i = 0 ; i < 5 ; ++i) { // i < MAX_NODES
+			 // random effects assignment
+			 for (int i = 0 ; i < 5 ; ++i) { // i < MAX_NODES
 						 nodes[i]->type = ++idx1 % 6;
 						 fx_init[nodes[i]->type](nodes[i]);
+				 }
+
+			 // random parameter assignment
+			 for(int j = 0; j < 5 ; ++j ) {
+				 for( int i = 0; i < nodes[j]->num_params ; ++i) {
+					 if( FX_NULL(nodes[j]) != NULL )
+						  FX_PARAM(nodes[j], i) = (float)rand()/(float)(RAND_MAX/ 1.0f);
 					}
-					*/
+			 }
+
+
+
 		 }
 
 
