@@ -6,6 +6,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c \
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/chorus_f32.c \
 ../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.c \
 ../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.c \
 ../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c \
@@ -13,6 +14,7 @@ C_SRCS += \
 
 OBJS += \
 ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.o \
+./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/chorus_f32.o \
 ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.o \
 ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.o \
 ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.o \
@@ -20,6 +22,7 @@ OBJS += \
 
 C_DEPS += \
 ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.d \
+./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/chorus_f32.d \
 ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.d \
 ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.d \
 ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.d \
@@ -33,7 +36,7 @@ Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/%.o Core/Src/_MULTI_FX_EFFECTS/FX_Defi
 clean: clean-Core-2f-Src-2f-_MULTI_FX_EFFECTS-2f-FX_Definitions
 
 clean-Core-2f-Src-2f-_MULTI_FX_EFFECTS-2f-FX_Definitions:
-	-$(RM) ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.su
+	-$(RM) ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/chorus_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/chorus_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/chorus_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/chorus_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.su ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.cyclo ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.d ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.o ./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.su
 
 .PHONY: clean-Core-2f-Src-2f-_MULTI_FX_EFFECTS-2f-FX_Definitions
 

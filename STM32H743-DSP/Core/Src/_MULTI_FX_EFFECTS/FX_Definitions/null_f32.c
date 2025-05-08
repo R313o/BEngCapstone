@@ -10,8 +10,8 @@ static void fx_null_process(FX_HANDLER_t *fx, pipe *p){
 
 static void fx_null_clean(FX_HANDLER_t *fx) {
 
+	// empty clean
 }
-
 
 
 /**
@@ -24,3 +24,9 @@ void fx_null_init(FX_HANDLER_t *fx) {
 	fx->clean = fx_null_clean;
 }
 
+
+float32_t*  fx_null_parameters (FX_HANDLER_t *fx) {
+
+	return NULL;
+
+}

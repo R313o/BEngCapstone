@@ -99,6 +99,11 @@ static void convolution_reverb_f32_process(
     );
 }
 
+float32_t* fx_reverb_parameters(FX_HANDLER_t *fx){
+
+	return NULL;
+}
+
 //-----------------------------------------------------------------------------
 // FX Reverb Initialization
 //-----------------------------------------------------------------------------
@@ -116,6 +121,9 @@ static void convolution_reverb_f32_process(
  */
 void fx_reverb_init(FX_HANDLER_t *fx)
 {
+
+	fx->num_params = 0;
+
     // Allocate FFT-domain memory for reverb: numSegments * FFT_SIZE + space for Handlers
     fx->states[0] = _static_mem_alloc(
         (NUMSEGMENTS_EMT * FFT_SIZE + 2 * NUMSEGMENTS_EMT) * sizeof(float),

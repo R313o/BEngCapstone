@@ -1,3 +1,5 @@
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c:122:6:fx_phaser_clean	1
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c:36:13:phaser_f32_process	4
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c:78:6:fx_phaser_init	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c:125:6:fx_phaser_clean	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c:22:13:phaser_f32_process	4
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c:64:6:phaser_f32_clean	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c:72:6:fx_phaser_init	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.c:117:12:fx_phaser_parameters	1

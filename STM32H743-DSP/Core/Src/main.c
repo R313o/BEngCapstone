@@ -55,9 +55,23 @@ pipe apipe;
 
 FX_HANDLER_t fx_handle_0,
 			 fx_handle_1,
-			 fx_handle_2;
+			 fx_handle_2,
+			 fx_handle_3,
+			 fx_handle_4;
 
-FX_HANDLER_t *nodes[3];
+
+FX_HANDLER_t *nodes[5];
+
+float32_t* (*fx_param[])(FX_HANDLER_t *fx ) =
+{
+     fx_reverb_parameters,
+     fx_cabinet_parameters,
+     fx_supro_parameters,
+	 fx_phaser_parameters,
+	 fx_chorus_parameters,
+	 fx_null_parameters
+};
+
 
 void (*fx_init[])(FX_HANDLER_t *fx ) =
 {
@@ -65,6 +79,7 @@ void (*fx_init[])(FX_HANDLER_t *fx ) =
      fx_cabinet_init,
      fx_supro_init,
 	 fx_phaser_init,
+	 fx_chorus_init,
 	 fx_null_init
 };
 
@@ -179,22 +194,41 @@ int main(void)
   nodes[0] = &fx_handle_0;
   nodes[1] = &fx_handle_1;
   nodes[2] = &fx_handle_2;
+  nodes[3] = &fx_handle_3;
+  nodes[4] = &fx_handle_4;
 
   srand(HAL_GetTick());  // seed the PRNG
 
   pipeInit(&apipe);
 
-  //fx_reverb_init  ( &fx_handle_0 );
-  //fx_cabinet_init ( &fx_handle_1 );
-  //fx_supro_init   ( &fx_handle_2 );
-
-  nodes[0]->type = FX_SUPRO;
-  nodes[1]->type = FX_CABINET;
-  nodes[2]->type = FX_PHASOR;
+  nodes[0]->type = FX_CHORUS;
+  nodes[1]->type = FX_SUPRO;
+  nodes[2]->type = FX_CABINET;
+  nodes[3]->type = FX_PHASOR;
+  nodes[4]->type = FX_NULL;
 
   // function init for loop
-  for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
-		 fx_init[nodes[i]->type](nodes[i]);
+  for (int i = 0 ; i< 5 ; ++i) { // i < MAX_NODES
+	  FX_INIT(nodes[i]);
+  }
+
+  float32_t passed_params[3] = {0.8 , 0.01, 2.0};
+  float32_t phaser_params[3] = {0.5, 0.1, 1.5};
+
+  for( int i = 0; i < nodes[0]->num_params ; ++i) {
+	  if( FX_NULL(nodes[0]) != NULL )
+		  FX_PARAM(nodes[0], i) = passed_params[i];
+  }
+
+  for( int i = 0; i < nodes[0]->num_params ; ++i) {
+	  if( FX_NULL(nodes[3]) != NULL )
+		  FX_PARAM(nodes[3], i) = phaser_params[i];
+  }
+
+  // TESTING IS ASSIGNMENT PARAMETERS TO A NULL EFFECT CAUSES AN ERROR
+  for( int i = 0; i < nodes[0]->num_params ; ++i) {
+	  if( FX_NULL(nodes[4]) != NULL )
+		  FX_PARAM(nodes[4], i) = phaser_params[i];
   }
 
   /* USER CODE END 2 */
@@ -214,7 +248,7 @@ int main(void)
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
 
 
-	   // noise gate
+	    // noise gate
 
 		for (int i = 0; i < BUFFER_SIZE; i++) {
 			sum_of_squares += apipe.processBuffer[i] * apipe.processBuffer[i];
@@ -226,10 +260,25 @@ int main(void)
 
 		sum_of_squares = 0;
 
-		 for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
+
+		  // TESTING IF ASSIGNMENT PARAMETERS TO PARAMETERLESS FX CAUSES AN ERROR
+		  for( int i = 0; i < nodes[1]->num_params ; ++i) {
+			  if( FX_NULL(nodes[1]) != NULL )
+			  FX_PARAM(nodes[1], i) = phaser_params[i];
+		  }
+
+		  // TESTING IS ASSIGNMENT PARAMETERS TO A NULL EFFECT CAUSES AN ERROR
+		  for( int i = 0; i < nodes[4]->num_params ; ++i) {
+			  if( FX_NULL(nodes[4]) != NULL )
+			  FX_PARAM(nodes[4], i) = phaser_params[i];
+		  }
+
+
+
+
+		 for (int i = 0 ; i< 5 ; ++i) { // i < MAX_NODES
 				nodes[i]->process(nodes[i], &apipe);
 		 }
-
 
 	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
 		 arm_copy_f32(apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
@@ -242,16 +291,24 @@ int main(void)
 
 		 volatile GPIO_PinState trig = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3);
 
-		 /*
+
 		 if (trig == GPIO_PIN_SET) {
 
-		     //fx_supro_clean  (&fx_handle_2);
-		     //fx_cabinet_clean(&fx_handle_1);
-		     //fx_reverb_clean (&fx_handle_0);
 
-		     //nodes[i]->clean(nodes[0])
 
-    	    for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
+			  for( int i = 0; i < nodes[0]->num_params ; ++i) {
+				  FX_PARAM(nodes[0], i) = (float)rand()/(float)(RAND_MAX/ 1.0f);
+			  }
+
+			  for( int i = 0; i < nodes[0]->num_params ; ++i) {
+				  FX_PARAM(nodes[3], i) = (float)rand()/(float)(RAND_MAX/ 1.0f) ;
+			  }
+
+
+
+
+            /*
+    	    for (int i = 0 ; i< 5 ; ++i) { // i < MAX_NODES
     	    	  nodes[i]->clean(nodes[i]);
     	    }
 
@@ -261,20 +318,16 @@ int main(void)
 
 		     memset(apipe.processBuffer, 0,  BUFFER_SIZE *sizeof(apipe.processBuffer[0]));
 
-			 volatile uint32_t idx1 = rand() % 3;
-			 volatile uint32_t idx2 = rand() % 3;
-			 volatile uint32_t idx3 = rand() % 3;
+			 volatile uint32_t idx1 = rand() % 6;
 
-		     nodes[idx1]->type = FX_SUPRO;
-		     nodes[idx2]->type = FX_CABINET;
-		     nodes[idx3]->type = FX_SUPRO;
-
-		     // function init for loop
-		    for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
-		   		 fx_init[nodes[i]->type](nodes[i]);
-		    }
+					 // function init for loop
+					for (int i = 0 ; i < 5 ; ++i) { // i < MAX_NODES
+						 nodes[i]->type = ++idx1 % 6;
+						 fx_init[nodes[i]->type](nodes[i]);
+					}
+					*/
 		 }
-*/
+
 
 
 	  }
@@ -542,7 +595,6 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
-
 
 }
 

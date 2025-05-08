@@ -7,21 +7,7 @@
 
 #include "_MULTI_FX.h"
 
-/*
-struct phaser_params {
-	 float32_t wetness;
-	 float32_t depth;
-	 float32_t rate;
-     uint8_t stages;
-} ;
-
-typedef struct {
-    FX_HANDLER_t  base;
-    float32_t    *state;
-    struct phaser_params p ;
-} phaser_f32;
-
-*/
+#define _static_mem_alloc _static_mem_alloc_ram_d2
 
 
 static void phaser_init_f32(phaser_f32 *self, float32_t *state, phaser_params_t *p) {
@@ -75,10 +61,18 @@ static void phaser_f32_process(FX_HANDLER_t *fx, pipe *pipe){
 }
 
 
+void phaser_f32_clean(phaser_f32 *self){
+
+	self->state = NULL;
+	self->params  = NULL;
+
+}
+
+
 void fx_phaser_init(FX_HANDLER_t *fx){
 
-    //p->inDelayed = (float32_t *)malloc(stages * sizeof(float32_t));  //BAD!
-    //p->outDelayed = (float32_t *)malloc(stages * sizeof(float32_t)); //BAD!
+
+	fx->num_params = 3; // 3 params for a chorus effect
 
     // allocate parameter instance
     fx->states[0] = _dctm_static_mem_alloc(
@@ -89,15 +83,16 @@ void fx_phaser_init(FX_HANDLER_t *fx){
     phaser_params_t *p = (phaser_params_t*)fx->states[0];
 
     /*
-     * HARD CODED CONSTANTS FOR NOW
+     * defaults
      */
     p->wetness  = 0.5 ;
-	p->depth 	= 0.5 ;
+	p->depth 	= 0.1 ;
 	p->rate     = 1.5 ;
-	p->stages   = 15   ;
+
+    p->stages   = 15   ;
 
     // Allocate input and output delay state buffers
-	fx->states[1] = _dctm_static_mem_alloc(
+	fx->states[1] = _static_mem_alloc(
         2 * (p->stages) * sizeof(float),   // (bottom half is input, top half is output)
         _Alignof(float)
     );
@@ -109,19 +104,32 @@ void fx_phaser_init(FX_HANDLER_t *fx){
     );
 
     // Initialize phasor effect
-    phaser_init_f32(fx->states[2], fx->states[1], p);
+    phaser_init_f32((phaser_f32 *)fx->states[2], fx->states[1], p);
 
     // Assign processing callback for phaser effect
     fx->process = phaser_f32_process;
     fx->clean =   fx_phaser_clean;
 
+
 }
 
 
+float32_t* fx_phaser_parameters(FX_HANDLER_t *fx){
+
+	phaser_params_t *p = (phaser_params_t*)fx->states[0];
+
+	return p->params;
+
+}
 
 void fx_phaser_clean(FX_HANDLER_t *fx){
 
-	//
+	phaser_f32_clean((phaser_f32 *)fx->states[2]);
+
+    for(int i = 0; i < 8; i++)
+    	fx->states[i] = NULL;
+
+    fx->process = NULL;
 }
 
 /*

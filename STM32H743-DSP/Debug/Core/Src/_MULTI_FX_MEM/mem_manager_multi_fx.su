@@ -1,4 +1,5 @@
-../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:73:6:dctm_pool_init	0	static
-../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:85:6:static_pool_init	0	static
-../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:99:7:_dctm_static_mem_alloc	4	static
-../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:119:7:_static_mem_alloc	4	static
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:87:6:dctm_pool_init	0	static
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:99:6:static_pool_init	8	static
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:116:7:_dctm_static_mem_alloc	4	static
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:136:7:_static_mem_alloc	4	static
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:156:7:_static_mem_alloc_ram_d2	4	static

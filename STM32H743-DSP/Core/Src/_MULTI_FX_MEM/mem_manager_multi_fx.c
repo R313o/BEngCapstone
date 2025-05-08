@@ -53,6 +53,20 @@ static size_t pool_head = 0u;
 
 
 /**
+ * @brief Backing store for static SRAM allocations.
+ *        Holds FFT_SIZEsized buffers.
+ */
+__attribute__((section(".ramd2"), used))
+static uint8_t static_pool_ram_d2[STATIC_POOL_SIZE_RAM_D2];
+
+/**
+ * @brief Current head offset into static_pool.
+ */
+static size_t pool_head_ram_d2 = 0u;
+
+
+
+/**
  * @brief Aligns a value upward to the next multiple of `align`.
  *
  * @param x     The original value (size or offset).
@@ -86,6 +100,9 @@ void static_pool_init()
 {
     pool_head = 0u;
     memset(static_pool, 0, STATIC_POOL_SIZE);
+
+    pool_head_ram_d2 = 0u;
+    memset(static_pool_ram_d2, 0, STATIC_POOL_SIZE_RAM_D2);
 }
 
 /**
@@ -127,6 +144,27 @@ void *_static_mem_alloc(size_t size, size_t align)
     pool_head = off + size;
     return &static_pool[off];
 }
+
+/**
+ * @brief Allocate a block of memory from the static SRAM pool.
+ *
+ * @param size  Number of bytes to allocate.
+ * @param align Required byte alignment for the returned pointer.
+ * @return Pointer to the allocated block within static_pool.
+ *         On overflow, calls _memory_alloc_error_handler().
+ */
+void *_static_mem_alloc_ram_d2(size_t size, size_t align)
+{
+    size_t off = align_up(pool_head_ram_d2, align);
+
+    if (off + size > STATIC_POOL_SIZE_RAM_D2) {
+        _memory_alloc_error_handler();
+    }
+
+    pool_head_ram_d2 = off + size;
+    return &static_pool_ram_d2[off];
+}
+
 
 
 

@@ -1,4 +1,5 @@
 "./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.o"
+"./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/chorus_f32.o"
 "./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/convolution_reverb_f32.o"
 "./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/null_f32.o"
 "./Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/phaser_f32.o"
