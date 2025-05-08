@@ -272,6 +272,27 @@ int main(void)
 		 fx_init[nodes[i]->type](nodes[i]);
   }
 
+  link.nodeCount = 3;
+  link.nodes[0].nodeId = 0;
+  link.nodes[0].effectId = 1;
+  link.nodes[0].numInputs = 1;
+  link.nodes[0].inputs[0] = 2;
+  link.nodes[1].nodeId = 1;
+  link.nodes[1].effectId = 2;
+  link.nodes[1].numInputs = 1;
+  link.nodes[1].inputs[0] = 0;
+  link.nodes[2].nodeId = 2;
+  link.nodes[2].effectId = 0;
+  link.nodes[2].numInputs = 1;
+  link.nodes[2].inputs[0] = 254;
+  link.processOrder[0] = 2;
+  link.processOrder[1] = 0;
+  link.processOrder[2] = 1;
+  link.needsRefresh = 0;
+
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
