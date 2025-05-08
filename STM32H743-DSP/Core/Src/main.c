@@ -66,10 +66,14 @@ FX_HANDLER_t fx_handle_0,
              fx_handle_2,
              fx_handle_3,
              fx_handle_4,
-			 fx_handle_5;
+			 fx_handle_5,
+			 fx_handle_6,
+			 fx_handle_7,
+			 fx_handle_8,
+			 fx_handle_9;
 
 
-FX_HANDLER_t *nodes[6];
+FX_HANDLER_t *nodes[MAX_NODES];
 
 float32_t* (*fx_param[])(FX_HANDLER_t *fx ) =
 {
@@ -92,8 +96,8 @@ void (*fx_init[])(FX_HANDLER_t *fx ) =
      fx_null_init
 };
 
-uint8_t effectOrder[3] = {0,   1, 2};
-uint8_t sourceOrder[3] = {255, 0, 1};
+//uint8_t effectOrder[3] = {0,   1, 2};
+//uint8_t sourceOrder[3] = {255, 0, 1};
 
 
 uint32_t testCounter = 0;
@@ -256,6 +260,11 @@ int main(void)
   nodes[3] = &fx_handle_3;
   nodes[4] = &fx_handle_4;
   nodes[5] = &fx_handle_5;
+  nodes[6] = &fx_handle_6;
+  nodes[7] = &fx_handle_7;
+  nodes[8] = &fx_handle_8;
+  nodes[9] = &fx_handle_9;
+
 
 
   srand(HAL_GetTick());  // seed the PRNG
@@ -269,19 +278,19 @@ int main(void)
   nodes[3]->type = FX_PHASOR;
   nodes[4]->type = FX_CHORUS;
   nodes[5]->type = FX_NULL;*/
+  for (int i = 0 ; i< MAX_NODES ; ++i)
+  {
+	  nodes[i]->type = FX_NULL;
+  }
+  nodes[0]->type = FX_SUPRO;
+  nodes[1]->type = FX_CABINET;
 
-  	nodes[0]->type = FX_SUPRO;
-    nodes[1]->type = FX_CABINET;
-    nodes[2]->type = FX_NULL;
-    nodes[3]->type = FX_NULL;
-    nodes[4]->type = FX_NULL;
-    nodes[5]->type = FX_NULL;
 
   // function init for loop
-  for (int i = 0 ; i< 6 ; ++i) { // i < MAX_NODES
+  for (int i = 0 ; i< MAX_NODES ; ++i) { // i < MAX_NODES
 		 fx_init[nodes[i]->type](nodes[i]);
   }
-
+/*
   float32_t passed_params[3] = {0.8 , 0.01, 2.0};
    float32_t phaser_params[3] = {0.5, 0.1, 1.5};
 
@@ -293,7 +302,7 @@ int main(void)
    for( int i = 0; i < nodes[3]->num_params ; ++i) {
  	  if( FX_NULL(nodes[3]) != NULL )
  		  FX_PARAM(nodes[3], i) = phaser_params[i];
-   }
+   }*/
 
 
 
@@ -307,10 +316,23 @@ int main(void)
   link.nodes[1].effectId = 1;
   link.nodes[1].numInputs = 1;
   link.nodes[1].inputs[0] = 0;
+
   link.nodes[2].nodeId = 2;
   link.nodes[2].effectId = 5;
   link.nodes[2].numInputs = 1;
   link.nodes[2].inputs[0] = 1;
+  link.nodes[3].nodeId = 3;
+  link.nodes[3].effectId = 5;
+  link.nodes[3].numInputs = 1;
+  link.nodes[3].inputs[0] = 2;
+  link.nodes[4].nodeId = 4;
+  link.nodes[4].effectId = 5;
+  link.nodes[4].numInputs = 1;
+  link.nodes[4].inputs[0] = 3;
+  link.nodes[5].nodeId = 5;
+  link.nodes[5].effectId = 5;
+  link.nodes[5].numInputs = 1;
+  link.nodes[5].inputs[0] = 4;
   link.processOrder[0] = 0;
   link.processOrder[1] = 1;
   link.processOrder[2] = 2;
@@ -347,7 +369,7 @@ int main(void)
 		  }*/
 		if(!link.needsRefresh)
 		 {
-			 for (int i = 0 ; i < link.nodeCount ; ++i) // i < MAX_NODES
+			 for (int i = 0 ; i < link.nodeCount ; i++) // i < MAX_NODES
 			 {
 				apipe.primeProcess(&apipe, link.nodes[link.processOrder[i]].inputs[0], link.processOrder[i]);
 
@@ -379,14 +401,14 @@ int main(void)
 
 		 apipe.bufferReady = false;
 
-		 volatile GPIO_PinState trig = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3);
+		// volatile GPIO_PinState trig = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3);
 
 		 // on rising edge (HIGH && previously armed), do your clean
-		 if (trig == GPIO_PIN_SET) {
+		/* if (trig == GPIO_PIN_SET) {
 
 		     //nodes[i]->clean(nodes[0])
 
-    	   /* for (int i = 0 ; i< link.nodeCount  ; ++i) { // i < MAX_NODES
+    	    for (int i = 0 ; i< link.nodeCount  ; ++i) { // i < MAX_NODES
     	    	  nodes[i]->clean(nodes[i]);
     	    }
 
@@ -412,7 +434,7 @@ int main(void)
 
 		 }*/
 
-		 if (link.needsRefresh)
+		 if (link.needsRefresh == 1)
 		 {
 
 			 link.needsRefresh = 0;
@@ -426,7 +448,7 @@ int main(void)
 			 dctm_pool_init();
 			 static_pool_init();
 
-			 for (int i = 0 ; i< link.nodeCount  ; i++)
+			 for (int i = 0 ; i < 6  ; i++)
 			 {
 
 

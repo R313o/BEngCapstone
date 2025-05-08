@@ -98,7 +98,7 @@ static void pipe_setIO(pipe *self, uint16_t sourceBuffer, uint16_t destinationBu
 static void pipe_primeProcess(pipe *self, uint16_t sourceBuffer, uint16_t workingBuffer)
 {
 	self->processBuffer = self->nodeBuffer[workingBuffer];
-	if (sourceBuffer < 3)
+	if (sourceBuffer <= MAX_NODES)
 	{
 		arm_copy_f32(self->nodeBuffer[sourceBuffer], self->processBuffer, BUFFER_SIZE);
 	}

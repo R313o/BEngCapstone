@@ -27,6 +27,11 @@ void readUART(dataLink* link, char c)
         while ((token = strtok_r(rest, ";", &rest))) {
             if (token[0] == 'N')
             {
+            	if(atoi(&token[1]) == 0)
+            	{
+            		link->needsRefresh = 2;
+            		initDataLink(link);
+            	}
                 nodeId = atoi(&token[1]);
             }
             else if (token[0] == 'E')
@@ -55,6 +60,10 @@ void readUART(dataLink* link, char c)
 					inputs[i++] = (uint8_t) strtoul(p, &p, 10);
 					if (*p == ',') p++;
                 }
+            }
+        	else if (token[0] == 'T')
+            {
+        		link->needsRefresh = 1;
             }
         }
 
@@ -90,7 +99,7 @@ void readUART(dataLink* link, char c)
         link->commandBuffer[link->commandIndex++] = c;
     }
 
-    link->needsRefresh = 1;
+    //link->needsRefresh = 1;
 }
 
 size_t topoSort(dataLink *link, uint8_t *result)
@@ -145,7 +154,7 @@ void initDataLink(dataLink* link)
         link->nodes[i].nodeId = 255;
         link->nodes[i].effectId = 5;
         link->nodes[i].numInputs = 0;
-        link->processOrder[i] = 255;
+        link->processOrder[i] = i;
 
         for (int j = 0; j < NUM_PARAMETERS; j++)
         {

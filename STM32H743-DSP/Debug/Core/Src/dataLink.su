@@ -1,3 +1,3 @@
 ../Core/Src/dataLink.c:11:6:readUART	56	static
-../Core/Src/dataLink.c:96:8:topoSort	160	static
-../Core/Src/dataLink.c:132:6:initDataLink	4	static
+../Core/Src/dataLink.c:105:8:topoSort	160	static
+../Core/Src/dataLink.c:141:6:initDataLink	4	static
