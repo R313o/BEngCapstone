@@ -263,32 +263,62 @@ int main(void)
   pipeInit(&apipe);
 
 
-  nodes[0]->type = FX_SUPRO;
+  /*nodes[0]->type = FX_REVERB;
   nodes[1]->type = FX_CABINET;
-  nodes[2]->type = FX_REVERB;
+  nodes[2]->type = FX_SUPRO;
+  nodes[3]->type = FX_PHASOR;
+  nodes[4]->type = FX_CHORUS;
+  nodes[5]->type = FX_NULL;*/
+
+  	nodes[0]->type = FX_SUPRO;
+    nodes[1]->type = FX_CABINET;
+    nodes[2]->type = FX_NULL;
+    nodes[3]->type = FX_NULL;
+    nodes[4]->type = FX_NULL;
+    nodes[5]->type = FX_NULL;
 
   // function init for loop
-  for (int i = 0 ; i< 3 ; ++i) { // i < MAX_NODES
+  for (int i = 0 ; i< 6 ; ++i) { // i < MAX_NODES
 		 fx_init[nodes[i]->type](nodes[i]);
   }
 
-  link.nodeCount = 3;
+  float32_t passed_params[3] = {0.8 , 0.01, 2.0};
+   float32_t phaser_params[3] = {0.5, 0.1, 1.5};
+
+   for( int i = 0; i < nodes[4]->num_params ; ++i) {
+ 	  if( FX_NULL(nodes[4]) != NULL )
+ 		  FX_PARAM(nodes[4], i) = passed_params[i];
+   }
+
+   for( int i = 0; i < nodes[3]->num_params ; ++i) {
+ 	  if( FX_NULL(nodes[3]) != NULL )
+ 		  FX_PARAM(nodes[3], i) = phaser_params[i];
+   }
+
+
+
+
+  link.nodeCount = 2;
   link.nodes[0].nodeId = 0;
-  link.nodes[0].effectId = 1;
+  link.nodes[0].effectId = 2;
   link.nodes[0].numInputs = 1;
-  link.nodes[0].inputs[0] = 2;
+  link.nodes[0].inputs[0] = 254;
   link.nodes[1].nodeId = 1;
-  link.nodes[1].effectId = 2;
+  link.nodes[1].effectId = 1;
   link.nodes[1].numInputs = 1;
   link.nodes[1].inputs[0] = 0;
   link.nodes[2].nodeId = 2;
-  link.nodes[2].effectId = 0;
+  link.nodes[2].effectId = 5;
   link.nodes[2].numInputs = 1;
-  link.nodes[2].inputs[0] = 254;
-  link.processOrder[0] = 2;
-  link.processOrder[1] = 0;
-  link.processOrder[2] = 1;
+  link.nodes[2].inputs[0] = 1;
+  link.processOrder[0] = 0;
+  link.processOrder[1] = 1;
+  link.processOrder[2] = 2;
+  link.processOrder[3] = 3;
+  link.processOrder[4] = 4;
+  link.processOrder[5] = 5;
   link.needsRefresh = 0;
+
 
 
 
@@ -315,7 +345,7 @@ int main(void)
 					   FX_PARAM(nodes[j], i) = link.nodes[j].params[i];
 			  }
 		  }*/
-		 if(!link.needsRefresh)
+		if(!link.needsRefresh)
 		 {
 			 for (int i = 0 ; i < link.nodeCount ; ++i) // i < MAX_NODES
 			 {
@@ -329,8 +359,14 @@ int main(void)
 				apipe.primeProcess(&apipe, sourceOrder[i], effectOrder[i]);
 
 				nodes[effectOrder[i]]->process(nodes[effectOrder[i]], &apipe);
-			 }*/
+			 }
+		 /*for (int i = 0 ; i < 6 ; i++) // i < MAX_NODES
+		 {
+			//apipe.primeProcess(&apipe, link.nodes[link.processOrder[i]].inputs[0], link.processOrder[i]);
 
+			nodes[link.nodes[link.processOrder[i]].effectId]->process(nodes[link.nodes[link.processOrder[i]].effectId], &apipe);
+
+		 }*/
 
 
 
@@ -350,7 +386,7 @@ int main(void)
 
 		     //nodes[i]->clean(nodes[0])
 
-    	    for (int i = 0 ; i< link.nodeCount  ; ++i) { // i < MAX_NODES
+    	   /* for (int i = 0 ; i< link.nodeCount  ; ++i) { // i < MAX_NODES
     	    	  nodes[i]->clean(nodes[i]);
     	    }
 
@@ -369,12 +405,12 @@ int main(void)
 		     nodes[idx3]->type = FX_SUPRO;
 
 		     // function init for loop
-		    for (int i = 0 ; i< link.nodeCount  ; ++i) { // i < MAX_NODES
+		    for (int i = 0 ; i < link.nodeCount  ; i++) { // i < MAX_NODES
 		   		 fx_init[nodes[i]->type](nodes[i]);
 		    }
 
 
-		 }
+		 }*/
 
 		 if (link.needsRefresh)
 		 {
@@ -383,7 +419,7 @@ int main(void)
 
 			 topoSort(&link, order);
 
-			 for (int i = 0 ; i< link.nodeCount  ; i++)
+			 for (int i = 0 ; i< 6 ; i++)
 			 { // i < MAX_NODES
 				 nodes[i]->clean(nodes[i]);
 			 }
@@ -394,30 +430,6 @@ int main(void)
 			 {
 
 
-				 /*if (link.nodes[i].effectId == 0)
-				 {
-					 nodes[i]->type = FX_REVERB;
-				 }
-				 else if (link.nodes[i].effectId == 1)
-				 {
-					 nodes[i]->type = FX_CABINET;
-				 }
-				 else if (link.nodes[i].effectId == 2)
-				 {
-					 nodes[i]->type = FX_SUPRO;
-				 }
-				 else if (link.nodes[i].effectId == 3)
-				 {
-					 nodes[i]->type = FX_PHASOR;
-				 }
-				 else if (link.nodes[i].effectId == 4)
-				 {
-					 nodes[i]->type = FX_CHORUS;
-				 }
-				 else if (link.nodes[i].effectId == 5)
-				 {
-					 nodes[i]->type = FX_NULL;
-				 }*/
 				 nodes[i]->type = link.nodes[i].effectId;
 
 				 fx_init[nodes[i]->type](nodes[i]);

@@ -22,6 +22,7 @@ void fx_null_init(FX_HANDLER_t *fx) {
 
 	fx->process = fx_null_process;
 	fx->clean = fx_null_clean;
+
 }
 
 

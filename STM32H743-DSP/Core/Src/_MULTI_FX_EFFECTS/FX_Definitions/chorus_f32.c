@@ -160,5 +160,6 @@ void fx_chorus_clean(FX_HANDLER_t *fx){
     	fx->states[i] = NULL;
 
     fx->process = NULL;
+    fx->clean = NULL;
 }
 

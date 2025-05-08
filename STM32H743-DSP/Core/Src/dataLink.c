@@ -18,7 +18,7 @@ void readUART(dataLink* link, char c)
         char* rest = link->commandBuffer;
 
         uint8_t nodeId = 255;
-        uint8_t effectId = 255;
+        uint8_t effectId = 5;
         uint8_t params[NUM_PARAMETERS];
         uint8_t inputs[MAX_INPUTS];
         memset(params, 255, sizeof params);   /* all 255, not just first */
@@ -143,7 +143,7 @@ void initDataLink(dataLink* link)
     {
 
         link->nodes[i].nodeId = 255;
-        link->nodes[i].effectId = 255;
+        link->nodes[i].effectId = 5;
         link->nodes[i].numInputs = 0;
         link->processOrder[i] = 255;
 

@@ -85,8 +85,8 @@ void fx_phaser_init(FX_HANDLER_t *fx){
     /*
      * defaults
      */
-    p->wetness  = 0.5 ;
-	p->depth 	= 0.1 ;
+    p->wetness  = 1 ;
+	p->depth 	= 0.5 ;
 	p->rate     = 1.5 ;
 
     p->stages   = 15   ;
@@ -130,6 +130,7 @@ void fx_phaser_clean(FX_HANDLER_t *fx){
     	fx->states[i] = NULL;
 
     fx->process = NULL;
+    fx->clean = NULL;
 }
 
 /*
