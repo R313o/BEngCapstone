@@ -111,6 +111,10 @@ void fx_chorus_init(FX_HANDLER_t *fx){
         _Alignof(chorus_params_t)
     );
 
+  	if(fx->states[0] == NULL){
+  		fx_chorus_clean(fx);
+    	    return;
+   	}
     chorus_params_t *c = (chorus_params_t*)fx->states[0];
 
     /*
@@ -142,6 +146,14 @@ void fx_chorus_init(FX_HANDLER_t *fx){
         sizeof(chorus_f32),
         _Alignof(chorus_f32)
     );
+
+    // return if mem allocation fails
+    for(int i = 0 ; i < 3 ; ++i){
+    	if(fx->states[i] == NULL){
+    		fx_chorus_clean(fx);
+    	      return;
+    	}
+    }
 
     // Initialize chorus effect
     chorus_init_f32((chorus_f32* )fx->states[2], fx->states[1], c);

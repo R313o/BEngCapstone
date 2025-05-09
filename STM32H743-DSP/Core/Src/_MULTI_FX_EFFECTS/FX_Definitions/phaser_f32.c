@@ -80,6 +80,11 @@ void fx_phaser_init(FX_HANDLER_t *fx){
         _Alignof(phaser_params_t)
     );
 
+   	if(fx->states[0] == NULL){
+    		fx_phaser_clean(fx);
+    	    return;
+   	}
+
     phaser_params_t *p = (phaser_params_t*)fx->states[0];
 
     /*
@@ -102,6 +107,15 @@ void fx_phaser_init(FX_HANDLER_t *fx){
         sizeof(phaser_f32),
         _Alignof(phaser_f32)
     );
+
+    // return if mem allocation fails
+    for(int i = 0 ; i < 3 ; ++i){
+    	if(fx->states[i] == NULL){
+    		fx_phaser_clean(fx);
+    	      return;
+    	}
+    }
+
 
     // Initialize phasor effect
     phaser_init_f32((phaser_f32 *)fx->states[2], fx->states[1], p);

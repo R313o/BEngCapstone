@@ -132,6 +132,9 @@ volatile unsigned long now = 0;
 volatile float32_t noise_thresh = 0.003;
 volatile float32_t sum_of_squares = 0;
 
+volatile  uint32_t clipLedDeadline = 0;   // “turn off” time in ms
+volatile  bool     clipLedActive   = false;
+
 /* USER CODE END 0 */
 
 /**
@@ -201,10 +204,10 @@ int main(void)
 
   pipeInit(&apipe);
 
-  nodes[0]->type = FX_CHORUS;
-  nodes[1]->type = FX_SUPRO;
-  nodes[2]->type = FX_CABINET;
-  nodes[3]->type = FX_PHASOR;
+  nodes[0]->type = FX_NULL;
+  nodes[1]->type = FX_NULL;
+  nodes[2]->type = FX_SUPRO;
+  nodes[3]->type = FX_CABINET;
   nodes[4]->type = FX_NULL;
 
   // function init for loop
@@ -252,6 +255,14 @@ int main(void)
 
 		 for (int i = 0; i < BUFFER_SIZE; i++) {
 			sum_of_squares += apipe.processBuffer[i] * apipe.processBuffer[i];
+
+			    if (apipe.processBuffer[i] >= 0.999 || apipe.processBuffer[i] <= -0.999) {
+			        if (!clipLedActive) {              // LED currently OFF
+			            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET); // LED ON
+			            clipLedActive   = true;
+			            clipLedDeadline = HAL_GetTick() + 1000UL;  // now + 1000 ms
+			        }
+			    }
 		 }
 
 		 if (( sum_of_squares / BUFFER_SIZE) < noise_thresh){
@@ -265,7 +276,7 @@ int main(void)
 				nodes[i]->process(nodes[i], &apipe);
 		 }
 
-	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
+	     //arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
 		 arm_copy_f32(apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
 
 
@@ -274,45 +285,45 @@ int main(void)
 
 		 apipe.bufferReady = false;
 
+		 /*
 		 volatile GPIO_PinState trig = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3);
 
 
-		 if (trig == GPIO_PIN_SET) {
+			 	if (trig == GPIO_PIN_SET) {
+
+				for (int i = 0 ; i< 5 ; ++i) { // i < MAX_NODES
+					  nodes[i]->clean(nodes[i]);
+				}
+				 dctm_pool_init();
+				 static_pool_init();
+
+				 memset(apipe.processBuffer, 0,  BUFFER_SIZE *sizeof(apipe.processBuffer[0]));
+
+				 volatile uint32_t idx1 = rand() % 6;
+
+				 // random effects assignment
+				 for (int i = 0 ; i < 5 ; ++i) { // i < MAX_NODES
+							 nodes[i]->type = ++idx1 % 6;
+							 fx_init[nodes[i]->type](nodes[i]);
+					 }
+				 // random parameter assignment
+				 for(int j = 0; j < 5 ; ++j ) {
+					 for( int i = 0; i < nodes[j]->num_params ; ++i) {
+						 if( FX_NULL(nodes[j]) != NULL )
+							  FX_PARAM(nodes[j], i) = (float)rand()/(float)(RAND_MAX/ 1.0f);
+						}
+				 	 }
+			 	 }
+		  */
+
+		if (clipLedActive && (int32_t)(HAL_GetTick() - clipLedDeadline) >= 0) {
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   // LED OFF
+			clipLedActive = false;
+		}
 
 
 
-    	    for (int i = 0 ; i< 5 ; ++i) { // i < MAX_NODES
-    	    	  nodes[i]->clean(nodes[i]);
-    	    }
-
-		     dctm_pool_init();
-		     static_pool_init();
-
-		     memset(apipe.processBuffer, 0,  BUFFER_SIZE *sizeof(apipe.processBuffer[0]));
-
-			 volatile uint32_t idx1 = rand() % 6;
-
-			 // random effects assignment
-			 for (int i = 0 ; i < 5 ; ++i) { // i < MAX_NODES
-						 nodes[i]->type = ++idx1 % 6;
-						 fx_init[nodes[i]->type](nodes[i]);
-				 }
-
-			 // random parameter assignment
-			 for(int j = 0; j < 5 ; ++j ) {
-				 for( int i = 0; i < nodes[j]->num_params ; ++i) {
-					 if( FX_NULL(nodes[j]) != NULL )
-						  FX_PARAM(nodes[j], i) = (float)rand()/(float)(RAND_MAX/ 1.0f);
-					}
-			 }
-
-
-
-		 }
-
-
-
-	  }
+	  } // if end
 	  else
 	  {
 	      __WFI();

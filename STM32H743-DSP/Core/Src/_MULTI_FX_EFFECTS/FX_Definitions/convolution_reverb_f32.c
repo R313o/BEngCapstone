@@ -97,7 +97,11 @@ static void convolution_reverb_f32_process(
         (fir_t     *)self->states[2],
         (float32_t *)self->states[1]
     );
+
+    arm_scale_f32(p->processBuffer, 1.0f/2, p->processBuffer, BUFFER_SIZE);
 }
+
+
 
 float32_t* fx_reverb_parameters(FX_HANDLER_t *fx){
 
@@ -147,6 +151,16 @@ void fx_reverb_init(FX_HANDLER_t *fx)
         sizeof(convolution_reverb_f32),
         _Alignof(convolution_reverb_f32)
     );
+
+
+    // return if mem allocation fails
+    for(int i = 0 ; i < 4 ; ++i){
+    	if(fx->states[i] == NULL){
+    		fx_reverb_clean(fx);
+    	      return;
+    	}
+    }
+
 
     // Initialize FIR handler with FFT memory
     fir_emt_140_dark_3_f32_init(
