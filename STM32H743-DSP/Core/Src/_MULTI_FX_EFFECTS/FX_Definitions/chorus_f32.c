@@ -18,9 +18,9 @@ static void chorus_f32_process(FX_HANDLER_t *fx, pipe *p){
 	float32_t G_ff =  0.8;
 	float32_t G_fb  = 0.5;
 
-	c->params->wetness = c->params->params[0];
-	c->params->depth = c->params->params[1];
-	c->params->rate = c->params->params[2];
+	c->params->wetness = 0.8; //c->params->params[0];
+	c->params->depth = 0.1 ; //c->params->params[1];
+	c->params->rate = 2.0; //c->params->params[2];
 
     uint32_t size1 = BUFFER_SIZE * 5;
     uint32_t size2 = (uint32_t)(ceilf((float32_t)c->params->baseDelay * (1.0f + c->params->depth)) * 2);
@@ -121,7 +121,7 @@ void fx_chorus_init(FX_HANDLER_t *fx){
      * defaults
      */
     c->wetness     = 0.8  ;
-	c->depth 	   = 0.01  ;
+	c->depth 	   = 0.1  ;
 	c->rate        = 2.0  ;
 	c->baseDelay   = 1000 ;
 

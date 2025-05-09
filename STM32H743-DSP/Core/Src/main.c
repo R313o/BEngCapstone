@@ -110,7 +110,7 @@ uint8_t uartRxIndex = 0;
 
 arm_rfft_fast_instance_f32 fft;
 
-volatile float32_t noise_thresh = 0.003;
+volatile float32_t noise_thresh = 0.0005;
 volatile float32_t sum_of_squares = 0;
 
 volatile  uint32_t clipLedDeadline = 0;   // “turn off” time in ms
@@ -288,8 +288,6 @@ int main(void)
   {
 	  nodes[i]->type = FX_NULL;
   }
-  nodes[0]->type = FX_SUPRO;
-  nodes[1]->type = FX_CABINET;
 
 
   // function init for loop
@@ -346,8 +344,6 @@ int main(void)
   link.processOrder[4] = 4;
   link.processOrder[5] = 5;
   link.needsRefresh = 0;
-
-
 
 
 

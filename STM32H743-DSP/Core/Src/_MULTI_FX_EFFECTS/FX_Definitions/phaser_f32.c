@@ -90,9 +90,9 @@ void fx_phaser_init(FX_HANDLER_t *fx){
     /*
      * defaults
      */
-    p->wetness  = 0.5 ;
-	p->depth 	= 0.1 ;
-	p->rate     = 1.5 ;
+    p->wetness  = 0.9 ;
+	p->depth 	= 0.8 ;
+	p->rate     = 2.5 ;
 
     p->stages   = 15   ;
 
