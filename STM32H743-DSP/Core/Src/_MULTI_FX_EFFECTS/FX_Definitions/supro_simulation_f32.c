@@ -243,7 +243,7 @@ static void supro_simulation_f32_process(FX_HANDLER_t *fx, pipe *p)
     fir_t     *firs    = (fir_t *)fx->states[2];
 
     // 1) Dry signal attenuation
-    arm_scale_f32(p->processBuffer, 0.1f, p->processBuffer, BUFFER_SIZE);
+    arm_scale_f32(p->processBuffer, 0.05f, p->processBuffer, BUFFER_SIZE);
 
     // 2) First convolution reverb
     partitioned_fir_convolution_fft(p, &firs[0], &overlap[0]);
@@ -261,7 +261,8 @@ static void supro_simulation_f32_process(FX_HANDLER_t *fx, pipe *p)
     partitioned_fir_convolution_fft(p, &firs[2], &overlap[2 * BUFFER_SIZE]);
 
     // 7) Final output scaling
-    arm_scale_f32(p->processBuffer, 0.005f, p->processBuffer, BUFFER_SIZE);
+    arm_scale_f32(p->processBuffer, 0.005f * 1/13, p->processBuffer, BUFFER_SIZE);
+
 }
 
 /**

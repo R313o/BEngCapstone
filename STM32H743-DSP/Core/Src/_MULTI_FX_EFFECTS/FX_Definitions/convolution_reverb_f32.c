@@ -97,7 +97,11 @@ static void convolution_reverb_f32_process(
         (fir_t     *)self->states[2],
         (float32_t *)self->states[1]
     );
+
+    arm_scale_f32(p->processBuffer, 1.0f/2, p->processBuffer, BUFFER_SIZE);
 }
+
+
 
 float32_t* fx_reverb_parameters(FX_HANDLER_t *fx){
 

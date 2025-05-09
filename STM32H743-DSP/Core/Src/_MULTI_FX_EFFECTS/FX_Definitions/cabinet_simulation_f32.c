@@ -50,6 +50,8 @@ static void cabinet_simulation_f32_process(FX_HANDLER_t *self, pipe *p)
         (fir_t *)self->states[2],
         (float32_t *)self->states[1]
     );
+
+    arm_scale_f32(p->processBuffer, 1.0f/5.2f, p->processBuffer, BUFFER_SIZE);
 }
 
 /**

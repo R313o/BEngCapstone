@@ -112,6 +112,12 @@ uint8_t overflowFlag = 0;
 
 arm_rfft_fast_instance_f32 fft;
 
+volatile float32_t noise_thresh = 0.003;
+volatile float32_t sum_of_squares = 0;
+
+volatile  uint32_t clipLedDeadline = 0;   // “turn off” time in ms
+volatile  bool     clipLedActive   = false;
+
 static 	 uint16_t  adcInput[BUFFER_SIZE  * 2];
 static	 uint16_t  dacOutput[BUFFER_SIZE * 2];
 
@@ -359,7 +365,28 @@ int main(void)
 	  if (apipe.bufferReady)
 	  {
 		 //apipe.updateDelayBuffer(&apipe);
-		 apipe.loadProcess(&apipe);
+
+
+         for (int i = 0; i < BUFFER_SIZE; i++) {
+            sum_of_squares += apipe.inBuffer[i] * apipe.inBuffer[i];
+
+                if (apipe.inBuffer[i] >= 0.999 || apipe.inBuffer[i] <= -0.999) {
+                    if (!clipLedActive) {              // LED currently OFF
+                        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET); // LED ON
+                        clipLedActive   = true;
+                        clipLedDeadline = HAL_GetTick() + 1000UL;  // now + 1000 ms
+                    }
+                }
+         }
+
+         if (( sum_of_squares / BUFFER_SIZE) < noise_thresh){
+             arm_fill_f32(0.0f, apipe.inBuffer, BUFFER_SIZE);
+         }
+
+         apipe.loadProcess(&apipe);
+
+         sum_of_squares = 0;
+
 
 		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
 
@@ -394,7 +421,6 @@ int main(void)
 
 
 
-	     arm_scale_f32(apipe.processBuffer, 0.01, apipe.processBuffer, BUFFER_SIZE);
 		 arm_copy_f32(apipe.processBuffer, apipe.outBuffer, BUFFER_SIZE);
 
 
@@ -480,7 +506,10 @@ int main(void)
 			 }
 
 
-
+		        if (clipLedActive && (int32_t)(HAL_GetTick() - clipLedDeadline) >= 0) {
+		            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   // LED OFF
+		            clipLedActive = false;
+		        }
 
 
 		 }
