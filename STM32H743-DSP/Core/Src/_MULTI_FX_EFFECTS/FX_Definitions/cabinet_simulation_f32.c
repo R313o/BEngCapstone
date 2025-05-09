@@ -50,6 +50,8 @@ static void cabinet_simulation_f32_process(FX_HANDLER_t *self, pipe *p)
         (fir_t *)self->states[2],
         (float32_t *)self->states[1]
     );
+
+    arm_scale_f32(p->processBuffer, 1.0f/5.2f, p->processBuffer, BUFFER_SIZE);
 }
 
 /**
@@ -123,6 +125,14 @@ void fx_cabinet_init(FX_HANDLER_t *fx)
         _Alignof(cabinet_simulation_f32)
     );
 
+    // return if mem allocation fails
+    for(int i = 0 ; i < 4 ; ++i){
+    	if(fx->states[i] == NULL){
+    	      fx_cabinet_clean(fx);
+    	      return;
+    	}
+    }
+
     // Initialize FIR filter with FFT memory
     fir_OD_M212_VINT_DYN_201_P05_00_f32_init(
         (fir_t *)fx->states[2],
@@ -152,6 +162,5 @@ void fx_cabinet_clean(FX_HANDLER_t *fx)
     	fx->states[i] = NULL;
 
     fx->process = NULL;
-    fx->clean = NULL;
 
 }
