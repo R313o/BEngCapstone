@@ -1,0 +1,7 @@
+../Core/Src/process.c:10:20:addEffect	2
+../Core/Src/process.c:13:20:subtractEffect	2
+../Core/Src/process.c:16:20:multiplyEffect	2
+../Core/Src/process.c:19:20:divideEffect	3
+../Core/Src/process.c:22:13:mixEffect	4
+../Core/Src/process.c:36:13:runGraph	15
+../Core/Src/process.c:72:6:processNetwork	6

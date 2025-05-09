@@ -148,6 +148,16 @@ void fx_reverb_init(FX_HANDLER_t *fx)
         _Alignof(convolution_reverb_f32)
     );
 
+
+    // return if mem allocation fails
+    for(int i = 0 ; i < 4 ; ++i){
+    	if(fx->states[i] == NULL){
+    		fx_reverb_clean(fx);
+    	      return;
+    	}
+    }
+
+
     // Initialize FIR handler with FFT memory
     fir_emt_140_dark_3_f32_init(
         (fir_t *)fx->states[2],
@@ -177,6 +187,5 @@ void fx_reverb_clean(FX_HANDLER_t *fx)
     	fx->states[i] = NULL;
 
     fx->process = NULL;
-    fx->clean = NULL;
 
 }

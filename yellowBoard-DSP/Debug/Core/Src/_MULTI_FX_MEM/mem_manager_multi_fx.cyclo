@@ -1,0 +1,6 @@
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:62:22:align_up	1
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:73:6:dctm_pool_init	1
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:85:6:static_pool_init	1
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:99:7:_dctm_static_mem_alloc	2
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:119:7:_static_mem_alloc	2
+../Core/Src/_MULTI_FX_MEM/mem_manager_multi_fx.c:139:13:_memory_alloc_error_handler	1

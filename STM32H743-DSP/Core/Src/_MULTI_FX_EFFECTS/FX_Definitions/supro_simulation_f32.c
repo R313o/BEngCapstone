@@ -124,6 +124,14 @@ void fx_supro_init(FX_HANDLER_t *fx)
         3 * sizeof(fir_t), _Alignof(fir_t)
     );
 
+    // return if mem allocation fails
+    for(int i = 0 ; i < 3 ; ++i){
+    	if(fx->states[i] == NULL){
+    		fx_supro_clean(fx);
+    	      return;
+    	}
+    }
+
     // Initialize each FIR with its slice of the FFT buffer
     {
         float32_t *fftBuf = (float32_t *)fx->states[1];
@@ -141,6 +149,15 @@ void fx_supro_init(FX_HANDLER_t *fx)
     fx->states[5] = _static_mem_alloc(sizeof(arm_biquad_casd_df1_inst_f32), _Alignof(arm_biquad_casd_df1_inst_f32));
     fx->states[6] = _static_mem_alloc(sizeof(arm_biquad_casd_df1_inst_f32), _Alignof(arm_biquad_casd_df1_inst_f32));
 
+    // return if mem allocation fails
+    for(int i = 3 ; i < 7 ; ++i){
+    	if(fx->states[i] == NULL){
+    		fx_supro_clean(fx);
+    	      return;
+    	}
+    }
+
+
     // Initialize filters
     arm_biquad_cascade_df1_init_f32((arm_biquad_casd_df1_inst_f32 *)fx->states[5],
                                    LP_STAGES, (float32_t *)LP5Hz_Biquad,
@@ -157,6 +174,13 @@ void fx_supro_init(FX_HANDLER_t *fx)
         supro_simulation_init_f32((supro_simulation_f32 *)fx->states[7],
                                   dtcmState, &firs[0], &firs[1], &firs[2]);
     }
+
+
+	if(fx->states[7] == NULL){
+		fx_supro_clean(fx);
+		  return;
+	}
+
 
     fx->process = supro_simulation_f32_process;
     fx->clean = fx_reverb_clean;
@@ -178,7 +202,6 @@ void fx_supro_clean(FX_HANDLER_t *fx)
     	fx->states[i] = NULL;
 
     fx->process = NULL;
-    fx->clean = NULL;
 
 }
 

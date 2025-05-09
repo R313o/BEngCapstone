@@ -1,4 +1,4 @@
 ../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:44:13:cabinet_simulation_f32_process	1
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:145:6:fx_cabinet_clean	1
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:81:12:fx_cabinet_parameters	1
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:96:6:fx_cabinet_init	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:155:6:fx_cabinet_clean	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:83:12:fx_cabinet_parameters	1
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:98:6:fx_cabinet_init	5

@@ -106,6 +106,8 @@ SET_RAM_D3 uint8_t order[MAX_NODES];
 
 uint8_t uartRxIndex = 0;
 
+uint8_t overflowFlag = 0;
+
 
 
 arm_rfft_fast_instance_f32 fft;
@@ -382,7 +384,7 @@ int main(void)
 
 				nodes[effectOrder[i]]->process(nodes[effectOrder[i]], &apipe);
 			 }
-		 /*for (int i = 0 ; i < 6 ; i++) // i < MAX_NODES
+		 for (int i = 0 ; i < 6 ; i++) // i < MAX_NODES
 		 {
 			//apipe.primeProcess(&apipe, link.nodes[link.processOrder[i]].inputs[0], link.processOrder[i]);
 
@@ -437,7 +439,7 @@ int main(void)
 		 if (link.needsRefresh == 1)
 		 {
 
-			 link.needsRefresh = 0;
+
 
 			 topoSort(&link, order);
 
@@ -445,8 +447,12 @@ int main(void)
 			 { // i < MAX_NODES
 				 nodes[i]->clean(nodes[i]);
 			 }
+
+
 			 dctm_pool_init();
 			 static_pool_init();
+
+			 overflowFlag = 0;
 
 			 for (int i = 0 ; i < 6  ; i++)
 			 {
@@ -455,6 +461,21 @@ int main(void)
 				 nodes[i]->type = link.nodes[i].effectId;
 
 				 fx_init[nodes[i]->type](nodes[i]);
+
+				 //
+
+			 }
+			 if (!overflowFlag)
+			 {
+				 link.needsRefresh = 0;
+				 uint8_t message[5] = {'B','O','O','P','\n'};
+				 				 HAL_UART_Transmit_IT(&huart2, message, 5);
+			 }
+			 else
+			 {
+				 link.needsRefresh = 2;
+				 uint8_t message[5] = {'P','O','O','P','\n'};
+				 HAL_UART_Transmit_IT(&huart2, message, 5);
 
 			 }
 

@@ -123,6 +123,14 @@ void fx_cabinet_init(FX_HANDLER_t *fx)
         _Alignof(cabinet_simulation_f32)
     );
 
+    // return if mem allocation fails
+    for(int i = 0 ; i < 4 ; ++i){
+    	if(fx->states[i] == NULL){
+    	      fx_cabinet_clean(fx);
+    	      return;
+    	}
+    }
+
     // Initialize FIR filter with FFT memory
     fir_OD_M212_VINT_DYN_201_P05_00_f32_init(
         (fir_t *)fx->states[2],
@@ -152,6 +160,5 @@ void fx_cabinet_clean(FX_HANDLER_t *fx)
     	fx->states[i] = NULL;
 
     fx->process = NULL;
-    fx->clean = NULL;
 
 }

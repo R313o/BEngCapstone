@@ -38,6 +38,7 @@
 /** @brief Total SRAM pool size in bytes: NUM_BUFFERS × FFT_SIZE floats. */
 #define STATIC_POOL_SIZE_RAM_D2      (NUM_BUFFERS_RAM_D2 * FFT_SIZE * sizeof(float)) + 4
 
+extern uint8_t overflowFlag;
 
 
 /**

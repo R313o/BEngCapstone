@@ -112,6 +112,7 @@ void *_dctm_static_mem_alloc(size_t size, size_t align)
 
     if (off + size > DTCM_STATIC_POOL_SIZE) {
         _memory_alloc_error_handler();
+        return NULL;
     }
 
     dtcm_pool_head = off + size;
@@ -132,6 +133,7 @@ void *_static_mem_alloc(size_t size, size_t align)
 
     if (off + size > STATIC_POOL_SIZE) {
         _memory_alloc_error_handler();
+        return NULL;
     }
 
     pool_head = off + size;
@@ -152,6 +154,7 @@ void *_static_mem_alloc_ram_d2(size_t size, size_t align)
 
     if (off + size > STATIC_POOL_SIZE_RAM_D2) {
         _memory_alloc_error_handler();
+        return NULL;
     }
 
     pool_head_ram_d2 = off + size;
@@ -168,8 +171,10 @@ void *_static_mem_alloc_ram_d2(size_t size, size_t align)
  * for catching in the debugger or watchdog reset.
  */
 __weak void _memory_alloc_error_handler()
+
 {
-    while (1) {
-        // handler error
-    }
+
+	overflowFlag = 1;
+
+
 }

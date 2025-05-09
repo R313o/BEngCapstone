@@ -1,0 +1,5 @@
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:42:13:cabinet_simulation_f32_process	16	static
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:62:13:cabinet_simulation_f32_init	24	static
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:72:13:cabinet_simulation_clean_f32	16	static
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:89:6:fx_cabinet_init	24	static
+../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/cabinet_simulation_f32.c:136:6:fx_cabinet_clean	24	static
