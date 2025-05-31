@@ -1,0 +1,381 @@
+#include <Arduino.h>
+#include <Arduino_GFX_Library.h>
+
+#define GFX_BL 2 // Define the backlight pin
+
+// Create the display object with correct timing parameters
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    41 /* DE */, 40 /* VSYNC */, 39 /* HSYNC */, 42 /* PCLK */,
+    14 /* R0 */, 21 /* R1 */, 47 /* R2 */, 48 /* R3 */, 45 /* R4 */,
+    9 /* G0 */, 46 /* G1 */, 3 /* G2 */, 8 /* G3 */, 16 /* G4 */, 1 /* G5 */,
+    15 /* B0 */, 7 /* B1 */, 6 /* B2 */, 5 /* B3 */, 4 /* B4 */,
+    0 /* hsync_polarity */, 210 /* hsyncFrontPorch */, 30 /* hsyncPulseWidth */, 16 /* hsyncBackPorch */,
+    0 /* vsyncPolarity */, 22 /* vsyncFrontPorch */, 13 /* vsyncPulseWidth */, 10 /* vsyncBackPorch */,
+    1 /* pclkActiveNeg */, 12000000 /* preferSpeed */
+);
+
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* autoFlush */
+);
+
+// Color variables
+uint16_t backgroundColor = 0xC618;  // Light grey (RGB565)
+uint16_t effectColor = 0x7BEF;      // Dark grey (RGB565)
+uint16_t menuColor = 0xFDA0;        // Pale orange (RGB565)
+
+// Menu button positions (relative to the effect button)
+int menuOffsetX = 120;
+int menuOffsetY = 0;
+int menuButtonWidth = 100;
+int menuButtonHeight = 50;
+int menuSpacing = 10;  // Space between menu buttons
+
+// Define a tolerance for movement to avoid considering small movements as dragging
+const int movementTolerance = 10;  // Allowable movement (in pixels) before considering it a drag
+
+enum MenuState { NONE, SHOWN };
+MenuState menuState = NONE;  // Current menu state
+
+class Effect {
+public:
+    int x, y, width, height;
+    String label;
+    bool isDragging;
+    bool wasDragged;
+    bool isPressed;
+    int dragOffsetX, dragOffsetY;
+    int startX, startY;  // Track where the touch started
+    Effect* inputs[5];  // Array for inputs (other effects)
+    Effect* outputs[5]; // Array for outputs (other effects)
+    int inputCount, outputCount;
+    bool menuActive;
+    unsigned long pressStartTime;  // To track when the button is pressed
+
+    Effect(int startX, int startY, String text) {
+        x = startX;
+        y = startY;
+        width = 100;
+        height = 50;
+        label = text;
+        isDragging = false;
+        wasDragged = false;
+        isPressed = false;
+        dragOffsetX = 0;
+        dragOffsetY = 0;
+        inputCount = 0;
+        outputCount = 0;
+        menuActive = false;
+        pressStartTime = 0;
+    }
+
+    // Draw the button on the screen
+    void draw() {
+        gfx->fillRect(x, y, width, height, effectColor); // Dark grey effect button
+        gfx->setCursor(x + 15, y + 15);
+        gfx->setTextColor(0xFFFF); // White text
+        gfx->setTextSize(2);
+        gfx->print(label);
+    }
+
+    // Check if a touch is within the button bounds
+    bool isTouched(int touchX, int touchY) {
+        return (touchX >= x && touchX <= x + width && 
+                touchY >= y && touchY <= y + height);
+    }
+
+    // Check if a touch is within the menu bounds
+    bool isMenuTouched(int touchX, int touchY) {
+        return (touchX >= x + menuOffsetX && touchX <= x + menuOffsetX + menuButtonWidth &&
+                touchY >= y + menuOffsetY && touchY <= y + menuOffsetY + 3 * (menuButtonHeight + menuSpacing));
+    }
+
+    // Start dragging the button
+    void startDrag(int touchX, int touchY) {
+        isDragging = true;
+        wasDragged = false;  // Reset dragging flag
+        startX = touchX;  // Record starting position
+        startY = touchY;
+        dragOffsetX = touchX - x;
+        dragOffsetY = touchY - y;
+        hideMenu();  // Hide the menu when dragging starts
+    }
+
+    // Stop dragging the button
+    void stopDrag() {
+        isDragging = false;
+    }
+
+    // Move the button to follow touch, only if movement exceeds the tolerance
+    void moveTo(int touchX, int touchY) {
+        if (!isDragging) return;
+
+        int deltaX = abs(touchX - startX);
+        int deltaY = abs(touchY - startY);
+
+        // Check if the movement exceeds the tolerance to be considered a drag
+        if (deltaX > movementTolerance || deltaY > movementTolerance) {
+            wasDragged = true;
+
+            // Erase the previous position
+            gfx->fillRect(x, y, width, height, backgroundColor); // Erase with background color
+
+            // Update the position
+            x = touchX - dragOffsetX;
+            y = touchY - dragOffsetY;
+
+            // Draw the button in the new position
+            draw();
+        }
+    }
+
+    // Show the menu around the effect button
+    void showMenu() {
+        gfx->fillRect(x + menuOffsetX, y + menuOffsetY, menuButtonWidth, menuButtonHeight, menuColor); // Pale orange Delete button
+        gfx->setCursor(x + menuOffsetX + 15, y + menuOffsetY + 15);
+        gfx->setTextColor(0x0000);
+        gfx->setTextSize(2);
+        gfx->print("Delete");
+
+        gfx->fillRect(x + menuOffsetX, y + menuOffsetY + menuButtonHeight + menuSpacing, menuButtonWidth, menuButtonHeight, menuColor); // Pale orange Add Input button
+        gfx->setCursor(x + menuOffsetX + 15, y + menuOffsetY + menuButtonHeight + menuSpacing + 15);
+        gfx->setTextColor(0x0000);
+        gfx->print("Add In");
+
+        gfx->fillRect(x + menuOffsetX, y + menuOffsetY + 2 * (menuButtonHeight + menuSpacing), menuButtonWidth, menuButtonHeight, menuColor); // Pale orange Add Output button
+        gfx->setCursor(x + menuOffsetX + 15, y + menuOffsetY + 2 * (menuButtonHeight + menuSpacing) + 15);
+        gfx->setTextColor(0x0000);
+        gfx->print("Add Out");
+
+        menuActive = true;
+        menuState = SHOWN;
+    }
+
+    // Hide the menu
+    void hideMenu() {
+        if (!menuActive) return; // Only hide if the menu is active
+        // Clear the menu area
+        gfx->fillRect(x + menuOffsetX, y + menuOffsetY, menuButtonWidth, 3 * (menuButtonHeight + menuSpacing), backgroundColor); 
+        menuActive = false;
+        menuState = NONE;
+    }
+
+    // Check if menu buttons are touched
+    bool isDeleteTouched(int touchX, int touchY) {
+        return (menuActive && 
+                touchX >= x + menuOffsetX && touchX <= x + menuOffsetX + menuButtonWidth &&
+                touchY >= y + menuOffsetY && touchY <= y + menuOffsetY + menuButtonHeight);
+    }
+
+    bool isAddInputTouched(int touchX, int touchY) {
+        return (menuActive &&
+                touchX >= x + menuOffsetX && touchX <= x + menuOffsetX + menuButtonWidth &&
+                touchY >= y + menuOffsetY + menuButtonHeight + menuSpacing && touchY <= y + menuOffsetY + 2 * (menuButtonHeight + menuSpacing));
+    }
+
+    bool isAddOutputTouched(int touchX, int touchY) {
+        return (menuActive &&
+                touchX >= x + menuOffsetX && touchX <= x + menuOffsetX + menuButtonWidth &&
+                touchY >= y + menuOffsetY + 2 * (menuButtonHeight + menuSpacing) && touchY <= y + menuOffsetY + 3 * (menuButtonHeight + menuSpacing));
+    }
+
+    // Add input
+    void addInput(Effect* input) {
+        if (inputCount < 5) {
+            inputs[inputCount++] = input;
+        }
+    }
+
+    // Add output
+    void addOutput(Effect* output) {
+        if (outputCount < 5) {
+            outputs[outputCount++] = output;
+        }
+    }
+};
+
+// Array to hold multiple FX buttons
+Effect* fxButtons[10];
+int buttonCount = 0;
+
+// Add button
+int addBtnX = 10, addBtnY = 10, addBtnWidth = 100, addBtnHeight = 50;
+bool addBtnReleased = false;
+
+// Reset button
+int resetBtnX = 10, resetBtnY = 400, resetBtnWidth = 100, resetBtnHeight = 50;
+
+// Function to detect if a touch is within the add button's bounds
+bool isTouchInAdd(int touchX, int touchY) {
+    return (touchX >= addBtnX && touchX <= addBtnX + addBtnWidth &&
+            touchY >= addBtnY && touchY <= addBtnY + addBtnHeight);
+}
+
+// Function to detect if a touch is within the reset button's bounds
+bool isTouchInReset(int touchX, int touchY) {
+    return (touchX >= resetBtnX && touchX <= resetBtnX + resetBtnWidth &&
+            touchY >= resetBtnY && touchY <= resetBtnY + resetBtnHeight);
+}
+
+// Function to draw the add button
+void drawAddButton() {
+    gfx->fillRect(addBtnX, addBtnY, addBtnWidth, addBtnHeight, 0xF800); // Red Add button
+    gfx->setCursor(addBtnX + 15, addBtnY + 15);
+    gfx->setTextColor(0xFFFF); // White text
+    gfx->setTextSize(2);
+    gfx->print("Add");
+}
+
+// Function to draw the reset button
+void drawResetButton() {
+    gfx->fillRect(resetBtnX, resetBtnY, resetBtnWidth, resetBtnHeight, 0x001F); // Blue reset button
+    gfx->setCursor(resetBtnX + 15, resetBtnY + 15);
+    gfx->setTextColor(0xFFFF); // White text
+    gfx->setTextSize(2);
+    gfx->print("Reset");
+}
+
+// Function to add a new FX button
+void addFxButton() {
+    if (buttonCount < 10) {
+        String label = "FX" + String(buttonCount + 1);  // Set label to FX#
+        fxButtons[buttonCount] = new Effect(350, 200, label);  // Create new button
+        fxButtons[buttonCount]->draw();  // Draw the new button
+        buttonCount++;
+    }
+}
+
+// Function to reset all FX buttons
+void resetFxButtons() {
+    buttonCount = 0;  // Clear all buttons
+    gfx->fillScreen(backgroundColor); // Clear the screen with the background color
+    drawAddButton(); // Redraw the Add button
+    drawResetButton(); // Redraw the reset button
+}
+
+#include "touch.h"  // Include touch library after gfx instantiation
+
+void setup(void)
+{
+    Serial.begin(115200);
+    Serial.println("Initializing display...");
+
+    // Initialize display
+    if (gfx->begin()) {
+        Serial.println("Display initialized successfully.");
+    } else {
+        Serial.println("Display initialization failed!");
+        while (1);
+    }
+
+    gfx->fillScreen(backgroundColor);  // Set the screen background to the background color
+
+#ifdef GFX_BL
+    pinMode(GFX_BL, OUTPUT);
+    digitalWrite(GFX_BL, HIGH);
+#endif
+
+    // Draw the Add button and reset button
+    drawAddButton();
+    drawResetButton();
+
+    // Initialize touch screen
+    touchInit();
+}
+
+void loop() {
+    if (touchTouched()) {
+        // Check if the Add button is touched
+        if (isTouchInAdd(touchLastX, touchLastY)) {
+            addBtnReleased = false; // Reset the release flag while being touched
+        }
+
+        // Check if the reset button is touched
+        if (isTouchInReset(touchLastX, touchLastY)) {
+            resetFxButtons();  // Reset all FX buttons
+        }
+
+        // Check if any FX button is being touched or dragged
+        bool touchedEffectButtonOrMenu = false;
+        for (int i = 0; i < buttonCount; i++) {
+            Effect* btn = fxButtons[i];
+            if (btn->isTouched(touchLastX, touchLastY)) {
+                touchedEffectButtonOrMenu = true;  // Touched the effect button
+                if (!btn->isDragging) {
+                    if (!btn->isPressed) {
+                        btn->isPressed = true;
+                        btn->startDrag(touchLastX, touchLastY);  // Start dragging immediately
+                        btn->pressStartTime = millis();  // Record the time when pressed
+                    }
+                } else if (btn->isDragging) {
+                    btn->moveTo(touchLastX, touchLastY);  // Move button to new position
+                }
+            } else if (btn->menuActive && btn->isMenuTouched(touchLastX, touchLastY)) {
+                touchedEffectButtonOrMenu = true;  // Touched the menu
+            }
+        }
+
+        // If the user touches outside of any effect button and its menu, hide all menus
+        if (!touchedEffectButtonOrMenu) {
+            for (int i = 0; i < buttonCount; i++) {
+                fxButtons[i]->hideMenu();
+            }
+        }
+    } else {
+        // Register the click only when the button is released
+        for (int i = 0; i < buttonCount; i++) {
+            Effect* btn = fxButtons[i];
+            btn->stopDrag();
+
+            if (btn->isPressed) {
+                btn->isPressed = false;
+                unsigned long pressDuration = millis() - btn->pressStartTime;
+                int deltaX = abs(touchLastX - btn->startX);
+                int deltaY = abs(touchLastY - btn->startY);
+
+                // Only show the menu if the press was short and the button was not dragged (within tolerance)
+                if (pressDuration < 500 && deltaX <= movementTolerance && deltaY <= movementTolerance) {
+                    if (!btn->menuActive) {
+                        btn->showMenu();  // Show the menu when effect is pressed but not dragged
+                    }
+                }
+            }
+
+            // Check if menu buttons are released
+            if (btn->menuActive) {
+                if (btn->isDeleteTouched(touchLastX, touchLastY)) {
+                    btn->hideMenu();
+                    delete fxButtons[i];
+                    for (int j = i; j < buttonCount - 1; j++) {
+                        fxButtons[j] = fxButtons[j + 1];  // Shift the array
+                    }
+                    buttonCount--;
+                    gfx->fillScreen(backgroundColor); // Clear the screen after deletion
+                    drawAddButton();
+                    drawResetButton();
+                    for (int j = 0; j < buttonCount; j++) {
+                        fxButtons[j]->draw();  // Redraw remaining buttons
+                    }
+                    break;
+                } else if (btn->isAddInputTouched(touchLastX, touchLastY)) {
+                    if (buttonCount > 1) {
+                        btn->addInput(fxButtons[0]);  // Example linking to the first effect
+                        btn->hideMenu();
+                    }
+                } else if (btn->isAddOutputTouched(touchLastX, touchLastY)) {
+                    if (buttonCount > 1) {
+                        btn->addOutput(fxButtons[0]);  // Example linking to the first effect
+                        btn->hideMenu();
+                    }
+                }
+            }
+        }
+
+        // Check if the Add button was released
+        if (!addBtnReleased) {
+            addFxButton();  // Add a new FX button
+            addBtnReleased = true; // Prevent multiple adds
+        }
+    }
+
+    delay(10); // Small delay to smooth the touch response
+}

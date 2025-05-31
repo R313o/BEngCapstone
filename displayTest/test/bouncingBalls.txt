@@ -1,0 +1,102 @@
+#include <Arduino.h>
+
+#define USE_SPI_DMA
+#include <Arduino_GFX_Library.h>
+
+#define ESP32_8048S070
+#define TFT_BL 2 // Define the backlight pin
+
+// Create the display object with auto_flush disabled
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    41 /* DE */, 40 /* VSYNC */, 39 /* HSYNC */, 42 /* PCLK */,
+    14 /* R0 */, 21 /* R1 */, 47 /* R2 */, 48 /* R3 */, 45 /* R4 */,
+    9 /* G0 */, 46 /* G1 */, 3 /* G2 */, 8 /* G3 */, 16 /* G4 */, 1 /* G5 */,
+    15 /* B0 */, 7 /* B1 */, 6 /* B2 */, 5 /* B3 */, 4 /* B4 */,
+    0 /* hsync_polarity */, 8 /* hsyncFrontPorch */, 2 /* hsyncPulseWidth */, 43 /* hsyncBackPorch */,
+    0 /* vsyncPolarity */, 8 /* vsyncFrontPorch */, 2 /* vsyncPulseWidth */, 12 /* vsyncBackPorch */,
+    1 /* pclkActiveNeg */, 16000000 /* preferSpeed */
+);
+
+Arduino_G *display = new Arduino_RGB_Display(
+    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, false /* auto_flush off */
+);
+
+Arduino_GFX *gfx = new Arduino_Canvas(800 /* width */, 480 /* height */, display);
+
+// Ball properties
+const int numBalls = 100;  // Number of balls
+int ballRadius[numBalls];
+int ballX[numBalls], ballY[numBalls];  // Ball positions
+int ballVelX[numBalls], ballVelY[numBalls];  // Ball velocities
+uint16_t ballColor[numBalls];  // Ball colors
+
+// Screen dimensions
+int screenWidth, screenHeight;
+
+// Function to generate a random color
+uint16_t randomColor() {
+    return gfx->color565(random(0, 256), random(0, 256), random(0, 256));
+}
+
+// Function to move each ball and handle bouncing
+void moveBalls() {
+    for (int i = 0; i < numBalls; i++) {
+        // Erase the old ball by filling the area with the background color
+        gfx->fillCircle(ballX[i], ballY[i], ballRadius[i], 0x0000);  // Black background
+
+        // Update ball positions
+        ballX[i] += ballVelX[i];
+        ballY[i] += ballVelY[i];
+
+        // Check for bouncing on the edges
+        if (ballX[i] <= ballRadius[i] || ballX[i] >= screenWidth - ballRadius[i]) {
+            ballVelX[i] = -ballVelX[i];  // Reverse X direction
+        }
+        if (ballY[i] <= ballRadius[i] || ballY[i] >= screenHeight - ballRadius[i]) {
+            ballVelY[i] = -ballVelY[i];  // Reverse Y direction
+        }
+
+        // Draw the new ball in the updated position
+        gfx->fillCircle(ballX[i], ballY[i], ballRadius[i], ballColor[i]);
+    }
+}
+
+void setup() {
+    Serial.begin(115200);
+    Serial.println("Initializing display...");
+
+    // Initialize the display
+    gfx->begin();
+
+    // Backlight pin setup
+    pinMode(TFT_BL, OUTPUT);
+    digitalWrite(TFT_BL, HIGH);
+
+    // Get the screen dimensions
+    screenWidth = gfx->width();
+    screenHeight = gfx->height();
+
+    // Initialize the balls
+    for (int i = 0; i < numBalls; i++) {
+        ballRadius[i] = random(10, 40);  // Random radius between 10 and 40 pixels
+        ballX[i] = random(ballRadius[i], screenWidth - ballRadius[i]);  // Random starting X position
+        ballY[i] = random(ballRadius[i], screenHeight - ballRadius[i]);  // Random starting Y position
+        ballVelX[i] = random(2, 5) * (random(0, 2) ? 1 : -1);  // Random X velocity
+        ballVelY[i] = random(2, 5) * (random(0, 2) ? 1 : -1);  // Random Y velocity
+        ballColor[i] = randomColor();  // Random color
+    }
+
+    // Fill the screen with a black background
+    gfx->fillScreen(0x0000);
+}
+
+void loop() {
+    // Move and draw all the balls
+    moveBalls();
+
+    // Flush the updated display
+    gfx->flush();
+
+    // Small delay to control the speed of the animation
+    delay(10);
+}
