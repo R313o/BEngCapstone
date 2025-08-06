@@ -1,7 +1,0 @@
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.c:96:6:fx_supro_init	40	static
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.c:156:6:fx_supro_clean	24	static
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.c:180:13:supro_simulation_init_f32	24	static
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.c:193:13:supro_simulation_clean_f32	16	static
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.c:206:13:supro_simulation_f32_process	24	static
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.c:236:13:supro_preamp_f32	72	static
-../Core/Src/_MULTI_FX_EFFECTS/FX_Definitions/supro_simulation_f32.c:277:13:supro_poweramp_f32	112	static
