@@ -15,5 +15,3 @@ A portable guitar processor that combines high-quality amplifier modelling with 
 | **Memory Mgr** | DTCM + external SRAM, bump-pointer allocator for large impulse responses |
 
 ---
-
-## Repository Structure
